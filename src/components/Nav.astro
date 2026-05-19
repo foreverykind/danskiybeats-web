@@ -1,0 +1,28 @@
+---
+const links = [
+  { href: '#hero',     label: 'Home',    section: 'hero' },
+  { href: '#clients',  label: 'Clients', section: 'clients' },
+  { href: '#work',     label: 'Work',    section: 'work' },
+  { href: '#releases', label: 'Music',   section: 'releases' },
+  { href: '#contact',  label: 'Contact', section: 'contact' },
+];
+---
+
+<nav class="nav" id="nav">
+  <ul class="desktop" id="navList">
+    {links.map(({ href, label, section }) => (
+      <li>
+        <a href={href} class="nlink" data-section={section}>
+          <span class="indicator"></span>{label}
+        </a>
+      </li>
+    ))}
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu"></button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  {links.map(({ href, label }) => (
+    <a href={href} class="m-link">{label}</a>
+  ))}
+</div>

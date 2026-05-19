@@ -1,0 +1,43 @@
+---
+type LogoClient = { name: string; logo: string };
+type TextClient = { name: string; logo?: never };
+type Client = LogoClient | TextClient;
+
+const clients: Client[] = [
+  { name: 'Mercedes',   logo: '/clients/mercedes.png' },
+  { name: 'Porsche',    logo: '/clients/porsche.svg'  },
+  { name: 'Nike',       logo: '/clients/nike.png'     },
+  { name: 'Toyota',     logo: '/clients/toyota.png'   },
+  { name: 'Obsidian'   },
+  { name: 'Aurum'      },
+  { name: 'Northpoint' },
+  { name: 'Vantage'    },
+  { name: 'Monolith'   },
+  { name: 'Halcyon'    },
+  { name: 'Pale Horse' },
+  { name: 'Ritter & Voss' },
+];
+---
+
+<section id="clients" class="clients">
+  <div class="section-label">
+    <span class="num">02</span>
+    <span class="line"></span>
+    <span>Clients</span>
+  </div>
+  <div class="section-label-right">
+    <span>Selected</span>
+    <span class="num">/ 16 of 42</span>
+  </div>
+
+  <div class="logo-grid" id="logoGrid">
+    {clients.map((c) => (
+      <div class="logo-cell">
+        {c.logo
+          ? <img class="logo-img" src={c.logo} alt={c.name} loading="lazy" decoding="async" />
+          : <span class="mark">{c.name}</span>
+        }
+      </div>
+    ))}
+  </div>
+</section>

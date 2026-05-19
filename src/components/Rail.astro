@@ -1,0 +1,18 @@
+---
+const stops = [
+  { href: '#hero',     section: 'hero',     label: 'Intro' },
+  { href: '#clients',  section: 'clients',  label: 'Clients' },
+  { href: '#work',     section: 'work',     label: 'Work' },
+  { href: '#releases', section: 'releases', label: 'Releases' },
+  { href: '#contact',  section: 'contact',  label: 'Contact' },
+];
+---
+
+<div class="rail" id="rail">
+  {stops.map(({ href, section, label }) => (
+    <a href={href} data-section={section}>
+      <span class="lbl">{label}</span>
+      <span class="d"></span>
+    </a>
+  ))}
+</div>

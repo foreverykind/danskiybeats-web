@@ -1,0 +1,176 @@
+---
+---
+
+<!-- Work grid and modal are populated by client-side JS -->
+<section id="work" class="work">
+  <div class="section-label">
+    <span class="num">03</span>
+    <span class="line"></span>
+    <span>Selected Work</span>
+  </div>
+
+  <div class="work-grid" id="workGrid"></div>
+  <div class="work-loadmore-wrap">
+    <button class="work-loadmore" id="workLoadMore" type="button">
+      Load more — 12 cases
+    </button>
+  </div>
+</section>
+
+<!-- Video modal -->
+<div class="vmodal" id="vmodal" aria-hidden="true">
+  <div class="vmodal-bar">
+    <span class="meta">
+      <span class="num" id="vmCount">01 / 17</span>
+      <span class="sep">/</span>
+      <span>Selected Work</span>
+    </span>
+    <button class="vmodal-close" id="vmClose" aria-label="Close"></button>
+  </div>
+  <div class="vmodal-frame">
+    <iframe
+      id="vmFrame"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="vmodal-foot">
+    <div class="title-l">
+      <span class="brand" id="vmBrand">Brand</span>
+      <span class="sep">·</span>
+      <span id="vmTitle">Title</span>
+    </div>
+    <div class="nav-arrows">
+      <button class="vmodal-arrow" id="vmPrev" aria-label="Previous case">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M9 1 L3 7 L9 13"/>
+        </svg>
+      </button>
+      <button class="vmodal-arrow" id="vmNext" aria-label="Next case">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M5 1 L11 7 L5 13"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const WORKS = [
+    { brand: "Toyota",              title: "Commercial",                          yt: "6PTmMcJW7Vo" },
+    { brand: "73 Rangers",          title: "Military Trailer",                    yt: "fxsp8f7X20M" },
+    { brand: "MHP",                 title: "Commercial Campaign",                 yt: "et4hQuqOHWI" },
+    { brand: "No Man's Land",       title: "Military Trailer",                    yt: "3Jn-zZO0bLo" },
+    { brand: "Aquaspirit",          title: "Campaign Trailer",                    yt: "A1DGQVyAUkM" },
+    { brand: "MHP Foods",           title: "Commercial",                          yt: "-1oe7eNX5jg" },
+    { brand: "Nestlé Ukraine",      title: "Campaign",                            yt: "yzRNyrp5DsY" },
+    { brand: "Vodafone",            title: "Commercial",                          yt: "8Ybw8DgKL1o" },
+    { brand: "Aerotim",             title: "Formation Flying",                    yt: "N7R6XFkZ_wY" },
+    { brand: "Blue & Yellow",       title: "Lithuanian Charity Organisation Promo", yt: "5oVzTwML8E4" },
+    { brand: "Guzema × Aerotim",    title: "'Vi Levare' Collection Collab",       yt: "0b6uCr25h_M" },
+    { brand: "Kyivstar",            title: "Commercial",                          yt: "6Q7qFDMqenY" },
+    { brand: "Lewi's",              title: "Commercial",                          yt: "lD35FGT2kEs" },
+    { brand: "Aerotim",             title: "Action Sports Meet Country",          yt: "YMTm1Y2H-Qs" },
+    { brand: "Woolrich",            title: "Commercial",                          yt: "wIWf6XZojIk" },
+    { brand: "Jameson",             title: "Irish Whiskey Commercial",            yt: "dTHYUy0Pdw4" },
+    { brand: "Nike",                title: "Commercial",                          yt: "07-y537FrCA" },
+  ];
+
+  const TOTAL = WORKS.length;
+  const grid = document.getElementById('workGrid')!;
+  WORKS.forEach((w, i) => {
+    const card = document.createElement('a');
+    card.href = "#";
+    card.className = "work-card";
+    card.dataset.idx = String(i);
+    const thumb = document.createElement('div');
+    thumb.className = "thumb";
+    const gradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
+    const setThumb = (quality: string) => {
+      thumb.style.backgroundImage = `${gradient}, url(https://img.youtube.com/vi/${w.yt}/${quality}.jpg)`;
+      thumb.style.backgroundSize = 'cover';
+      thumb.style.backgroundPosition = 'center';
+    };
+    // Try maxresdefault (1280×720) first, fall back to hqdefault (480×360)
+    const probe = new Image();
+    probe.onload = () => {
+      if (probe.naturalWidth > 120) setThumb('maxresdefault');
+      else setThumb('hqdefault');
+    };
+    probe.onerror = () => setThumb('hqdefault');
+    setThumb('hqdefault'); // immediate render, upgrades if maxres loads
+    probe.src = `https://img.youtube.com/vi/${w.yt}/maxresdefault.jpg`;
+    card.appendChild(thumb);
+    card.insertAdjacentHTML('beforeend', `
+      <div class="index">${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}</div>
+      <div class="overlay">
+        <span class="play"></span>
+        <div class="brand">${w.brand}</div>
+        <div class="title">${w.title}</div>
+      </div>
+    `);
+    card.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
+    if (i >= 5) card.classList.add('hidden-mobile');
+    grid.appendChild(card);
+  });
+
+  // Mobile load-more
+  document.body.classList.add('work-collapsed');
+  const lm = document.getElementById('workLoadMore')!;
+  lm.addEventListener('click', () => {
+    const collapsed = document.body.classList.toggle('work-collapsed');
+    if (collapsed) {
+      lm.textContent = `Load more — ${TOTAL - 5} cases`;
+      lm.classList.remove('expanded');
+    } else {
+      lm.textContent = 'Show less';
+      lm.classList.add('expanded');
+    }
+  });
+
+  // Video modal
+  const modal = document.getElementById('vmodal')!;
+  const frame = document.getElementById('vmFrame') as HTMLIFrameElement;
+  const vmBrand = document.getElementById('vmBrand')!;
+  const vmTitle = document.getElementById('vmTitle')!;
+  const vmCount = document.getElementById('vmCount')!;
+  let vmIdx = 0;
+
+  function loadVideo(i: number) {
+    const w = WORKS[i];
+    frame.src = `https://www.youtube.com/embed/${w.yt}?autoplay=1&rel=0&modestbranding=1&color=white`;
+    vmBrand.textContent = w.brand;
+    vmTitle.textContent = w.title;
+    vmCount.textContent = `${String(i + 1).padStart(2, '0')} / ${String(WORKS.length).padStart(2, '0')}`;
+    vmIdx = i;
+  }
+
+  function openModal(i: number) {
+    loadVideo(i);
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vmodal-locked');
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    frame.src = "";
+    document.body.classList.remove('vmodal-locked');
+  }
+
+  document.getElementById('vmClose')!.addEventListener('click', closeModal);
+  document.getElementById('vmPrev')!.addEventListener('click', () =>
+    loadVideo((vmIdx - 1 + WORKS.length) % WORKS.length)
+  );
+  document.getElementById('vmNext')!.addEventListener('click', () =>
+    loadVideo((vmIdx + 1) % WORKS.length)
+  );
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeModal();
+    if (e.key === 'ArrowLeft')  loadVideo((vmIdx - 1 + WORKS.length) % WORKS.length);
+    if (e.key === 'ArrowRight') loadVideo((vmIdx + 1) % WORKS.length);
+  });
+</script>

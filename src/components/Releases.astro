@@ -1,0 +1,138 @@
+---
+import { getArtistDiscography } from '../lib/spotify';
+import type { SpotifyRelease } from '../lib/spotify';
+
+const FALLBACK: SpotifyRelease[] = [
+  { id: 'r01', name: 'Nightcaller',      album_type: 'album',  release_date: '2026-01-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+  { id: 'r02', name: 'Velvet Engine',    album_type: 'single', release_date: '2025-06-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+  { id: 'r03', name: 'Black Crane',      album_type: 'single', release_date: '2025-02-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+  { id: 'r04', name: 'Field Recordings', album_type: 'album',  release_date: '2024-03-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+  { id: 'r05', name: 'Halcyon',          album_type: 'single', release_date: '2023-09-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+  { id: 'r06', name: 'Long Drive',       album_type: 'album',  release_date: '2022-11-01', images: [], external_urls: { spotify: 'https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ' } },
+];
+
+let releases: SpotifyRelease[] = [];
+try {
+  const raw = await getArtistDiscography();
+  releases = raw.sort((a, b) => b.release_date.localeCompare(a.release_date));
+} catch (err) {
+  console.warn('[Releases] Spotify API unavailable — using fallback. Error:', (err as Error).message);
+  releases = FALLBACK;
+}
+---
+
+<section id="releases" class="releases">
+  <div class="section-label">
+    <span class="num">04</span>
+    <span class="line"></span>
+    <span>Releases</span>
+  </div>
+  <div class="section-label-right">
+    <span>Catalogue</span>
+    <span class="num">/ {releases.length}</span>
+  </div>
+
+  <div class="coverflow" id="coverflow"></div>
+  <div class="release-info" id="releaseInfo"></div>
+
+  <div class="cf-nav">
+    <button class="cf-btn" id="cfPrev" aria-label="Previous">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M9 1 L3 7 L9 13"/>
+      </svg>
+    </button>
+    <span class="cf-counter">
+      <span class="now" id="cfNow">01</span>
+      {' / '}
+      <span id="cfTotal">{String(releases.length).padStart(2, '0')}</span>
+    </span>
+    <button class="cf-btn" id="cfNext" aria-label="Next">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M5 1 L11 7 L5 13"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<script define:vars={{ releases }}>
+  const cf = document.getElementById('coverflow');
+  const info = document.getElementById('releaseInfo');
+  let idx = 0;
+
+  releases.forEach((r, i) => {
+    const el = document.createElement('div');
+    el.className = "cover";
+    el.dataset.i = String(i);
+    const coverUrl = r.images[0]?.url;
+    el.innerHTML = `
+      <div class="cover-inner">
+        <div class="cover-art" style="${
+          coverUrl
+            ? `background-image: url(${coverUrl}); background-size: cover; background-position: center;`
+            : 'background: linear-gradient(135deg, #1f1f1f 0%, #3a3a3a 60%, #0e0e0e 100%);'
+        }"></div>
+      </div>
+    `;
+    el.addEventListener('click', () => { idx = i; render(); });
+    cf.appendChild(el);
+  });
+
+  function render() {
+    const covers = cf.querySelectorAll('.cover');
+    const n = covers.length;
+    covers.forEach((el, i) => {
+      let offset = i - idx;
+      if (offset >  n / 2) offset -= n;
+      if (offset < -n / 2) offset += n;
+      const abs = Math.abs(offset);
+      const x = offset * 200;
+      const rot = offset === 0 ? 0 : (offset > 0 ? -32 : 32);
+      const z = offset === 0 ? 0 : -120 * abs;
+      const scale = offset === 0 ? 1 : Math.max(0.6, 1 - 0.18 * abs);
+      const op = abs > 2 ? 0 : 1 - 0.25 * abs;
+      el.style.transform = `translate(-50%,-50%) translate3d(${x}px, 0, ${z}px) rotateY(${rot}deg) scale(${scale})`;
+      el.style.zIndex = String(100 - abs);
+      el.style.opacity = String(op);
+      el.style.filter = offset === 0 ? "none" : `brightness(${0.55 + (0.45 / (abs + 1))})`;
+    });
+
+    const r = releases[idx];
+    const year = r.release_date.slice(0, 4);
+    const type = r.album_type === 'album' ? 'Album' : r.album_type === 'single' ? 'Single' : r.album_type;
+    info.innerHTML = `
+      <div class="title-line">${r.name}</div>
+      <div class="submeta">
+        <span>${year}</span><span class="sep">·</span>
+        <span>${type}</span>
+      </div>
+      <div class="dsp-row">
+        <a class="dsp" href="https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ" target="_blank" rel="noopener">
+          <span class="ico"></span>Spotify
+        </a>
+        <a class="dsp" href="https://music.apple.com/es/artist/danskiy/1509966270?l=en-GB" target="_blank" rel="noopener">
+          <span class="ico"></span>Apple Music
+        </a>
+        <a class="dsp" href="https://www.deezer.com/ru/artist/90002962" target="_blank" rel="noopener">
+          <span class="ico"></span>Deezer
+        </a>
+      </div>
+    `;
+    document.getElementById('cfNow').textContent = String(idx + 1).padStart(2, '0');
+  }
+
+  render();
+
+  document.getElementById('cfPrev').addEventListener('click', () => {
+    idx = (idx - 1 + releases.length) % releases.length;
+    render();
+  });
+  document.getElementById('cfNext').addEventListener('click', () => {
+    idx = (idx + 1) % releases.length;
+    render();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('vmodal')?.classList.contains('open')) return;
+    if (e.key === 'ArrowLeft')  { idx = (idx - 1 + releases.length) % releases.length; render(); }
+    if (e.key === 'ArrowRight') { idx = (idx + 1) % releases.length; render(); }
+  });
+</script>

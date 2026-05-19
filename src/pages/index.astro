@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Rail from '../components/Rail.astro';
+import Hero from '../components/Hero.astro';
+import Clients from '../components/Clients.astro';
+import Work from '../components/Work.astro';
+import Releases from '../components/Releases.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Layout>
+  <Nav />
+  <Rail />
+  <main>
+    <Hero />
+    <Clients />
+    <Work />
+    <Releases />
+    <Contact />
+  </main>
+</Layout>
+
+<script>
+  /* ─── Custom Cursor ─── */
+  (function () {
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    window.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
+    function tick() {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+    document.querySelectorAll('a, button, .work-card, .logo-cell, .pill, .dsp, .cf-btn, .cover')
+      .forEach((el) => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+      });
+  })();
+
+  /* ─── Scroll Spy ─── */
+  (function () {
+    const sections = ['hero', 'clients', 'work', 'releases', 'contact'];
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting && en.intersectionRatio > 0.4) {
+          const id = (en.target as HTMLElement).id;
+          document.querySelectorAll('[data-section]').forEach((a) =>
+            a.classList.toggle('active', (a as HTMLElement).dataset.section === id)
+          );
+        }
+      });
+    }, { threshold: [0.4, 0.6] });
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+  })();
+
+  /* ─── Hamburger Menu ─── */
+  (function () {
+    const h = document.getElementById('hamburger');
+    if (!h) return;
+    h.addEventListener('click', () => document.body.classList.toggle('menu-open'));
+    document.querySelectorAll('.m-link').forEach((a) =>
+      a.addEventListener('click', () => document.body.classList.remove('menu-open'))
+    );
+  })();
+</script>
