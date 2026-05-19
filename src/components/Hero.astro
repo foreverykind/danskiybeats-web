@@ -1,10 +1,12 @@
 ---
+import heroData from '../data/hero.json';
+const h = heroData;
 ---
 
 <section id="hero" class="hero">
   <div class="hero-video" aria-hidden="true">
     <div class="vignette-dot"></div>
-    <div class="placeholder-tag">[ SHOWREEL · 02:14 ]</div>
+    <div class="placeholder-tag">[ SHOWREEL{h.reel_duration ? ` · ${h.reel_duration}` : ''} ]</div>
   </div>
   <div class="hero-overlay" aria-hidden="true"></div>
 
@@ -13,25 +15,28 @@
     <span class="line"></span>
     <span>Intro</span>
   </div>
-  <div class="section-label-right">
-    <span>Reel 2026</span>
-    <span class="num">/ 02:14</span>
-  </div>
+  {(h.reel_year || h.reel_duration) && (
+    <div class="section-label-right">
+      {h.reel_year && <span>Reel {h.reel_year}</span>}
+      {h.reel_duration && <span class="num">/ {h.reel_duration}</span>}
+    </div>
+  )}
 
   <div class="hero-inner">
     <div class="hero-left">
       <div class="eyebrow">
-        <span>Composer</span>
-        <span class="sep">·</span>
-        <span>Producer</span>
+        {h.eyebrow.map((item, i) => (
+          <>
+            {i > 0 && <span class="sep">·</span>}
+            <span>{item}</span>
+          </>
+        ))}
       </div>
-      <div class="tagline">
-        Original music &amp; custom sound design for film, advertising and artists.
-        Selected work for automotive, fashion, labels &amp; agencies — 2019 → 2026.
-      </div>
+      <div class="tagline">{h.tagline}</div>
       <div class="hero-cta">
-        <a href="#releases" class="pill">Listen <span class="arrow"></span></a>
-        <a href="#contact" class="pill">Get in touch <span class="arrow"></span></a>
+        {h.cta.map((btn) => (
+          <a href={btn.href} class="pill">{btn.label} <span class="arrow"></span></a>
+        ))}
       </div>
     </div>
   </div>

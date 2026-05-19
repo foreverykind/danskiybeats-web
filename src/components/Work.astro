@@ -1,4 +1,11 @@
 ---
+import worksData from '../data/works.json';
+import { extractYoutubeId } from '../lib/youtube';
+const WORKS = worksData.items.map(w => ({
+  brand: w.brand,
+  title: w.title,
+  yt: extractYoutubeId(w.youtubeUrl),
+}));
 ---
 
 <!-- Work grid and modal are populated by client-side JS -->
@@ -55,29 +62,10 @@
   </div>
 </div>
 
-<script>
-  const WORKS = [
-    { brand: "Toyota",              title: "Commercial",                          yt: "6PTmMcJW7Vo" },
-    { brand: "73 Rangers",          title: "Military Trailer",                    yt: "fxsp8f7X20M" },
-    { brand: "MHP",                 title: "Commercial Campaign",                 yt: "et4hQuqOHWI" },
-    { brand: "No Man's Land",       title: "Military Trailer",                    yt: "3Jn-zZO0bLo" },
-    { brand: "Aquaspirit",          title: "Campaign Trailer",                    yt: "A1DGQVyAUkM" },
-    { brand: "MHP Foods",           title: "Commercial",                          yt: "-1oe7eNX5jg" },
-    { brand: "Nestlé Ukraine",      title: "Campaign",                            yt: "yzRNyrp5DsY" },
-    { brand: "Vodafone",            title: "Commercial",                          yt: "8Ybw8DgKL1o" },
-    { brand: "Aerotim",             title: "Formation Flying",                    yt: "N7R6XFkZ_wY" },
-    { brand: "Blue & Yellow",       title: "Lithuanian Charity Organisation Promo", yt: "5oVzTwML8E4" },
-    { brand: "Guzema × Aerotim",    title: "'Vi Levare' Collection Collab",       yt: "0b6uCr25h_M" },
-    { brand: "Kyivstar",            title: "Commercial",                          yt: "6Q7qFDMqenY" },
-    { brand: "Lewi's",              title: "Commercial",                          yt: "lD35FGT2kEs" },
-    { brand: "Aerotim",             title: "Action Sports Meet Country",          yt: "YMTm1Y2H-Qs" },
-    { brand: "Woolrich",            title: "Commercial",                          yt: "wIWf6XZojIk" },
-    { brand: "Jameson",             title: "Irish Whiskey Commercial",            yt: "dTHYUy0Pdw4" },
-    { brand: "Nike",                title: "Commercial",                          yt: "07-y537FrCA" },
-  ];
+<script define:vars={{ WORKS }}>
 
   const TOTAL = WORKS.length;
-  const grid = document.getElementById('workGrid')!;
+  const grid = document.getElementById('workGrid');
   WORKS.forEach((w, i) => {
     const card = document.createElement('a');
     card.href = "#";
@@ -86,7 +74,7 @@
     const thumb = document.createElement('div');
     thumb.className = "thumb";
     const gradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
-    const setThumb = (quality: string) => {
+    const setThumb = (quality) => {
       thumb.style.backgroundImage = `${gradient}, url(https://img.youtube.com/vi/${w.yt}/${quality}.jpg)`;
       thumb.style.backgroundSize = 'cover';
       thumb.style.backgroundPosition = 'center';
@@ -116,7 +104,8 @@
 
   // Mobile load-more
   document.body.classList.add('work-collapsed');
-  const lm = document.getElementById('workLoadMore')!;
+  const lm = document.getElementById('workLoadMore');
+  lm.textContent = `Load more — ${TOTAL - 5} cases`;
   lm.addEventListener('click', () => {
     const collapsed = document.body.classList.toggle('work-collapsed');
     if (collapsed) {
@@ -129,14 +118,14 @@
   });
 
   // Video modal
-  const modal = document.getElementById('vmodal')!;
-  const frame = document.getElementById('vmFrame') as HTMLIFrameElement;
-  const vmBrand = document.getElementById('vmBrand')!;
-  const vmTitle = document.getElementById('vmTitle')!;
-  const vmCount = document.getElementById('vmCount')!;
+  const modal = document.getElementById('vmodal');
+  const frame = document.getElementById('vmFrame');
+  const vmBrand = document.getElementById('vmBrand');
+  const vmTitle = document.getElementById('vmTitle');
+  const vmCount = document.getElementById('vmCount');
   let vmIdx = 0;
 
-  function loadVideo(i: number) {
+  function loadVideo(i) {
     const w = WORKS[i];
     frame.src = `https://www.youtube.com/embed/${w.yt}?autoplay=1&rel=0&modestbranding=1&color=white`;
     vmBrand.textContent = w.brand;
@@ -145,7 +134,7 @@
     vmIdx = i;
   }
 
-  function openModal(i: number) {
+  function openModal(i) {
     loadVideo(i);
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
@@ -159,11 +148,11 @@
     document.body.classList.remove('vmodal-locked');
   }
 
-  document.getElementById('vmClose')!.addEventListener('click', closeModal);
-  document.getElementById('vmPrev')!.addEventListener('click', () =>
+  document.getElementById('vmClose').addEventListener('click', closeModal);
+  document.getElementById('vmPrev').addEventListener('click', () =>
     loadVideo((vmIdx - 1 + WORKS.length) % WORKS.length)
   );
-  document.getElementById('vmNext')!.addEventListener('click', () =>
+  document.getElementById('vmNext').addEventListener('click', () =>
     loadVideo((vmIdx + 1) % WORKS.length)
   );
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });

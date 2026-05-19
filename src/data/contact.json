@@ -1,0 +1,25 @@
+{
+  "email": "danskiybeats@gmail.com",
+  "telegram_handle": "@DanskiyBeats",
+  "telegram_url": "https://t.me/DanskiyBeats",
+  "instagram_handle": "@danskiy",
+  "instagram_url": "https://www.instagram.com/danskiy/",
+  "bookings_label": "Bookings 2026",
+  "dsp": [
+    {
+      "name": "Spotify",
+      "label": "Spotify — /artist/danskiy",
+      "url": "https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ"
+    },
+    {
+      "name": "Apple Music",
+      "label": "Apple Music — /artist/danskiy",
+      "url": "https://music.apple.com/es/artist/danskiy/1509966270?l=en-GB"
+    },
+    {
+      "name": "Deezer",
+      "label": "Deezer — /artist/90002962",
+      "url": "https://www.deezer.com/ru/artist/90002962"
+    }
+  ]
+}

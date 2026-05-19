@@ -1,0 +1,83 @@
+backend:
+  name: github
+  repo: foreverykind/danskiybeats-web
+  branch: main
+  base_url: https://danskiybeats.com
+  auth_endpoint: api/auth
+
+media_folder: public/clients
+public_folder: /clients
+
+locale: en
+
+collections:
+  - name: work
+    label: Work
+    files:
+      - name: works_list
+        label: Selected Work
+        file: src/data/works.json
+        fields:
+          - label: Works
+            name: items
+            widget: list
+            fields:
+              - { label: Brand, name: brand, widget: string }
+              - { label: Title, name: title, widget: string }
+              - { label: "YouTube URL", name: youtubeUrl, widget: string, hint: "Full URL or short link, e.g. https://youtu.be/6PTmMcJW7Vo" }
+
+  - name: clients
+    label: Clients
+    files:
+      - name: clients_list
+        label: Clients
+        file: src/data/clients.json
+        fields:
+          - label: Clients
+            name: items
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Logo, name: logo, widget: image, required: false, hint: "Upload or leave empty for text-only display" }
+
+  - name: contact
+    label: Contact
+    files:
+      - name: contact_info
+        label: Contact Info
+        file: src/data/contact.json
+        fields:
+          - { label: Email, name: email, widget: string }
+          - { label: "Telegram Handle", name: telegram_handle, widget: string }
+          - { label: "Telegram URL", name: telegram_url, widget: string }
+          - { label: "Instagram Handle", name: instagram_handle, widget: string }
+          - { label: "Instagram URL", name: instagram_url, widget: string }
+          - { label: "Bookings Label", name: bookings_label, widget: string }
+          - label: "Streaming Links"
+            name: dsp
+            widget: list
+            fields:
+              - { label: Platform, name: name, widget: string }
+              - { label: "Display Label", name: label, widget: string }
+              - { label: URL, name: url, widget: string }
+
+  - name: hero
+    label: Hero
+    files:
+      - name: hero_content
+        label: Hero
+        file: src/data/hero.json
+        fields:
+          - label: "Roles (eyebrow)"
+            name: eyebrow
+            widget: list
+            field: { label: Role, name: role, widget: string }
+          - { label: Tagline, name: tagline, widget: text }
+          - { label: "Reel Year", name: reel_year, widget: string, required: false }
+          - { label: "Reel Duration", name: reel_duration, widget: string, required: false, hint: "e.g. 02:14" }
+          - label: "CTA Buttons"
+            name: cta
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }

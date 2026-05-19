@@ -1,0 +1,10 @@
+{
+  "eyebrow": ["Composer", "Producer"],
+  "tagline": "Original music & custom sound design for film, advertising and artists. Selected work for automotive, fashion, labels & agencies — 2019 → 2026.",
+  "reel_year": "2026",
+  "reel_duration": "02:14",
+  "cta": [
+    { "label": "Listen",       "href": "#releases" },
+    { "label": "Get in touch", "href": "#contact"  }
+  ]
+}

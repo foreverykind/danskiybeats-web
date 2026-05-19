@@ -1,22 +1,8 @@
 ---
-type LogoClient = { name: string; logo: string };
-type TextClient = { name: string; logo?: never };
-type Client = LogoClient | TextClient;
+import clientsData from '../data/clients.json';
 
-const clients: Client[] = [
-  { name: 'Mercedes',   logo: '/clients/mercedes.png' },
-  { name: 'Porsche',    logo: '/clients/porsche.svg'  },
-  { name: 'Nike',       logo: '/clients/nike.png'     },
-  { name: 'Toyota',     logo: '/clients/toyota.png'   },
-  { name: 'Obsidian'   },
-  { name: 'Aurum'      },
-  { name: 'Northpoint' },
-  { name: 'Vantage'    },
-  { name: 'Monolith'   },
-  { name: 'Halcyon'    },
-  { name: 'Pale Horse' },
-  { name: 'Ritter & Voss' },
-];
+type Client = { name: string; logo?: string };
+const clients: Client[] = clientsData.items;
 ---
 
 <section id="clients" class="clients">
@@ -24,10 +10,6 @@ const clients: Client[] = [
     <span class="num">02</span>
     <span class="line"></span>
     <span>Clients</span>
-  </div>
-  <div class="section-label-right">
-    <span>Selected</span>
-    <span class="num">/ 16 of 42</span>
   </div>
 
   <div class="logo-grid" id="logoGrid">
