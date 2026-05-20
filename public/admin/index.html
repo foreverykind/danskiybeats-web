@@ -26,16 +26,20 @@
         contact:  'contact_info'
       };
 
+      var _redirectTimer;
       function skipFileLevel() {
-        var hash = window.location.hash;
-        // Match  #/collections/hero  but NOT  #/collections/hero/files/...
-        var m = hash.match(/^#\/collections\/([^/]+)\/?$/);
-        if (m && FILE_MAP[m[1]]) {
-          window.location.hash = '#/collections/' + m[1] + '/files/' + FILE_MAP[m[1]];
-        }
+        clearTimeout(_redirectTimer);
+        _redirectTimer = setTimeout(function () {
+          var hash = window.location.hash;
+          // Match  #/collections/hero  but NOT  #/collections/hero/files/...
+          var m = hash.match(/^#\/collections\/([^/]+)\/?$/);
+          if (m && FILE_MAP[m[1]]) {
+            window.location.hash = '#/collections/' + m[1] + '/files/' + FILE_MAP[m[1]];
+          }
+        }, 150);
       }
+      // Only on user navigation (hashchange), NOT on initial page load
       window.addEventListener('hashchange', skipFileLevel);
-      skipFileLevel();
 
 
       /* ── PREVIEW TEMPLATES: card grid ────────────────────────────────── */
