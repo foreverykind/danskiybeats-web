@@ -735,10 +735,7 @@
             <div class="field"><label>Hero Video URL (Cloudinary)</label><input class="input" id="h_video" type="text" placeholder="https://res.cloudinary.com/..." /><div class="hint">MP4 from Cloudinary.</div></div>
             <div class="field"><label>Roles</label><input class="input" id="h_roles" type="text" placeholder="Composer · Producer · Sound Designer" /><div class="hint">Dot- or comma-separated.</div></div>
             <div class="field"><label>Hero about</label><textarea class="textarea" id="h_tagline" placeholder="Short intro paragraph."></textarea></div>
-            <div class="form-grid cols-2" style="gap:18px">
-              <div class="field"><label>Reel Year <span style="font-weight:400;color:var(--text-muted)">optional</span></label><input class="input" id="h_year" type="text" placeholder="2026" /></div>
-              <div class="field"><label>Reel Duration <span style="font-weight:400;color:var(--text-muted)">optional</span></label><input class="input" id="h_duration" type="text" placeholder="2:14" /></div>
-            </div>
+
             <div style="font-size:13px;font-weight:600;margin-top:4px">Call-to-action buttons</div>
             <div class="cta-row">
               <div class="cta-badge">Primary</div>
@@ -1011,8 +1008,6 @@ function populateHero(){
   document.getElementById('h_video').value=h.video_url||'';
   document.getElementById('h_roles').value=Array.isArray(h.eyebrow)?h.eyebrow.join(' · '):(h.eyebrow||'');
   document.getElementById('h_tagline').value=h.tagline||'';
-  document.getElementById('h_year').value=h.reel_year||'';
-  document.getElementById('h_duration').value=h.reel_duration||'';
   var c0=(h.cta&&h.cta[0])||{},c1=(h.cta&&h.cta[1])||{};
   document.getElementById('h_cta0_label').value=c0.label||'';setSelect('h_cta0_href',c0.href||'#releases');
   document.getElementById('h_cta1_label').value=c1.label||'';setSelect('h_cta1_href',c1.href||'#contact');
@@ -1025,8 +1020,6 @@ async function saveHero(){
     var content=Object.assign({},cache['hero.json'].content,{
       video_url:document.getElementById('h_video').value.trim(),eyebrow:eyebrow,
       tagline:document.getElementById('h_tagline').value.trim(),
-      reel_year:document.getElementById('h_year').value.trim(),
-      reel_duration:document.getElementById('h_duration').value.trim(),
       cta:[{label:document.getElementById('h_cta0_label').value.trim(),href:document.getElementById('h_cta0_href').value},
            {label:document.getElementById('h_cta1_label').value.trim(),href:document.getElementById('h_cta1_href').value}]});
     var res=await writeFile('src/data/hero.json',cache['hero.json'].sha,content,'Update hero via admin');
