@@ -17,6 +17,12 @@ export default async function handler(req, res) {
     return res.status(400).send(data.error_description ?? data.error);
   }
 
+  // Verify the token actually belongs to a user with repo access
+  const userRes = await fetch('https://api.github.com/user', {
+    headers: { Authorization: `Bearer ${data.access_token}`, 'User-Agent': 'danskiybeats-cms' },
+  });
+  const userData = await userRes.json();
+
   const payload = JSON.stringify({ token: data.access_token, provider: 'github' })
     .replace(/</g, '\\u003c')
     .replace(/>/g, '\\u003e')
@@ -24,6 +30,11 @@ export default async function handler(req, res) {
 
   res.setHeader('Content-Type', 'text/html');
   res.send(`<!DOCTYPE html><html><body>
+<p style="font-family:monospace;padding:20px">
+  Authorized as: <strong>${userData.login ?? 'unknown'}</strong><br>
+  Scopes: ${data.scope ?? 'none'}<br>
+  <small>This message will close automatically...</small>
+</p>
 <script>
 (function(){
   var d=${payload};
