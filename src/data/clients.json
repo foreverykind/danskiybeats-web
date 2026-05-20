@@ -47,6 +47,10 @@
     {
       "name": "JJS",
       "logo": "/clients/jjs-seeklogo.png"
+    },
+    {
+      "name": "Discovery Plus",
+      "logo": "/clients/discovery-plus-seeklogo.png"
     }
   ]
 }
