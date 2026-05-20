@@ -5,59 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Danskiy Beats — CMS</title>
     <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
-    <style>
-      /* Force avatar/user-menu area hidden */
-      #cms-user-bar { display: none !important; }
-    </style>
   </head>
   <body>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
     <script>
     (function () {
 
-      /* ── AUTO-SKIP the intermediate "files list" level ──────────────────
-         Files collections have one extra click: Collection → File → Editor.
-         We map each collection to its single file and redirect instantly.   */
-      var FILE_MAP = {
-        hero:     'hero_content',
-        clients:  'clients_list',
-        work:     'works_list',
-        releases: 'releases_list',
-        contact:  'contact_info'
-      };
-
-      // Track previous hash to detect back-navigation
-      var _prevHash = window.location.hash;
-      var _lastAutoNav = null;
-
-      // MutationObserver: when the file-list for a single-file collection
-      // renders, auto-click the file link — but only if we arrived here
-      // by clicking the collection in the sidebar (not by navigating back).
-      new MutationObserver(function () {
-        var hash = window.location.hash;
-        var m = hash.match(/^#\/collections\/([^\/]+)\/?$/);
-        if (!m) { _lastAutoNav = null; return; }
-
-        var col = m[1], slug = FILE_MAP[col];
-        if (!slug) return;
-        if (_lastAutoNav === col) return; // already did it
-
-        // If we came FROM a deeper level of this collection, user is going back — don't auto-click
-        if (_prevHash.indexOf('/collections/' + col + '/') !== -1) return;
-
-        var link = document.querySelector('a[href*="/files/' + slug + '"]');
-        if (link) { _lastAutoNav = col; link.click(); }
-      }).observe(document.body, { childList: true, subtree: true });
-
-      window.addEventListener('hashchange', function () {
-        var h = window.location.hash;
-        _prevHash = h;
-        // Reset so the next explicit collection click can auto-navigate again
-        if (!h.match(/^#\/collections\/([^\/]+)\/?$/)) _lastAutoNav = null;
-      });
-
-
-      /* ── PREVIEW TEMPLATES: card grid ────────────────────────────────── */
+      /* ── PREVIEW TEMPLATES: card grid ── */
 
       function ytId(url) {
         if (!url) return null;
@@ -72,9 +26,10 @@
         none:  { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '13px', textAlign: 'center', padding: '8px', boxSizing: 'border-box' },
         empty: { padding: '32px', color: '#555', fontFamily: 'sans-serif' }
       };
+
       function ext(a, b) { return Object.assign({}, a, b); }
 
-      /* Releases — 200×200 */
+      /* Releases — 200×200 cover cards */
       CMS.registerPreviewTemplate('releases_list', createClass({
         render: function () {
           var items = this.props.entry.getIn(['data', 'items']);
@@ -94,7 +49,7 @@
         }
       }));
 
-      /* Clients — 160×160 */
+      /* Clients — 160×160 logo cards */
       CMS.registerPreviewTemplate('clients_list', createClass({
         render: function () {
           var items = this.props.entry.getIn(['data', 'items']);
@@ -113,7 +68,7 @@
         }
       }));
 
-      /* Work — 220×148 YouTube thumbnails */
+      /* Work — 220×148 YouTube thumbnail cards */
       CMS.registerPreviewTemplate('works_list', createClass({
         render: function () {
           var items = this.props.entry.getIn(['data', 'items']);
@@ -134,7 +89,7 @@
       }));
 
 
-      /* ── BUTTON BAR: "Update website" + "Log out" ────────────────────── */
+      /* ── LOGOUT BUTTON ── */
 
       function logout() {
         try {
@@ -154,89 +109,31 @@
         window.location.reload();
       }
 
-      function triggerDeploy(btn) {
-        btn.disabled = true;
-        btn.textContent = 'Updating…';
-        fetch('/api/deploy', { method: 'POST' })
-          .then(function (r) { return r.json(); })
-          .then(function (data) {
-            if (data.ok) {
-              btn.textContent = 'Done ✓';
-              btn.style.borderColor = 'rgba(80,200,80,0.7)';
-              btn.style.color = '#7dff7d';
-              setTimeout(function () {
-                btn.textContent = 'Update website';
-                btn.disabled = false;
-                btn.style.borderColor = '';
-                btn.style.color = '';
-              }, 3000);
-            } else { throw new Error(data.error); }
-          })
-          .catch(function () {
-            btn.textContent = 'Error — try again';
-            btn.style.color = '#ff8080';
-            setTimeout(function () {
-              btn.textContent = 'Update website';
-              btn.disabled = false;
-              btn.style.color = '';
-            }, 3000);
-          });
-      }
-
-      /* Build the bar */
-      var bar = document.createElement('div');
-      bar.id = 'cms-btn-bar';
-      bar.style.cssText = [
-        'position:fixed', 'top:8px', 'right:12px', 'z-index:2147483647',
-        'display:flex', 'gap:8px', 'align-items:center',
-        'background:rgba(18,18,22,0.96)',
-        'backdrop-filter:blur(6px)',
-        '-webkit-backdrop-filter:blur(6px)',
-        'border:1px solid rgba(255,255,255,0.1)',
-        'border-radius:8px', 'padding:5px 10px'
-      ].join(';');
-
-      var BTN = [
-        'background:transparent', 'border:1px solid rgba(255,255,255,0.2)',
-        'color:rgba(255,255,255,0.8)', 'padding:4px 13px', 'border-radius:5px',
-        'cursor:pointer', 'font-size:13px', 'font-family:inherit', 'line-height:1.5',
-        'transition:background 0.15s,color 0.15s'
-      ].join(';');
-
-      var deployBtn = document.createElement('button');
-      deployBtn.textContent = 'Update website';
-      deployBtn.style.cssText = BTN + ';border-color:rgba(255,255,255,0.35);color:#fff;font-weight:500';
-      deployBtn.onclick = function () { triggerDeploy(deployBtn); };
-      deployBtn.onmouseenter = function () { if (!deployBtn.disabled) deployBtn.style.background = 'rgba(255,255,255,0.1)'; };
-      deployBtn.onmouseleave = function () { deployBtn.style.background = 'transparent'; };
-
-      var sep = document.createElement('span');
-      sep.style.cssText = 'width:1px;height:18px;background:rgba(255,255,255,0.15);flex-shrink:0';
-
+      /* Inject fixed Log out button */
       var logoutBtn = document.createElement('button');
+      logoutBtn.id = 'cms-logout-btn';
       logoutBtn.textContent = 'Log out';
-      logoutBtn.style.cssText = BTN;
       logoutBtn.onclick = logout;
+      logoutBtn.style.cssText = [
+        'position:fixed', 'top:9px', 'right:16px', 'z-index:99999',
+        'background:transparent', 'border:1px solid rgba(255,255,255,0.22)',
+        'color:rgba(255,255,255,0.75)', 'padding:5px 14px', 'border-radius:4px',
+        'cursor:pointer', 'font-size:13px', 'font-family:inherit', 'line-height:1.4'
+      ].join(';');
       logoutBtn.onmouseenter = function () { logoutBtn.style.background = 'rgba(255,255,255,0.08)'; logoutBtn.style.color = '#fff'; };
-      logoutBtn.onmouseleave = function () { logoutBtn.style.background = 'transparent'; logoutBtn.style.color = 'rgba(255,255,255,0.8)'; };
+      logoutBtn.onmouseleave = function () { logoutBtn.style.background = 'transparent'; logoutBtn.style.color = 'rgba(255,255,255,0.75)'; };
+      document.body.appendChild(logoutBtn);
 
-      bar.appendChild(deployBtn);
-      bar.appendChild(sep);
-      bar.appendChild(logoutBtn);
-      document.body.appendChild(bar);
-
-      /* Hide the CMS avatar/user button once it renders */
+      /* Hide the GitHub profile avatar button once it appears */
       new MutationObserver(function () {
-        /* GitHub avatar image */
         document.querySelectorAll(
-          'img[src*="avatars.githubusercontent"], img[alt*="vatar"], img[alt*="user"]'
+          'img[src*="avatars.githubusercontent"], img[alt*="vatar"]'
         ).forEach(function (img) {
-          var btn = img.closest('button') || img.closest('a');
-          if (btn && !btn._cmsHidden) { btn.style.setProperty('display', 'none', 'important'); btn._cmsHidden = true; }
-        });
-        /* Also target the top-right nav user widget by aria or data attrs */
-        document.querySelectorAll('[aria-label*="user" i], [data-testid*="user" i]').forEach(function (el) {
-          if (!el._cmsHidden) { el.style.setProperty('display', 'none', 'important'); el._cmsHidden = true; }
+          var btn = img.closest('button');
+          if (btn && !btn._cmsHidden) {
+            btn.style.display = 'none';
+            btn._cmsHidden = true;
+          }
         });
       }).observe(document.body, { childList: true, subtree: true });
 

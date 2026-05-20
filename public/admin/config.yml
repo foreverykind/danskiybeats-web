@@ -11,44 +11,8 @@ public_folder: /clients
 locale: en
 
 collections:
-  - name: hero
-    label: Hero
-    files:
-      - name: hero_content
-        label: Hero
-        file: src/data/hero.json
-        fields:
-          - label: "Roles (eyebrow)"
-            name: eyebrow
-            widget: list
-            field: { label: Role, name: role, widget: string }
-          - { label: Tagline, name: tagline, widget: text }
-          - { label: "Video URL (mp4)", name: video_url, widget: string, required: false, hint: "Direct MP4 link, e.g. from Cloudinary. Leave empty to show placeholder." }
-          - { label: "Reel Year", name: reel_year, widget: string, required: false }
-          - { label: "Reel Duration", name: reel_duration, widget: string, required: false, hint: "e.g. 02:14" }
-          - label: "CTA Buttons"
-            name: cta
-            widget: list
-            fields:
-              - { label: Label, name: label, widget: string }
-              - { label: Link, name: href, widget: string }
-
-  - name: clients
-    label: Clients
-    files:
-      - name: clients_list
-        label: Clients
-        file: src/data/clients.json
-        fields:
-          - label: Clients
-            name: items
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
-              - { label: Logo, name: logo, widget: image, required: false, hint: "Upload or leave empty for text-only display" }
-
   - name: work
-    label: Selected Work
+    label: Work
     files:
       - name: works_list
         label: Selected Work
@@ -83,8 +47,22 @@ collections:
               - { label: "Apple Music URL", name: apple, widget: string, required: false }
               - { label: "Deezer URL", name: deezer, widget: string, required: false }
 
+  - name: clients
+    label: Clients
+    files:
+      - name: clients_list
+        label: Clients
+        file: src/data/clients.json
+        fields:
+          - label: Clients
+            name: items
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Logo, name: logo, widget: image, required: false, hint: "Upload or leave empty for text-only display" }
+
   - name: contact
-    label: Contacts
+    label: Contact
     files:
       - name: contact_info
         label: Contact Info
@@ -104,3 +82,24 @@ collections:
               - { label: "Display Label", name: label, widget: string }
               - { label: URL, name: url, widget: string }
 
+  - name: hero
+    label: Hero
+    files:
+      - name: hero_content
+        label: Hero
+        file: src/data/hero.json
+        fields:
+          - label: "Roles (eyebrow)"
+            name: eyebrow
+            widget: list
+            field: { label: Role, name: role, widget: string }
+          - { label: Tagline, name: tagline, widget: text }
+          - { label: "Video URL (mp4)", name: video_url, widget: string, required: false, hint: "Direct MP4 link, e.g. from Cloudinary. Leave empty to show placeholder." }
+          - { label: "Reel Year", name: reel_year, widget: string, required: false }
+          - { label: "Reel Duration", name: reel_duration, widget: string, required: false, hint: "e.g. 02:14" }
+          - label: "CTA Buttons"
+            name: cta
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string }
+              - { label: Link, name: href, widget: string }
