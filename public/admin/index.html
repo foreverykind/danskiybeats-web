@@ -1,94 +1,1193 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Danskiy Beats — CMS</title>
-    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
-  </head>
-  <body>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-    <script>
-    (function () {
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danskiy Beats — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
 
-      /* ── PREVIEW TEMPLATES: card grid ── */
+  :root {
+    --bg: #F8F9FA;
+    --surface: #FFFFFF;
+    --primary: #3B82F6;
+    --primary-soft: #EFF6FF;
+    --success: #10B981;
+    --success-hover: #059669;
+    --danger: #EF4444;
+    --danger-soft: #FEF2F2;
+    --text: #1F2937;
+    --text-dim: #6B7280;
+    --text-muted: #9CA3AF;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --radius: 8px;
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+    --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.08);
+    --shadow-lg: 0 20px 40px rgba(16, 24, 40, 0.18);
+  }
 
-      function ytId(url) {
-        if (!url) return null;
-        var m = url.match(/(?:youtu\.be\/|[?&]v=|\/v\/|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
-        return m ? m[1] : (url.length === 11 ? url : null);
-      }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
 
-      var S = {
-        wrap:  { display: 'flex', flexWrap: 'wrap', gap: '12px', padding: '16px', background: '#111', minHeight: '100vh' },
-        card:  { borderRadius: '6px', overflow: 'hidden', background: '#1c1c1c', position: 'relative', flexShrink: 0 },
-        label: { position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: '11px', padding: '5px 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
-        none:  { width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '13px', textAlign: 'center', padding: '8px', boxSizing: 'border-box' },
-        empty: { padding: '32px', color: '#555', fontFamily: 'sans-serif' }
-      };
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input, textarea { font-family: inherit; font-size: 14px; }
 
-      function ext(a, b) { return Object.assign({}, a, b); }
+  /* ---------- LOGIN ---------- */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    padding: 24px;
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .login-logo {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .login-logo .dot { color: var(--primary); }
+  .login-sub {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-bottom: 36px;
+  }
+  .btn-github {
+    width: 100%;
+    background: #1F2937;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s;
+  }
+  .btn-github:hover { background: #111827; }
+  .login-footnote {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 24px;
+  }
 
-      /* Releases — 200×200 cover cards */
-      CMS.registerPreviewTemplate('releases_list', createClass({
-        render: function () {
-          var items = this.props.entry.getIn(['data', 'items']);
-          var getAsset = this.props.getAsset;
-          if (!items || !items.size) return h('div', { style: S.empty }, 'No releases yet');
-          return h('div', { style: S.wrap },
-            items.toJS().map(function (item, i) {
-              var cover = item.cover ? getAsset(item.cover).toString() : null;
-              return h('div', { key: i, style: ext(S.card, { width: '200px', height: '200px' }) },
-                cover
-                  ? h('img', { src: cover, style: { width: '200px', height: '200px', objectFit: 'cover', display: 'block' } })
-                  : h('div', { style: S.none }, item.title || '–'),
-                h('div', { style: S.label }, (item.title || '–') + (item.year ? ' · ' + item.year : ''))
-              );
-            })
-          );
-        }
-      }));
+  /* ---------- APP LAYOUT ---------- */
+  .app { display: none; min-height: 100vh; }
+  .app.active { display: flex; }
+  .login-screen.hidden { display: none; }
 
-      /* Clients — 160×160 logo cards */
-      CMS.registerPreviewTemplate('clients_list', createClass({
-        render: function () {
-          var items = this.props.entry.getIn(['data', 'items']);
-          var getAsset = this.props.getAsset;
-          if (!items || !items.size) return h('div', { style: S.empty }, 'No clients yet');
-          return h('div', { style: S.wrap },
-            items.toJS().map(function (item, i) {
-              var logo = item.logo ? getAsset(item.logo).toString() : null;
-              return h('div', { key: i, style: ext(S.card, { width: '160px', height: '160px', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', boxSizing: 'border-box' }) },
-                logo
-                  ? h('img', { src: logo, style: { maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' } })
-                  : h('span', { style: { color: '#aaa', fontSize: '13px', textAlign: 'center' } }, item.name || '–')
-              );
-            })
-          );
-        }
-      }));
+  .sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; bottom: 0; left: 0;
+    z-index: 30;
+  }
+  .sidebar-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .brand .dot { color: var(--primary); }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.02em;
+  }
 
-      /* Work — 220×148 YouTube thumbnail cards */
-      CMS.registerPreviewTemplate('works_list', createClass({
-        render: function () {
-          var items = this.props.entry.getIn(['data', 'items']);
-          if (!items || !items.size) return h('div', { style: S.empty }, 'No works yet');
-          return h('div', { style: S.wrap },
-            items.toJS().map(function (item, i) {
-              var vid = ytId(item.youtubeUrl);
-              var thumb = vid ? 'https://img.youtube.com/vi/' + vid + '/hqdefault.jpg' : null;
-              return h('div', { key: i, style: ext(S.card, { width: '220px', height: '148px' }) },
-                thumb
-                  ? h('img', { src: thumb, style: { width: '220px', height: '148px', objectFit: 'cover', display: 'block' } })
-                  : h('div', { style: S.none }, '▶'),
-                h('div', { style: S.label }, (item.brand ? item.brand + ' — ' : '') + (item.title || '–'))
-              );
-            })
-          );
-        }
-      }));
+  .nav {
+    flex: 1;
+    padding: 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    margin-left: -3px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .nav-item:hover { background: #F3F4F6; color: var(--text); }
+  .nav-item.active {
+    background: var(--primary-soft);
+    color: var(--primary);
+    border-left-color: var(--primary);
+  }
+  .nav-item.active .icon { color: var(--primary); }
+  .nav-item .icon { width: 18px; height: 18px; flex-shrink: 0; }
 
-    })();
-    </script>
-  </body>
+  .sidebar-footer {
+    border-top: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #60A5FA, #3B82F6);
+    color: #fff; font-weight: 600; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .user-meta { flex: 1; min-width: 0; }
+  .user-name { font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-handle { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .logout-btn {
+    color: var(--text-muted);
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    transition: background 0.12s, color 0.12s;
+  }
+  .logout-btn:hover { background: #F3F4F6; color: var(--danger); }
+  .logout-btn .icon { width: 16px; height: 16px; }
+
+  /* ---------- MAIN ---------- */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    padding: 24px 32px 64px;
+    min-width: 0;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+  }
+  .page-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .mobile-toggle { display: none; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .panel-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .panel-header .sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .panel-body { padding: 24px; }
+
+  /* ---------- FORM ---------- */
+  .form-grid { display: grid; grid-template-columns: 1fr; gap: 18px; max-width: 640px; }
+  .form-grid.cols-2 { grid-template-columns: 1fr 1fr; max-width: 720px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  .field .hint { font-size: 11px; color: var(--text-muted); }
+  .input, .textarea {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  .input:hover, .textarea:hover { border-color: var(--border-strong); }
+  .input:focus, .textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+  .input::placeholder { color: var(--text-muted); }
+  .textarea { resize: vertical; min-height: 92px; font-family: inherit; }
+
+  select.input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 34px;
+    cursor: pointer;
+  }
+
+  .file-drop {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    background: #FAFBFC;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .file-drop:hover { border-color: var(--primary); background: var(--primary-soft); }
+  .file-drop .icon { width: 24px; height: 24px; margin: 0 auto 8px; display: block; color: var(--text-muted); }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    margin-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+  .form-actions.start { justify-content: flex-start; padding-top: 0; margin-top: 4px; border: none; }
+
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: #FAFBFC;
+  }
+  .cta-badge {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--primary);
+    background: var(--primary-soft);
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-top: 24px;
+  }
+  .cta-badge.secondary { color: var(--text-dim); background: #F3F4F6; }
+  .cta-fields {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+  }
+  @media (max-width: 700px) {
+    .cta-row { flex-direction: column; }
+    .cta-badge { margin-top: 0; }
+    .cta-fields { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 13px;
+    transition: background 0.15s, transform 0.05s, box-shadow 0.15s, color 0.15s, border-color 0.15s;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .btn .icon { width: 15px; height: 15px; }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: #2563EB; }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-success:hover { background: var(--success-hover); }
+  .btn-ghost { background: transparent; color: var(--text-dim); border-color: var(--border); }
+  .btn-ghost:hover { background: #F3F4F6; color: var(--text); }
+  .btn-danger-ghost { background: transparent; color: var(--text-muted); border-color: var(--border); }
+  .btn-danger-ghost:hover { background: var(--danger-soft); color: var(--danger); border-color: #FECACA; }
+  .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+  .btn.loading { pointer-events: none; }
+  .btn.loading .label { opacity: 0; }
+  .btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  .btn { position: relative; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- GRID CARDS ---------- */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 1100px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 700px) { .grid-3 { grid-template-columns: 1fr; } }
+
+  .client-card, .work-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.12s, box-shadow 0.12s, transform 0.15s;
+    position: relative;
+  }
+  .client-card:hover, .work-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+
+  .client-logo {
+    height: 110px;
+    background: #F3F4F6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+  .client-info {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .client-name { font-weight: 500; font-size: 14px; }
+  .icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: background 0.12s, color 0.12s;
+  }
+  .icon-btn:hover { background: #F3F4F6; color: var(--text); }
+  .icon-btn.danger:hover { background: var(--danger-soft); color: var(--danger); }
+  .icon-btn .icon { width: 15px; height: 15px; }
+
+  /* WORK CARDS */
+  .work-card { display: flex; flex-direction: column; }
+  .work-thumb {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, #E5E7EB, #D1D5DB);
+    position: relative;
+    overflow: hidden;
+  }
+  .work-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .work-thumb .play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.35));
+    transition: background 0.15s;
+  }
+  .work-thumb .play .icon { width: 36px; height: 36px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35)); }
+
+  .work-body {
+    padding: 12px 14px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .drag-handle {
+    cursor: grab;
+    color: var(--text-muted);
+    padding: 4px 2px;
+    margin-left: -4px;
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+  .drag-handle:active { cursor: grabbing; }
+  .drag-handle .icon { width: 14px; height: 14px; }
+  .work-meta { flex: 1; min-width: 0; }
+  .work-title {
+    font-weight: 500;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .work-client { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .work-actions { display: flex; gap: 2px; }
+
+  /* DRAG STATES */
+  .dragging { opacity: 0.4; }
+  .drop-target { outline: 2px dashed var(--primary); outline-offset: -2px; }
+
+  /* ---------- RELEASES LIST ---------- */
+  .release-list { display: flex; flex-direction: column; }
+  .release-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  .release-row:last-child { border-bottom: none; }
+  .release-row:hover { background: #FAFBFC; }
+  .release-cover {
+    width: 48px; height: 48px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #94A3B8, #475569);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    overflow: hidden;
+  }
+  .release-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .release-info { flex: 1; min-width: 0; }
+  .release-title { font-weight: 500; font-size: 14px; }
+  .release-year { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .platforms { display: flex; gap: 6px; }
+  .platform-pill {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .platform-pill.disabled { background: #E5E7EB !important; color: var(--text-muted); }
+  .platform-pill.spotify { background: #1DB954; }
+  .platform-pill.apple { background: #FA243C; }
+  .platform-pill.deezer { background: #FF6600; }
+  .release-actions { display: flex; gap: 4px; margin-left: 8px; }
+
+  /* ---------- EMPTY ---------- */
+  .empty {
+    padding: 64px 24px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .empty .empty-icon {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--primary-soft);
+    color: var(--primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+  .empty .empty-icon .icon { width: 28px; height: 28px; }
+  .empty h4 { margin: 0 0 6px; color: var(--text); font-size: 15px; font-weight: 600; }
+  .empty p { margin: 0; font-size: 13px; }
+  .empty .add-link { color: var(--primary); font-weight: 500; cursor: pointer; }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 24px;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: slideUp 0.18s ease-out;
+  }
+  @keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-header h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .modal-close {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    color: var(--text-muted);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s, color 0.12s;
+  }
+  .modal-close:hover { background: #F3F4F6; color: var(--text); }
+  .modal-close .icon { width: 17px; height: 17px; }
+  .modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background: #FAFBFC;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .toast {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 3px solid var(--success);
+    min-width: 240px;
+    max-width: 360px;
+    animation: toastIn 0.22s ease-out;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .toast.error { border-left-color: var(--danger); }
+  .toast.error .toast-icon { color: var(--danger); }
+  .toast-icon { color: var(--success); display: flex; }
+  .toast-icon .icon { width: 18px; height: 18px; }
+  .toast.fade-out { animation: toastOut 0.2s ease-in forwards; }
+  @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes toastOut { to { transform: translateX(120%); opacity: 0; } }
+
+  /* ---------- SCREENS ---------- */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.18s ease-out; }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 880px) {
+    .mobile-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      color: var(--text);
+      margin-right: 8px;
+    }
+    .mobile-toggle:hover { background: #F3F4F6; }
+    .mobile-toggle .icon { width: 20px; height: 20px; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.2s ease-out;
+      box-shadow: var(--shadow-lg);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 16px 16px 48px; }
+    .topbar-left { display: flex; align-items: center; }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(17,24,39,0.4);
+      z-index: 25;
+    }
+    .sidebar-backdrop.open { display: block; }
+    .form-grid.cols-2 { grid-template-columns: 1fr; }
+  }
+
+  .load-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:16px}
+  .load-overlay.hidden{display:none}
+  .load-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+  .load-overlay p{color:var(--text-dim);font-size:14px;margin:0}
+  .file-preview{width:100%;height:80px;object-fit:contain;margin-bottom:8px;border-radius:4px;display:block}
+  .client-logo img{max-width:70%;max-height:70%;object-fit:contain;filter:brightness(0)}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+</style>
+</head>
+<body>
+
+<div class="load-overlay" id="loadOverlay">
+  <div class="load-spinner"></div>
+  <p id="loadMsg">Loading...</p>
+</div>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">DANSKIY<span class="dot">.</span> BEATS</div>
+    <div class="login-sub">Content Management System</div>
+    <button class="btn-github" id="loginBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.69-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 015.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.4-5.27 5.69.41.36.78 1.06.78 2.14 0 1.55-.01 2.8-.01 3.18 0 .31.21.68.8.56C20.22 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+      <span id="loginBtnText">Login with GitHub</span>
+    </button>
+    <div class="login-footnote">Access restricted to authorized users only</div>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">DANSKIY<span class="dot">.</span> BEATS</div>
+      <div class="brand-sub">Content Manager</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" data-screen="hero"><i data-lucide="home" class="icon"></i><span>Hero Section</span></div>
+      <div class="nav-item" data-screen="clients"><i data-lucide="users" class="icon"></i><span>Clients</span></div>
+      <div class="nav-item" data-screen="works"><i data-lucide="clapperboard" class="icon"></i><span>Selected Works</span></div>
+      <div class="nav-item" data-screen="releases"><i data-lucide="disc-3" class="icon"></i><span>Releases</span></div>
+      <div class="nav-item" data-screen="contacts"><i data-lucide="mail" class="icon"></i><span>Contacts</span></div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="avatar" id="userAvatar">DK</div>
+      <div class="user-meta">
+        <div class="user-name" id="userName">danskiy</div>
+        <div class="user-handle" id="userHandle">@danskiy</div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" title="Logout"><i data-lucide="log-out" class="icon"></i></button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <section class="screen active" id="screen-hero">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Hero Section</h1><div class="page-sub">Main video and headline on the home page.</div></div>
+      </div></div>
+      <div class="panel">
+        <div class="panel-header"><div><h3>Home Hero</h3><div class="sub">Shown above the fold on danskiybeats.com</div></div></div>
+        <div class="panel-body">
+          <form class="form-grid" id="heroForm" onsubmit="event.preventDefault();saveHero()">
+            <div class="field"><label>Hero Video URL (Cloudinary)</label><input class="input" id="h_video" type="text" placeholder="https://res.cloudinary.com/..." /><div class="hint">MP4 from Cloudinary.</div></div>
+            <div class="field"><label>Roles</label><input class="input" id="h_roles" type="text" placeholder="Composer · Producer · Sound Designer" /><div class="hint">Dot- or comma-separated.</div></div>
+            <div class="field"><label>Hero about</label><textarea class="textarea" id="h_tagline" placeholder="Short intro paragraph."></textarea></div>
+            <div class="form-grid cols-2" style="gap:18px">
+              <div class="field"><label>Reel Year <span style="font-weight:400;color:var(--text-muted)">optional</span></label><input class="input" id="h_year" type="text" placeholder="2026" /></div>
+              <div class="field"><label>Reel Duration <span style="font-weight:400;color:var(--text-muted)">optional</span></label><input class="input" id="h_duration" type="text" placeholder="2:14" /></div>
+            </div>
+            <div style="font-size:13px;font-weight:600;margin-top:4px">Call-to-action buttons</div>
+            <div class="cta-row">
+              <div class="cta-badge">Primary</div>
+              <div class="cta-fields">
+                <div class="field"><label>Label</label><input class="input" id="h_cta0_label" type="text" /></div>
+                <div class="field"><label>Scrolls to</label><select class="input" id="h_cta0_href"><option value="#hero">#hero</option><option value="#clients">#clients</option><option value="#work">#work</option><option value="#releases">#releases</option><option value="#contact">#contact</option></select></div>
+              </div>
+            </div>
+            <div class="cta-row">
+              <div class="cta-badge secondary">Secondary</div>
+              <div class="cta-fields">
+                <div class="field"><label>Label</label><input class="input" id="h_cta1_label" type="text" /></div>
+                <div class="field"><label>Scrolls to</label><select class="input" id="h_cta1_href"><option value="#hero">#hero</option><option value="#clients">#clients</option><option value="#work">#work</option><option value="#releases">#releases</option><option value="#contact">#contact</option></select></div>
+              </div>
+            </div>
+            <div class="form-actions"><button type="submit" class="btn btn-success"><span class="label"><i data-lucide="check" class="icon"></i> Save changes</span></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-clients">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Clients</h1><div class="page-sub">Brands featured on the clients strip.</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openModal('clientModal')"><i data-lucide="plus" class="icon"></i><span class="label">Add Client</span></button>
+      </div>
+      <div class="grid-3" id="clientsGrid"></div>
+    </section>
+
+    <section class="screen" id="screen-works">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Selected Works</h1><div class="page-sub">Drag to reorder. Top items appear first.</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openWorkModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Work</span></button>
+      </div>
+      <div class="grid-3" id="worksGrid"></div>
+    </section>
+
+    <section class="screen" id="screen-releases">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Releases</h1><div class="page-sub">Discography. Drag to reorder.</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openReleaseModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Release</span></button>
+      </div>
+      <div class="panel"><div class="release-list" id="releasesList"></div></div>
+    </section>
+
+    <section class="screen" id="screen-contacts">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Contacts</h1><div class="page-sub">Footer links and booking info.</div></div>
+      </div></div>
+      <div class="panel">
+        <div class="panel-header"><div><h3>Public contact info</h3><div class="sub">Displayed in the site footer.</div></div></div>
+        <div class="panel-body">
+          <form class="form-grid cols-2" id="contactForm" onsubmit="event.preventDefault();saveContacts()">
+            <div class="field"><label>Email</label><input class="input" id="c_email" type="email" /></div>
+            <div class="field"><label>Telegram URL</label><input class="input" id="c_telegram_url" type="url" placeholder="https://t.me/..." /></div>
+            <div class="field"><label>Instagram URL</label><input class="input" id="c_instagram_url" type="url" /></div>
+            <div class="field"><label>Spotify URL</label><input class="input" id="c_spotify" type="url" /></div>
+            <div class="field"><label>Apple Music URL</label><input class="input" id="c_apple" type="url" /></div>
+            <div class="field"><label>Deezer URL</label><input class="input" id="c_deezer" type="url" /></div>
+            <div class="form-actions" style="grid-column:1/-1"><button type="submit" class="btn btn-success"><span class="label"><i data-lucide="check" class="icon"></i> Save changes</span></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-overlay" id="clientModal">
+  <div class="modal">
+    <div class="modal-header"><h3>Add client</h3><button class="modal-close" onclick="closeModal('clientModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="clientForm" onsubmit="event.preventDefault();submitClient()">
+      <div class="modal-body"><div class="form-grid">
+        <div class="field"><label>Brand name</label><input class="input" id="cf_brand" type="text" placeholder="e.g. Nike, Mercedes" required /></div>
+        <div class="field"><label>Logo (PNG/SVG, transparent background)</label>
+          <label class="file-drop" id="clientLogoDrop">
+            <i data-lucide="upload-cloud" class="icon"></i>
+            <div id="clientLogoLabel">Drop logo here, or <strong style="color:var(--primary)">browse</strong></div>
+            <div class="hint" style="margin-top:4px">PNG transparent background recommended</div>
+            <input type="file" id="cf_logo" accept="image/*" hidden onchange="previewFile(this,'clientLogoDrop','clientLogoLabel')" />
+          </label>
+        </div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('clientModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="clientSubmitBtn"><span class="label">Save client</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="workModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="workModalTitle">Add work</h3><button class="modal-close" onclick="closeModal('workModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="workForm" onsubmit="event.preventDefault();submitWork()">
+      <input type="hidden" id="wf_idx" />
+      <div class="modal-body"><div class="form-grid">
+        <div class="field"><label>Project title</label><input class="input" id="wf_title" type="text" placeholder="e.g. Echoes — Original score" required /></div>
+        <div class="field"><label>Client / Brand</label><input class="input" id="wf_brand" type="text" required /></div>
+        <div class="field"><label>YouTube URL</label><input class="input" id="wf_youtube" type="url" placeholder="https://www.youtube.com/watch?v=..." required /><div class="hint">Thumbnail fetched automatically.</div></div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('workModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="workSubmitBtn"><span class="label">Save work</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="releaseModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="releaseModalTitle">Add release</h3><button class="modal-close" onclick="closeModal('releaseModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="releaseForm" onsubmit="event.preventDefault();submitRelease()">
+      <input type="hidden" id="rf_idx" />
+      <div class="modal-body"><div class="form-grid">
+        <div class="form-grid cols-2" style="gap:18px">
+          <div class="field"><label>Title</label><input class="input" id="rf_title" type="text" required /></div>
+          <div class="field"><label>Year</label><input class="input" id="rf_year" type="text" placeholder="2025" /></div>
+        </div>
+        <div class="field"><label>Cover image</label>
+          <label class="file-drop" id="releaseCoverDrop">
+            <i data-lucide="image" class="icon"></i>
+            <div id="releaseCoverLabel">Drop cover here, or <strong style="color:var(--primary)">browse</strong></div>
+            <div class="hint" style="margin-top:4px">Square JPG/PNG, min 800x800</div>
+            <input type="file" id="rf_cover" accept="image/*" hidden onchange="previewFile(this,'releaseCoverDrop','releaseCoverLabel')" />
+          </label>
+        </div>
+        <div class="field"><label>Spotify URL</label><input class="input" id="rf_spotify" type="url" /></div>
+        <div class="field"><label>Apple Music URL</label><input class="input" id="rf_apple" type="url" /></div>
+        <div class="field"><label>Deezer URL</label><input class="input" id="rf_deezer" type="url" /></div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('releaseModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="releaseSubmitBtn"><span class="label">Save release</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+var REPO='foreverykind/danskiybeats-web',BRANCH='main',GH='https://api.github.com';
+function tok(){return sessionStorage.getItem('gh_token');}
+async function gh(path,opts){
+  opts=opts||{};
+  var r=await fetch(GH+path,Object.assign({},opts,{headers:Object.assign({'Authorization':'Bearer '+tok(),'Content-Type':'application/json','User-Agent':'danskiy-admin','X-GitHub-Api-Version':'2022-11-28'},opts.headers||{})}));
+  if(!r.ok){var e=await r.json().catch(function(){return{};});throw new Error(e.message||'GitHub '+r.status);}
+  return r.json();
+}
+async function readFile(p){
+  var d=await gh('/repos/'+REPO+'/contents/'+p+'?ref='+BRANCH);
+  return{sha:d.sha,content:JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\s/g,'')))))};
+}
+async function writeFile(p,sha,content,msg){
+  var b64=btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2))));
+  return gh('/repos/'+REPO+'/contents/'+p,{method:'PUT',body:JSON.stringify({message:msg,content:b64,sha:sha,branch:BRANCH})});
+}
+async function uploadFile(folder,filename,file){
+  var buf=await file.arrayBuffer(),bytes=new Uint8Array(buf),bin='';
+  for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);
+  var b64=btoa(bin),path='public/'+folder+'/'+filename,sha;
+  try{var ex=await gh('/repos/'+REPO+'/contents/'+path+'?ref='+BRANCH);sha=ex.sha;}catch(e){}
+  var body={message:'Upload '+filename+' via admin',content:b64,branch:BRANCH};if(sha)body.sha=sha;
+  await gh('/repos/'+REPO+'/contents/'+path,{method:'PUT',body:JSON.stringify(body)});
+  return'/'+folder+'/'+filename;
+}
+var cache={};
+async function loadAll(){
+  await Promise.all(['hero.json','clients.json','works.json','releases.json','contact.json'].map(async function(f){
+    var x=await readFile('src/data/'+f);cache[f]={sha:x.sha,content:x.content};
+  }));
+}
+document.getElementById('loginBtn').addEventListener('click',function(){
+  var btn=document.getElementById('loginBtn');
+  btn.disabled=true;document.getElementById('loginBtnText').textContent='Opening GitHub...';
+  var popup=window.open('/api/auth','github-oauth','width=620,height=720,left=200,top=100');
+  var handler=function(e){
+    if(typeof e.data!=='string')return;
+    if(e.data==='authorizing:github'){popup.postMessage('ack',location.origin);return;}
+    if(e.data.startsWith('authorization:github:success:')){
+      window.removeEventListener('message',handler);
+      var p=JSON.parse(e.data.slice('authorization:github:success:'.length));
+      sessionStorage.setItem('gh_token',p.token);
+      if(!popup.closed)popup.close();
+      startApp();
+    }
+  };
+  window.addEventListener('message',handler);
+  var iv=setInterval(function(){
+    if(popup.closed){clearInterval(iv);window.removeEventListener('message',handler);btn.disabled=false;document.getElementById('loginBtnText').textContent='Login with GitHub';}
+  },500);
+});
+document.getElementById('logoutBtn').addEventListener('click',function(){
+  sessionStorage.removeItem('gh_token');
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginBtn').disabled=false;
+  document.getElementById('loginBtnText').textContent='Login with GitHub';
+});
+async function startApp(){
+  showLoad('Loading content...');
+  try{
+    var user=await gh('/user');
+    document.getElementById('userName').textContent=user.name||user.login;
+    document.getElementById('userHandle').textContent='@'+user.login;
+    var av=document.getElementById('userAvatar');
+    if(user.avatar_url)av.innerHTML='<img src="'+user.avatar_url+'" alt="">';
+    await loadAll();
+    populateHero();populateContacts();renderClients();renderWorks();renderReleases();
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('active');
+    hideLoad();lucide.createIcons();
+  }catch(err){
+    hideLoad();alert('Login failed: '+err.message);
+    document.getElementById('loginBtn').disabled=false;
+    document.getElementById('loginBtnText').textContent='Login with GitHub';
+  }
+}
+function showLoad(m){document.getElementById('loadMsg').textContent=m||'Loading...';document.getElementById('loadOverlay').classList.remove('hidden');}
+function hideLoad(){document.getElementById('loadOverlay').classList.add('hidden');}
+document.querySelectorAll('.nav-item').forEach(function(item){
+  item.addEventListener('click',function(){
+    document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+    item.classList.add('active');
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+    document.getElementById('screen-'+item.dataset.screen).classList.add('active');
+    closeSidebar();lucide.createIcons();
+  });
+});
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarBackdrop').classList.toggle('open');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('open');}
+document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar);
+function openModal(id){document.getElementById(id).classList.add('open');setTimeout(function(){lucide.createIcons();},0);}
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+  var f=document.querySelector('#'+id+' form');if(f)f.reset();
+  document.querySelectorAll('#'+id+' img.file-preview').forEach(function(i){i.remove();});
+}
+document.querySelectorAll('.modal-overlay').forEach(function(o){
+  o.addEventListener('click',function(e){if(e.target===o)closeModal(o.id);});
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(function(o){closeModal(o.id);});
+});
+function previewFile(input,dropId,labelId){
+  var file=input.files[0];if(!file)return;
+  var drop=document.getElementById(dropId),lbl=document.getElementById(labelId);
+  drop.querySelectorAll('img.file-preview').forEach(function(i){i.remove();});
+  var img=document.createElement('img');img.src=URL.createObjectURL(file);img.className='file-preview';
+  drop.insertBefore(img,drop.firstChild);lbl.textContent=file.name;
+}
+function toast(msg,type){
+  type=type||'success';
+  var wrap=document.getElementById('toastContainer'),el=document.createElement('div');
+  el.className='toast'+(type==='error'?' error':'');
+  var ico=type==='error'?'alert-circle':'check-circle-2';
+  el.innerHTML='<span class="toast-icon"><i data-lucide="'+ico+'" class="icon"></i></span><span>'+msg+'</span>';
+  wrap.appendChild(el);lucide.createIcons();
+  setTimeout(function(){el.classList.add('fade-out');setTimeout(function(){el.remove();},220);},3000);
+}
+function populateHero(){
+  var h=cache['hero.json'].content;
+  document.getElementById('h_video').value=h.video_url||'';
+  document.getElementById('h_roles').value=Array.isArray(h.eyebrow)?h.eyebrow.join(' · '):(h.eyebrow||'');
+  document.getElementById('h_tagline').value=h.tagline||'';
+  document.getElementById('h_year').value=h.reel_year||'';
+  document.getElementById('h_duration').value=h.reel_duration||'';
+  var c0=(h.cta&&h.cta[0])||{},c1=(h.cta&&h.cta[1])||{};
+  document.getElementById('h_cta0_label').value=c0.label||'';setSelect('h_cta0_href',c0.href||'#releases');
+  document.getElementById('h_cta1_label').value=c1.label||'';setSelect('h_cta1_href',c1.href||'#contact');
+}
+function setSelect(id,val){var s=document.getElementById(id);for(var i=0;i<s.options.length;i++)if(s.options[i].value===val){s.options[i].selected=true;break;}}
+async function saveHero(){
+  var btn=document.querySelector('#heroForm button[type=submit]');btn.classList.add('loading');
+  try{
+    var eyebrow=document.getElementById('h_roles').value.trim().split(/[·,]+/).map(function(s){return s.trim();}).filter(Boolean);
+    var content=Object.assign({},cache['hero.json'].content,{
+      video_url:document.getElementById('h_video').value.trim(),eyebrow:eyebrow,
+      tagline:document.getElementById('h_tagline').value.trim(),
+      reel_year:document.getElementById('h_year').value.trim(),
+      reel_duration:document.getElementById('h_duration').value.trim(),
+      cta:[{label:document.getElementById('h_cta0_label').value.trim(),href:document.getElementById('h_cta0_href').value},
+           {label:document.getElementById('h_cta1_label').value.trim(),href:document.getElementById('h_cta1_href').value}]});
+    var res=await writeFile('src/data/hero.json',cache['hero.json'].sha,content,'Update hero via admin');
+    cache['hero.json'].sha=res.content.sha;cache['hero.json'].content=content;toast('Hero saved');
+  }catch(err){toast('Save failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+function populateContacts(){
+  var c=cache['contact.json'].content;
+  document.getElementById('c_email').value=c.email||'';
+  document.getElementById('c_telegram_url').value=c.telegram_url||'';
+  document.getElementById('c_instagram_url').value=c.instagram_url||'';
+  var dsp=c.dsp||[];
+  document.getElementById('c_spotify').value=(dsp.find(function(d){return d.name==='Spotify';})||{}).url||'';
+  document.getElementById('c_apple').value=(dsp.find(function(d){return d.name==='Apple Music';})||{}).url||'';
+  document.getElementById('c_deezer').value=(dsp.find(function(d){return d.name==='Deezer';})||{}).url||'';
+}
+async function saveContacts(){
+  var btn=document.querySelector('#contactForm button[type=submit]');btn.classList.add('loading');
+  try{
+    var old=cache['contact.json'].content;
+    var content=Object.assign({},old,{
+      email:document.getElementById('c_email').value.trim(),
+      telegram_url:document.getElementById('c_telegram_url').value.trim(),
+      instagram_url:document.getElementById('c_instagram_url').value.trim(),
+      dsp:[{name:'Spotify',label:(old.dsp&&old.dsp[0]&&old.dsp[0].label)||'Spotify',url:document.getElementById('c_spotify').value.trim()},
+           {name:'Apple Music',label:(old.dsp&&old.dsp[1]&&old.dsp[1].label)||'Apple Music',url:document.getElementById('c_apple').value.trim()},
+           {name:'Deezer',label:(old.dsp&&old.dsp[2]&&old.dsp[2].label)||'Deezer',url:document.getElementById('c_deezer').value.trim()}]});
+    var res=await writeFile('src/data/contact.json',cache['contact.json'].sha,content,'Update contacts via admin');
+    cache['contact.json'].sha=res.content.sha;cache['contact.json'].content=content;toast('Contacts saved');
+  }catch(err){toast('Save failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+function renderClients(){
+  var items=cache['clients.json'].content.items||[],grid=document.getElementById('clientsGrid');
+  if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="users" class="icon"></i></div><h4>No clients yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
+  grid.innerHTML=items.map(function(c,i){return'<div class="client-card"><div class="client-logo">'+(c.logo?'<img src="'+c.logo+'" alt="'+c.name+'" />':(c.name.toUpperCase()))+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  lucide.createIcons();
+}
+async function removeClient(idx){
+  if(!confirm('Remove this client?'))return;
+  var items=cache['clients.json'].content.items.slice();items.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['clients.json'].content,{items:items});
+    var res=await writeFile('src/data/clients.json',cache['clients.json'].sha,content,'Remove client via admin');
+    cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;renderClients();toast('Client removed');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+}
+async function submitClient(){
+  var brand=document.getElementById('cf_brand').value.trim();if(!brand)return;
+  var btn=document.getElementById('clientSubmitBtn');btn.classList.add('loading');
+  try{
+    var logoPath='',lf=document.getElementById('cf_logo').files[0];
+    if(lf){var ext=lf.name.split('.').pop();logoPath=await uploadFile('clients',brand.toLowerCase().replace(/[^a-z0-9]/g,'-')+'.'+ext,lf);}
+    var items=(cache['clients.json'].content.items||[]).concat([{name:brand,logo:logoPath}]);
+    var content=Object.assign({},cache['clients.json'].content,{items:items});
+    var res=await writeFile('src/data/clients.json',cache['clients.json'].sha,content,'Add client '+brand+' via admin');
+    cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;
+    closeModal('clientModal');renderClients();toast('Client added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+function ytId(url){if(!url)return'';var m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:(url.length===11?url:'');}
+function ytThumb(url){var id=ytId(url);return id?'https://img.youtube.com/vi/'+id+'/hqdefault.jpg':'';}
+function renderWorks(){
+  var items=cache['works.json'].content.items||[],grid=document.getElementById('worksGrid');
+  if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="clapperboard" class="icon"></i></div><h4>No works yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
+  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" draggable="true" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  lucide.createIcons();attachDrag(grid,'works');
+}
+function openWorkModal(idx){
+  document.getElementById('wf_idx').value=idx!==undefined?idx:'';
+  document.getElementById('workModalTitle').textContent=idx!==undefined?'Edit work':'Add work';
+  if(idx!==undefined){var w=cache['works.json'].content.items[idx];document.getElementById('wf_title').value=w.title||'';document.getElementById('wf_brand').value=w.brand||'';document.getElementById('wf_youtube').value=w.youtubeUrl||'';}
+  else document.getElementById('workForm').reset();
+  openModal('workModal');
+}
+async function submitWork(){
+  var title=document.getElementById('wf_title').value.trim(),brand=document.getElementById('wf_brand').value.trim(),youtube=document.getElementById('wf_youtube').value.trim();
+  if(!title||!brand||!youtube)return;
+  var btn=document.getElementById('workSubmitBtn');btn.classList.add('loading');
+  try{
+    var items=cache['works.json'].content.items.slice(),idx=document.getElementById('wf_idx').value;
+    var entry={brand:brand,title:title,youtubeUrl:youtube};
+    if(idx!=='')items[parseInt(idx)]=entry;else items.unshift(entry);
+    var content=Object.assign({},cache['works.json'].content,{items:items});
+    var res=await writeFile('src/data/works.json',cache['works.json'].sha,content,(idx!==''?'Update':'Add')+' work '+title+' via admin');
+    cache['works.json'].sha=res.content.sha;cache['works.json'].content=content;
+    closeModal('workModal');renderWorks();toast(idx!==''?'Work updated':'Work added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+async function removeWork(idx){
+  if(!confirm('Delete this work?'))return;
+  var items=cache['works.json'].content.items.slice();items.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['works.json'].content,{items:items});
+    var res=await writeFile('src/data/works.json',cache['works.json'].sha,content,'Remove work via admin');
+    cache['works.json'].sha=res.content.sha;cache['works.json'].content=content;renderWorks();toast('Work deleted');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+}
+function renderReleases(){
+  var items=cache['releases.json'].content.items||[],list=document.getElementById('releasesList');
+  if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="disc-3" class="icon"></i></div><h4>No releases yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
+  list.innerHTML=items.map(function(r,i){return'<div class="release-row" draggable="true" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  lucide.createIcons();attachDrag(list,'releases');
+}
+function openReleaseModal(idx){
+  document.getElementById('rf_idx').value=idx!==undefined?idx:'';
+  document.getElementById('releaseModalTitle').textContent=idx!==undefined?'Edit release':'Add release';
+  if(idx!==undefined){var r=cache['releases.json'].content.items[idx];document.getElementById('rf_title').value=r.title||'';document.getElementById('rf_year').value=r.year||'';document.getElementById('rf_spotify').value=r.spotify||'';document.getElementById('rf_apple').value=r.apple||'';document.getElementById('rf_deezer').value=r.deezer||'';}
+  else document.getElementById('releaseForm').reset();
+  openModal('releaseModal');
+}
+async function submitRelease(){
+  var title=document.getElementById('rf_title').value.trim();if(!title)return;
+  var btn=document.getElementById('releaseSubmitBtn');btn.classList.add('loading');
+  try{
+    var items=cache['releases.json'].content.items.slice(),idx=document.getElementById('rf_idx').value;
+    var cover=idx!==''?(items[parseInt(idx)].cover||''):'';
+    var cf=document.getElementById('rf_cover').files[0];
+    if(cf){var ext=cf.name.split('.').pop();cover=await uploadFile('releases',title.toLowerCase().replace(/[^a-z0-9]/g,'-').slice(0,40)+'.'+ext,cf);}
+    var entry={title:title,cover:cover,format:idx!==''?(items[parseInt(idx)].format||'album'):'album',year:document.getElementById('rf_year').value.trim(),spotify:document.getElementById('rf_spotify').value.trim(),apple:document.getElementById('rf_apple').value.trim(),deezer:document.getElementById('rf_deezer').value.trim()};
+    if(idx!=='')items[parseInt(idx)]=entry;else items.unshift(entry);
+    var content=Object.assign({},cache['releases.json'].content,{items:items});
+    var res=await writeFile('src/data/releases.json',cache['releases.json'].sha,content,(idx!==''?'Update':'Add')+' release '+title+' via admin');
+    cache['releases.json'].sha=res.content.sha;cache['releases.json'].content=content;
+    closeModal('releaseModal');renderReleases();toast(idx!==''?'Release updated':'Release added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+async function removeRelease(idx){
+  if(!confirm('Delete this release?'))return;
+  var items=cache['releases.json'].content.items.slice();items.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['releases.json'].content,{items:items});
+    var res=await writeFile('src/data/releases.json',cache['releases.json'].sha,content,'Remove release via admin');
+    cache['releases.json'].sha=res.content.sha;cache['releases.json'].content=content;renderReleases();toast('Release deleted');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+}
+function attachDrag(container,key){
+  var dragIdx=null;
+  container.querySelectorAll('[draggable=true]').forEach(function(el){
+    el.addEventListener('dragstart',function(e){dragIdx=parseInt(el.dataset.idx);el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    el.addEventListener('dragend',function(){el.classList.remove('dragging');container.querySelectorAll('.drop-target').forEach(function(n){n.classList.remove('drop-target');});});
+    el.addEventListener('dragover',function(e){e.preventDefault();if(parseInt(el.dataset.idx)!==dragIdx)el.classList.add('drop-target');});
+    el.addEventListener('dragleave',function(){el.classList.remove('drop-target');});
+    el.addEventListener('drop',async function(e){
+      e.preventDefault();el.classList.remove('drop-target');
+      var ti=parseInt(el.dataset.idx);if(dragIdx===null||dragIdx===ti)return;
+      var jk=key==='works'?'works.json':'releases.json';
+      var items=cache[jk].content.items.slice(),moved=items.splice(dragIdx,1)[0];items.splice(ti,0,moved);
+      showLoad('Saving order...');
+      try{
+        var content=Object.assign({},cache[jk].content,{items:items});
+        var res=await writeFile('src/data/'+jk,cache[jk].sha,content,'Reorder '+key+' via admin');
+        cache[jk].sha=res.content.sha;cache[jk].content=content;
+        if(key==='works')renderWorks();else renderReleases();toast('Order saved');
+      }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();dragIdx=null;}
+    });
+  });
+}
+hideLoad();lucide.createIcons();
+</script>
+</body>
 </html>
