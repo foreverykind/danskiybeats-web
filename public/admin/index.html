@@ -89,7 +89,7 @@
       }));
 
 
-      /* ── LOGOUT BUTTON ── */
+      /* ── TOP-RIGHT BUTTON BAR: "Update website" + "Log out" ── */
 
       function logout() {
         try {
@@ -109,20 +109,80 @@
         window.location.reload();
       }
 
-      /* Inject fixed Log out button */
+      function triggerDeploy(btn) {
+        btn.disabled = true;
+        btn.textContent = 'Updating…';
+        btn.style.opacity = '0.6';
+        fetch('/api/deploy', { method: 'POST' })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.ok) {
+              btn.textContent = 'Done ✓';
+              btn.style.opacity = '1';
+              btn.style.borderColor = 'rgba(100,220,100,0.6)';
+              btn.style.color = 'rgba(140,255,140,0.9)';
+              setTimeout(function () {
+                btn.textContent = 'Update website';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.borderColor = 'rgba(255,255,255,0.35)';
+                btn.style.color = '#fff';
+              }, 3000);
+            } else {
+              throw new Error(data.error || 'Unknown error');
+            }
+          })
+          .catch(function () {
+            btn.textContent = 'Error — try again';
+            btn.style.opacity = '1';
+            btn.style.borderColor = 'rgba(255,100,100,0.6)';
+            btn.style.color = 'rgba(255,140,140,0.9)';
+            setTimeout(function () {
+              btn.textContent = 'Update website';
+              btn.disabled = false;
+              btn.style.borderColor = 'rgba(255,255,255,0.35)';
+              btn.style.color = '#fff';
+            }, 3000);
+          });
+      }
+
+      var BASE_BTN = [
+        'background:transparent',
+        'border:1px solid rgba(255,255,255,0.22)',
+        'color:rgba(255,255,255,0.75)',
+        'padding:5px 14px',
+        'border-radius:4px',
+        'cursor:pointer',
+        'font-size:13px',
+        'font-family:inherit',
+        'line-height:1.4',
+        'transition:background 0.15s,color 0.15s'
+      ].join(';');
+
+      /* "Update website" — primary action */
+      var deployBtn = document.createElement('button');
+      deployBtn.id = 'cms-deploy-btn';
+      deployBtn.textContent = 'Update website';
+      deployBtn.style.cssText = BASE_BTN + ';border-color:rgba(255,255,255,0.35);color:#fff';
+      deployBtn.onclick = function () { triggerDeploy(deployBtn); };
+      deployBtn.onmouseenter = function () { if (!deployBtn.disabled) deployBtn.style.background = 'rgba(255,255,255,0.1)'; };
+      deployBtn.onmouseleave = function () { deployBtn.style.background = 'transparent'; };
+
+      /* "Log out" */
       var logoutBtn = document.createElement('button');
       logoutBtn.id = 'cms-logout-btn';
       logoutBtn.textContent = 'Log out';
+      logoutBtn.style.cssText = BASE_BTN;
       logoutBtn.onclick = logout;
-      logoutBtn.style.cssText = [
-        'position:fixed', 'top:9px', 'right:16px', 'z-index:99999',
-        'background:transparent', 'border:1px solid rgba(255,255,255,0.22)',
-        'color:rgba(255,255,255,0.75)', 'padding:5px 14px', 'border-radius:4px',
-        'cursor:pointer', 'font-size:13px', 'font-family:inherit', 'line-height:1.4'
-      ].join(';');
       logoutBtn.onmouseenter = function () { logoutBtn.style.background = 'rgba(255,255,255,0.08)'; logoutBtn.style.color = '#fff'; };
       logoutBtn.onmouseleave = function () { logoutBtn.style.background = 'transparent'; logoutBtn.style.color = 'rgba(255,255,255,0.75)'; };
-      document.body.appendChild(logoutBtn);
+
+      /* Container */
+      var btnBar = document.createElement('div');
+      btnBar.style.cssText = 'position:fixed;top:9px;right:16px;z-index:99999;display:flex;gap:8px;align-items:center';
+      btnBar.appendChild(deployBtn);
+      btnBar.appendChild(logoutBtn);
+      document.body.appendChild(btnBar);
 
       /* Hide the GitHub profile avatar button once it appears */
       new MutationObserver(function () {
