@@ -98,23 +98,33 @@ const WORKS = worksData.items.map(w => ({
       </div>
     `);
     card.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
-    if (i >= 5) card.classList.add('hidden-mobile');
     grid.appendChild(card);
   });
 
-  // Mobile load-more
-  document.body.classList.add('work-collapsed');
+  // Mobile load-more (+5 per tap)
+  const STEP = 5;
+  let visibleCount = STEP;
+  const allCards = Array.from(grid.querySelectorAll('.work-card'));
   const lm = document.getElementById('workLoadMore');
-  lm.textContent = `Load more — ${TOTAL - 5} cases`;
-  lm.addEventListener('click', () => {
-    const collapsed = document.body.classList.toggle('work-collapsed');
-    if (collapsed) {
-      lm.textContent = `Load more — ${TOTAL - 5} cases`;
-      lm.classList.remove('expanded');
+
+  function updateVisibility() {
+    allCards.forEach((card, i) => {
+      card.classList.toggle('hidden-mobile', i >= visibleCount);
+    });
+    const remaining = TOTAL - visibleCount;
+    if (remaining <= 0) {
+      lm.hidden = true;
     } else {
-      lm.textContent = 'Show less';
-      lm.classList.add('expanded');
+      lm.hidden = false;
+      lm.textContent = `Load more — ${Math.min(remaining, STEP)} cases`;
     }
+  }
+
+  updateVisibility();
+
+  lm.addEventListener('click', () => {
+    visibleCount = Math.min(visibleCount + STEP, TOTAL);
+    updateVisibility();
   });
 
   // Video modal

@@ -109,4 +109,19 @@ const releases = releasesData.items;
     if (e.key === 'ArrowLeft')  { idx = (idx - 1 + releases.length) % releases.length; render(); }
     if (e.key === 'ArrowRight') { idx = (idx + 1) % releases.length; render(); }
   });
+
+  // Touch swipe
+  let touchStartX = 0;
+  cf.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  cf.addEventListener('touchend', (e) => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(delta) > 40) {
+      idx = delta < 0
+        ? (idx + 1) % releases.length
+        : (idx - 1 + releases.length) % releases.length;
+      render();
+    }
+  }, { passive: true });
 </script>
