@@ -26,6 +26,27 @@ collections:
               - { label: Title, name: title, widget: string }
               - { label: "YouTube URL", name: youtubeUrl, widget: string, hint: "Full URL or short link, e.g. https://youtu.be/6PTmMcJW7Vo" }
 
+  - name: releases
+    label: Releases
+    media_folder: "/public/releases"
+    public_folder: "/releases"
+    files:
+      - name: releases_list
+        label: Releases
+        file: src/data/releases.json
+        fields:
+          - label: Releases
+            name: items
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Cover, name: cover, widget: image, required: false }
+              - { label: Format, name: format, widget: select, options: [album, single, ep] }
+              - { label: Year, name: year, widget: string }
+              - { label: "Spotify URL", name: spotify, widget: string, required: false }
+              - { label: "Apple Music URL", name: apple, widget: string, required: false }
+              - { label: "Deezer URL", name: deezer, widget: string, required: false }
+
   - name: clients
     label: Clients
     files:
