@@ -762,7 +762,7 @@
         <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
         <div><h1 class="page-title">Clients</h1><div class="page-sub">Brands featured on the clients strip.</div></div>
       </div>
-      <button class="btn btn-primary" onclick="openModal('clientModal')"><i data-lucide="plus" class="icon"></i><span class="label">Add Client</span></button>
+      <button class="btn btn-primary" onclick="openClientModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Client</span></button>
       </div>
       <div class="grid-3" id="clientsGrid"></div>
     </section>
@@ -812,7 +812,7 @@
 
 <div class="modal-overlay" id="clientModal">
   <div class="modal">
-    <div class="modal-header"><h3>Add client</h3><button class="modal-close" onclick="closeModal('clientModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <div class="modal-header"><h3 id="clientModalTitle">Add client</h3><button class="modal-close" onclick="closeModal('clientModal')"><i data-lucide="x" class="icon"></i></button></div>
     <form id="clientForm" onsubmit="event.preventDefault();submitClient()">
       <div class="modal-body"><div class="form-grid">
         <div class="field"><label>Brand name</label><input class="input" id="cf_brand" type="text" placeholder="e.g. Nike, Mercedes" required /></div>
@@ -1054,7 +1054,7 @@ async function saveContacts(){
 function renderClients(){
   var items=cache['clients.json'].content.items||[],grid=document.getElementById('clientsGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="users" class="icon"></i></div><h4>No clients yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
-  grid.innerHTML=items.map(function(c,i){return'<div class="client-card"><div class="client-logo">'+(c.logo?'<img src="'+c.logo+'" alt="'+c.name+'" />':(c.name.toUpperCase()))+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  grid.innerHTML=items.map(function(c,i){return'<div class="client-card"><div class="client-logo">'+(c.logo?'<img src="'+c.logo+'" alt="'+c.name+'" />':(c.name.toUpperCase()))+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><div style="display:flex;gap:4px"><button class="icon-btn" onclick="openClientModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
   lucide.createIcons();
 }
 async function removeClient(idx){
@@ -1067,17 +1067,37 @@ async function removeClient(idx){
     cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;renderClients();toast('Client removed');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
+var editClientIdx=-1;
+function openClientModal(idx){
+  editClientIdx=(idx===undefined)?-1:idx;
+  var isEdit=editClientIdx>=0;
+  document.getElementById('clientModalTitle').textContent=isEdit?'Edit client':'Add client';
+  document.getElementById('cf_brand').value=isEdit?(cache['clients.json'].content.items[idx].name||''):'';
+  document.getElementById('cf_logo').value='';
+  var drop=document.getElementById('clientLogoDrop'),lbl=document.getElementById('clientLogoLabel');
+  if(isEdit){
+    var cur=cache['clients.json'].content.items[idx].logo;
+    if(cur){drop.style.backgroundImage='url('+cur+')';drop.style.backgroundSize='contain';drop.style.backgroundRepeat='no-repeat';drop.style.backgroundPosition='center';lbl.textContent='Logo loaded — upload new to replace';}
+    else{drop.style.backgroundImage='';lbl.innerHTML='Drop logo here, or <strong style="color:var(--primary)">browse</strong>';}
+  }else{drop.style.backgroundImage='';lbl.innerHTML='Drop logo here, or <strong style="color:var(--primary)">browse</strong>';}
+  openModal('clientModal');
+}
 async function submitClient(){
   var brand=document.getElementById('cf_brand').value.trim();if(!brand)return;
   var btn=document.getElementById('clientSubmitBtn');btn.classList.add('loading');
   try{
-    var logoPath='',lf=document.getElementById('cf_logo').files[0];
+    var lf=document.getElementById('cf_logo').files[0];
+    var items=(cache['clients.json'].content.items||[]).slice();
+    var existing=editClientIdx>=0?items[editClientIdx]:{};
+    var logoPath=existing.logo||'';
     if(lf){var ext=lf.name.split('.').pop();logoPath=await uploadFile('clients',brand.toLowerCase().replace(/[^a-z0-9]/g,'-')+'.'+ext,lf);}
-    var items=(cache['clients.json'].content.items||[]).concat([{name:brand,logo:logoPath}]);
+    var entry={name:brand,logo:logoPath};
+    if(editClientIdx>=0){items[editClientIdx]=entry;}else{items=items.concat([entry]);}
     var content=Object.assign({},cache['clients.json'].content,{items:items});
-    var res=await writeFile('src/data/clients.json',cache['clients.json'].sha,content,'Add client '+brand+' via admin');
+    var msg=(editClientIdx>=0?'Update':'Add')+' client '+brand+' via admin';
+    var res=await writeFile('src/data/clients.json',cache['clients.json'].sha,content,msg);
     cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;
-    closeModal('clientModal');renderClients();toast('Client added');
+    closeModal('clientModal');renderClients();toast(editClientIdx>=0?'Client updated':'Client added');
   }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
 }
 function ytId(url){if(!url)return'';var m=url.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:(url.length===11?url:'');}
