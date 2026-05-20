@@ -26,20 +26,35 @@
         contact:  'contact_info'
       };
 
-      var _redirectTimer;
-      function skipFileLevel() {
-        clearTimeout(_redirectTimer);
-        _redirectTimer = setTimeout(function () {
-          var hash = window.location.hash;
-          // Match  #/collections/hero  but NOT  #/collections/hero/files/...
-          var m = hash.match(/^#\/collections\/([^/]+)\/?$/);
-          if (m && FILE_MAP[m[1]]) {
-            window.location.hash = '#/collections/' + m[1] + '/files/' + FILE_MAP[m[1]];
-          }
-        }, 150);
-      }
-      // Only on user navigation (hashchange), NOT on initial page load
-      window.addEventListener('hashchange', skipFileLevel);
+      // Track previous hash to detect back-navigation
+      var _prevHash = window.location.hash;
+      var _lastAutoNav = null;
+
+      // MutationObserver: when the file-list for a single-file collection
+      // renders, auto-click the file link — but only if we arrived here
+      // by clicking the collection in the sidebar (not by navigating back).
+      new MutationObserver(function () {
+        var hash = window.location.hash;
+        var m = hash.match(/^#\/collections\/([^\/]+)\/?$/);
+        if (!m) { _lastAutoNav = null; return; }
+
+        var col = m[1], slug = FILE_MAP[col];
+        if (!slug) return;
+        if (_lastAutoNav === col) return; // already did it
+
+        // If we came FROM a deeper level of this collection, user is going back — don't auto-click
+        if (_prevHash.indexOf('/collections/' + col + '/') !== -1) return;
+
+        var link = document.querySelector('a[href*="/files/' + slug + '"]');
+        if (link) { _lastAutoNav = col; link.click(); }
+      }).observe(document.body, { childList: true, subtree: true });
+
+      window.addEventListener('hashchange', function () {
+        var h = window.location.hash;
+        _prevHash = h;
+        // Reset so the next explicit collection click can auto-navigate again
+        if (!h.match(/^#\/collections\/([^\/]+)\/?$/)) _lastAutoNav = null;
+      });
 
 
       /* ── PREVIEW TEMPLATES: card grid ────────────────────────────────── */
