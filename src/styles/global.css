@@ -165,6 +165,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 .hero-video::after {
   content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(20,20,20,0.5) 0%, transparent 30%, transparent 55%, rgba(20,20,20,0.9) 100%);
+  pointer-events: none;
 }
 .hero-reel {
   position: absolute; inset: 0; z-index: 0;
