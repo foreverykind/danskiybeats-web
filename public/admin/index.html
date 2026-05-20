@@ -11,43 +11,7 @@
     <script>
     (function () {
 
-      /* ── AUTO-SKIP intermediate file-list level ──────────────────────────
-         Files collections show an extra "pick a file" screen before the editor.
-         Each collection here has exactly one file, so we auto-click through it.
-
-         Rules:
-           • Forward click (sidebar → collection)  → auto-click the file link
-           • Back navigation (editor → file list)  → leave it alone (_done flag)
-           • After "Contents" / leaving collections → reset, works again next time
-      ── */
-      var FILE_MAP = {
-        hero:     'hero_content',
-        clients:  'clients_list',
-        work:     'works_list',
-        releases: 'releases_list',
-        contact:  'contact_info'
-      };
-
-      var _done = {};
-
-      /* Reset when user leaves the collections area entirely */
-      window.addEventListener('hashchange', function () {
-        if (!window.location.hash.startsWith('#/collections/')) _done = {};
-      });
-
-      /* When the file-list renders, click the single file link — but only once
-         per collection visit (prevents re-triggering on back navigation). */
-      new MutationObserver(function () {
-        var m = window.location.hash.match(/^#\/collections\/(\w+)$/);
-        if (!m) return;
-        var col = m[1], slug = FILE_MAP[col];
-        if (!slug || _done[col]) return;
-        var link = document.querySelector('a[href*="/collections/' + col + '/files/' + slug + '"]');
-        if (link) { _done[col] = true; link.click(); }
-      }).observe(document.body, { childList: true, subtree: true });
-
-
-      /* ── PREVIEW TEMPLATES: card grid ──────────────────────────────────
+      /* ── PREVIEW TEMPLATES: card grid ── */
 
       function ytId(url) {
         if (!url) return null;
