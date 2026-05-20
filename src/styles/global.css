@@ -660,9 +660,8 @@ body.vmodal-locked { overflow: hidden; }
 
 @media (max-width: 720px) {
   .rail { display: none; }
-  .section-label, .section-label-right { top: 72px; }
-  .section-label { left: 22px; }
-  .section-label-right { right: 22px; }
+  .section-label { top: 72px; left: 22px; }
+  .section-label-right { display: none; }
   .hero-inner { padding: 0 22px 48px; }
   .hero-foot { padding: 14px 22px; }
   .clients .head, .work .head, .releases .head { padding: 0 22px 36px; }
