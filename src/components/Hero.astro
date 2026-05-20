@@ -5,8 +5,14 @@ const h = heroData;
 
 <section id="hero" class="hero">
   <div class="hero-video" aria-hidden="true">
-    <div class="vignette-dot"></div>
-    <div class="placeholder-tag">[ SHOWREEL{h.reel_duration ? ` · ${h.reel_duration}` : ''} ]</div>
+    {h.video_url ? (
+      <video class="hero-reel" autoplay muted loop playsinline src={h.video_url} />
+    ) : (
+      <>
+        <div class="vignette-dot"></div>
+        <div class="placeholder-tag">[ SHOWREEL{h.reel_duration ? ` · ${h.reel_duration}` : ''} ]</div>
+      </>
+    )}
   </div>
   <div class="hero-overlay" aria-hidden="true"></div>
 

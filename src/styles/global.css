@@ -155,8 +155,12 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
   overflow: hidden;
 }
 .hero-video::after {
-  content: ""; position: absolute; inset: 0;
+  content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(20,20,20,0.5) 0%, transparent 30%, transparent 55%, rgba(20,20,20,0.9) 100%);
+}
+.hero-reel {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%; object-fit: cover;
 }
 .hero-video .placeholder-tag {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);

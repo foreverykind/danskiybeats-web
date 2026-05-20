@@ -94,6 +94,7 @@ collections:
             widget: list
             field: { label: Role, name: role, widget: string }
           - { label: Tagline, name: tagline, widget: text }
+          - { label: "Video URL (mp4)", name: video_url, widget: string, required: false, hint: "Direct MP4 link, e.g. from Cloudinary. Leave empty to show placeholder." }
           - { label: "Reel Year", name: reel_year, widget: string, required: false }
           - { label: "Reel Duration", name: reel_duration, widget: string, required: false, hint: "e.g. 02:14" }
           - label: "CTA Buttons"
