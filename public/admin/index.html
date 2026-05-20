@@ -88,55 +88,6 @@
         }
       }));
 
-
-      /* ── LOGOUT BUTTON ── */
-
-      function logout() {
-        try {
-          if (window.CMS && window.CMS.store) {
-            window.CMS.store.dispatch({ type: 'AUTH_LOGOUT' });
-            return;
-          }
-        } catch (e) {}
-        localStorage.removeItem('netlify-cms-user');
-        localStorage.removeItem('decap-cms-user');
-        var toRemove = [];
-        for (var i = 0; i < localStorage.length; i++) {
-          var k = localStorage.key(i);
-          if (k && /decap|netlify|github|cms-auth/i.test(k)) toRemove.push(k);
-        }
-        toRemove.forEach(function (k) { localStorage.removeItem(k); });
-        window.location.reload();
-      }
-
-      /* Inject fixed Log out button */
-      var logoutBtn = document.createElement('button');
-      logoutBtn.id = 'cms-logout-btn';
-      logoutBtn.textContent = 'Log out';
-      logoutBtn.onclick = logout;
-      logoutBtn.style.cssText = [
-        'position:fixed', 'top:9px', 'right:16px', 'z-index:99999',
-        'background:#111', 'border:1px solid #444',
-        'color:#fff', 'padding:5px 14px', 'border-radius:4px',
-        'cursor:pointer', 'font-size:13px', 'font-family:inherit', 'line-height:1.4'
-      ].join(';');
-      logoutBtn.onmouseenter = function () { logoutBtn.style.background = '#333'; };
-      logoutBtn.onmouseleave = function () { logoutBtn.style.background = '#111'; };
-      document.body.appendChild(logoutBtn);
-
-      /* Hide the GitHub profile avatar button once it appears */
-      new MutationObserver(function () {
-        document.querySelectorAll(
-          'img[src*="avatars.githubusercontent"], img[alt*="vatar"]'
-        ).forEach(function (img) {
-          var btn = img.closest('button');
-          if (btn && !btn._cmsHidden) {
-            btn.style.display = 'none';
-            btn._cmsHidden = true;
-          }
-        });
-      }).observe(document.body, { childList: true, subtree: true });
-
     })();
     </script>
   </body>
