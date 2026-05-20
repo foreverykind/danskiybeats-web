@@ -1,10 +1,20 @@
 {
-  "eyebrow": ["Composer", "Producer"],
+  "eyebrow": [
+    "Composer",
+    "Producer"
+  ],
   "tagline": "Original music & custom sound design for film, advertising and artists. Selected work for automotive, fashion, labels & agencies — 2019 → 2026.",
   "reel_year": "2026",
   "reel_duration": "02:14",
   "cta": [
-    { "label": "Listen",       "href": "#releases" },
-    { "label": "Get in touch", "href": "#contact"  }
-  ]
+    {
+      "label": "Listen",
+      "href": "#releases"
+    },
+    {
+      "label": "Get in touch",
+      "href": "#contact"
+    }
+  ],
+  "video_url": "https://res.cloudinary.com/dlgybgkrc/video/upload/v1779304835/2024_Mercedes-AMG_GT_SO._AMG._Commercial_1080p_oh6jaf.mp4"
 }
