@@ -1,16 +1,52 @@
 {
   "items": [
-    { "name": "Mercedes",        "logo": "/clients/mercedes-benz-seeklogo.png"        },
-    { "name": "Porsche",         "logo": "/clients/porsche-seeklogo.svg"               },
-    { "name": "Nike",            "logo": "/clients/nike-logo-png_seeklogo-99482.png"   },
-    { "name": "Toyota",          "logo": "/clients/toyota-seeklogo.png"                },
-    { "name": "BMW",             "logo": "/clients/bmw-seeklogo.png"                   },
-    { "name": "Universal Music", "logo": "/clients/universal-music-group-seeklogo.png" },
-    { "name": "Netflix",         "logo": "/clients/netflix-seeklogo.png"               },
-    { "name": "Vodafone",        "logo": "/clients/Vodafone_logo_2017.png"             },
-    { "name": "Puma",            "logo": "/clients/puma-se-seeklogo.png"               },
-    { "name": "Levi's",          "logo": "/clients/Levis-logo-quer.svg.png"            },
-    { "name": "Hulu",            "logo": "/clients/hulu-seeklogo.svg"                  },
-    { "name": "JJS",             "logo": "/clients/jjs-seeklogo.png"                   }
+    {
+      "name": "Mercedes",
+      "logo": "/clients/mercedes-benz-seeklogo.png"
+    },
+    {
+      "name": "Lexus",
+      "logo": "/clients/lexus-seeklogo.png"
+    },
+    {
+      "name": "Nike",
+      "logo": "/clients/nike-logo-png_seeklogo-99482.png"
+    },
+    {
+      "name": "Toyota",
+      "logo": "/clients/toyota-seeklogo.png"
+    },
+    {
+      "name": "BMW",
+      "logo": "/clients/bmw-seeklogo.png"
+    },
+    {
+      "name": "Universal Music",
+      "logo": "/clients/universal-music-group-seeklogo.png"
+    },
+    {
+      "name": "Netflix",
+      "logo": "/clients/netflix-seeklogo.png"
+    },
+    {
+      "name": "Vodafone",
+      "logo": "/clients/Vodafone_logo_2017.png"
+    },
+    {
+      "name": "Puma",
+      "logo": "/clients/puma-se-seeklogo.png"
+    },
+    {
+      "name": "Levi's",
+      "logo": "/clients/Levis-logo-quer.svg.png"
+    },
+    {
+      "name": "Hulu",
+      "logo": "/clients/hulu-seeklogo.svg"
+    },
+    {
+      "name": "JJS",
+      "logo": "/clients/jjs-seeklogo.png"
+    }
   ]
 }
