@@ -1,31 +1,13 @@
 {
   "items": [
     {
-      "title": "Nightcaller",
-      "cover": "",
+      "title": "Holy Vibe",
+      "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
       "format": "album",
-      "year": "2026",
-      "spotify": "https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ",
-      "apple": "https://music.apple.com/es/artist/danskiy/1509966270?l=en-GB",
-      "deezer": "https://www.deezer.com/ru/artist/90002962"
-    },
-    {
-      "title": "Velvet Engine",
-      "cover": "",
-      "format": "single",
-      "year": "2025",
-      "spotify": "https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ",
-      "apple": "https://music.apple.com/es/artist/danskiy/1509966270?l=en-GB",
-      "deezer": "https://www.deezer.com/ru/artist/90002962"
-    },
-    {
-      "title": "Black Crane",
-      "cover": "",
-      "format": "single",
-      "year": "2025",
-      "spotify": "https://open.spotify.com/artist/0nDMnyWzCyoGR7Xr8uOUFQ",
-      "apple": "https://music.apple.com/es/artist/danskiy/1509966270?l=en-GB",
-      "deezer": "https://www.deezer.com/ru/artist/90002962"
+      "year": "2023",
+      "spotify": "https://open.spotify.com/album/7iZPG84JQs5NaQV4T3mhM2",
+      "apple": "https://music.apple.com/es/album/holy-vibe/1693993808?l=en-GB",
+      "deezer": "https://www.deezer.com/us/album/456766955"
     },
     {
       "title": "Field Recordings",
