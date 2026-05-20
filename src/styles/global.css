@@ -286,7 +286,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 @media (max-width: 560px) { .logo-grid { grid-template-columns: repeat(3,1fr); } }
 
 /* ─── Work ─── */
-.work { padding: 110px 0 0; display: flex; flex-direction: column; }
+.work { padding-top: 120px; display: flex; flex-direction: column; }
 .work .head {
   display: flex; justify-content: space-between; align-items: flex-end;
   padding: 0 32px 56px;
@@ -377,8 +377,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 .releases {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   overflow: hidden;
-  padding: 110px 0 0;
-  min-height: 0;
+  padding: 120px 0 80px;
 }
 .releases .head {
   display: flex; justify-content: space-between; width: 100%;
@@ -531,7 +530,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 @media (max-width: 720px) { .discography-head { padding: 0 22px 36px; } }
 
 /* ─── Contact ─── */
-.contact { padding: 110px 32px 0; display: flex; flex-direction: column; }
+.contact { padding: 120px 32px 56px; display: flex; flex-direction: column; }
 .contact .head {
   display: flex; justify-content: space-between; align-items: flex-end;
   margin-bottom: 80px;
@@ -646,6 +645,7 @@ body.vmodal-locked { overflow: hidden; }
 }
 .rail a {
   width: 22px; display: flex; align-items: center; gap: 10px;
+  flex-direction: row-reverse;
   font-size: 9px; letter-spacing: 0.22em; color: rgba(255,255,255,0.5);
 }
 .rail a .d {
