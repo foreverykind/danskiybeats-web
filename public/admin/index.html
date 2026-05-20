@@ -124,15 +124,26 @@
       logoutBtn.onmouseleave = function () { logoutBtn.style.background = '#111'; };
       document.body.appendChild(logoutBtn);
 
-      /* Hide the GitHub profile avatar button once it appears */
+      /* Hide profile/avatar button + Publish dropdown arrow */
       new MutationObserver(function () {
-        document.querySelectorAll(
-          'img[src*="avatars.githubusercontent"], img[alt*="vatar"]'
-        ).forEach(function (img) {
-          var btn = img.closest('button');
-          if (btn && !btn._cmsHidden) {
-            btn.style.display = 'none';
+        // 1. Avatar: img-based or SVG-only buttons (no text) → hide
+        document.querySelectorAll('button').forEach(function (btn) {
+          if (btn === logoutBtn || btn._cmsHidden) return;
+          var text = btn.textContent.trim();
+          if (text.length > 2) return; // has meaningful label — leave it
+          if (btn.querySelector('img, svg')) {
+            btn.style.setProperty('display', 'none', 'important');
             btn._cmsHidden = true;
+          }
+        });
+
+        // 2. Publish dropdown arrow: sibling button right after the Publish button
+        document.querySelectorAll('button').forEach(function (btn) {
+          if (btn.textContent.trim() !== 'Publish' || btn._noDropdown) return;
+          var next = btn.nextElementSibling;
+          if (next && next.tagName === 'BUTTON') {
+            next.style.setProperty('display', 'none', 'important');
+            btn._noDropdown = true;
           }
         });
       }).observe(document.body, { childList: true, subtree: true });
