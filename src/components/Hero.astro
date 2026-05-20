@@ -59,10 +59,6 @@ const h = heroData;
 <script>
   const v = document.querySelector('.hero-reel') as HTMLVideoElement | null;
   if (v) {
-    v.play().catch(() => {
-      // iOS may block autoplay until first touch
-      const resume = () => { v.play().catch(() => {}); document.removeEventListener('touchstart', resume); };
-      document.addEventListener('touchstart', resume, { passive: true });
-    });
+    v.play().catch(() => v.remove());
   }
 </script>
