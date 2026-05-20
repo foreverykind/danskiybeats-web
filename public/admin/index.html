@@ -116,12 +116,12 @@
       logoutBtn.onclick = logout;
       logoutBtn.style.cssText = [
         'position:fixed', 'top:9px', 'right:16px', 'z-index:99999',
-        'background:transparent', 'border:1px solid rgba(255,255,255,0.22)',
-        'color:rgba(255,255,255,0.75)', 'padding:5px 14px', 'border-radius:4px',
+        'background:#111', 'border:1px solid #444',
+        'color:#fff', 'padding:5px 14px', 'border-radius:4px',
         'cursor:pointer', 'font-size:13px', 'font-family:inherit', 'line-height:1.4'
       ].join(';');
-      logoutBtn.onmouseenter = function () { logoutBtn.style.background = 'rgba(255,255,255,0.08)'; logoutBtn.style.color = '#fff'; };
-      logoutBtn.onmouseleave = function () { logoutBtn.style.background = 'transparent'; logoutBtn.style.color = 'rgba(255,255,255,0.75)'; };
+      logoutBtn.onmouseenter = function () { logoutBtn.style.background = '#333'; };
+      logoutBtn.onmouseleave = function () { logoutBtn.style.background = '#111'; };
       document.body.appendChild(logoutBtn);
 
       /* Hide the GitHub profile avatar button once it appears */
