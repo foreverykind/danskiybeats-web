@@ -44,6 +44,14 @@ import Contact from '../components/Contact.astro';
       });
   })();
 
+  /* ─── Nav background on scroll ─── */
+  (function () {
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav?.classList.toggle('scrolled', window.scrollY > 80);
+    }, { passive: true });
+  })();
+
   /* ─── Scroll Spy ─── */
   (function () {
     const sections = ['hero', 'clients', 'work', 'releases', 'contact'];

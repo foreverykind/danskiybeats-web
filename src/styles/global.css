@@ -78,6 +78,13 @@ body.cursor-hover .dot-cursor-ring { width: 56px; height: 56px; border-color: rg
   display: flex; align-items: center;
   padding: 22px 32px; z-index: 200;
   mix-blend-mode: difference;
+  transition: background 0.4s ease, backdrop-filter 0.4s ease;
+}
+.nav.scrolled {
+  mix-blend-mode: normal;
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 .nav ul.desktop {
   display: flex; justify-content: space-between; width: 100%;
@@ -555,6 +562,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 @media (max-width: 720px) {
   .crow { grid-template-columns: 1fr; gap: 12px; padding: 22px 0; }
   .contact { padding: 100px 22px 36px; }
+  .contact .head { margin-bottom: 32px; }
 }
 
 /* ─── Video Modal ─── */
@@ -659,4 +667,7 @@ body.vmodal-locked { overflow: hidden; }
   .hero-foot { padding: 14px 22px; }
   .clients .head, .work .head, .releases .head { padding: 0 22px 36px; }
   .cover { width: 220px; height: 220px; }
+  .releases { padding: 70px 0 40px; }
+  .coverflow { height: 220px; }
+  .release-info { margin-top: 28px; }
 }

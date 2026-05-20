@@ -11,7 +11,7 @@ const releases = releasesData.items;
   </div>
   <div class="section-label-right">
     <span>Catalogue</span>
-    <span class="num">/ {releases.length}</span>
+    <span class="num">/ {String(releases.length).padStart(2, '0')}</span>
   </div>
 
   <div class="coverflow" id="coverflow"></div>
