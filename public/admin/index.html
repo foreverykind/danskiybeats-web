@@ -126,18 +126,30 @@
 
       /* Hide profile/avatar button + Publish dropdown arrow */
       new MutationObserver(function () {
-        // 1. Avatar: img-based or SVG-only buttons (no text) → hide
         document.querySelectorAll('button').forEach(function (btn) {
           if (btn === logoutBtn || btn._cmsHidden) return;
-          var text = btn.textContent.trim();
-          if (text.length > 2) return; // has meaningful label — leave it
-          if (btn.querySelector('img, svg')) {
+
+          // Check DIRECT text only (not subtree) so "Log Out" inside a child
+          // dropdown doesn't fool us into keeping the profile button visible
+          var directText = Array.from(btn.childNodes)
+            .filter(function (n) { return n.nodeType === 3; })
+            .map(function (n) { return n.textContent.trim(); })
+            .join('');
+
+          var ACTION = /^(Publish|Save|Delete|Update|Cancel|Published)$/i;
+          if (ACTION.test(btn.textContent.trim())) return; // keep action buttons
+
+          // Hide if: dropdown toggle (aria-haspopup) OR icon-only (svg/img, no direct text)
+          var isDropdown = btn.hasAttribute('aria-haspopup');
+          var isIconOnly = directText === '' && !!btn.querySelector('img, svg');
+
+          if (isDropdown || isIconOnly) {
             btn.style.setProperty('display', 'none', 'important');
             btn._cmsHidden = true;
           }
         });
 
-        // 2. Publish dropdown arrow: sibling button right after the Publish button
+        // Publish dropdown arrow: sibling button right after the Publish button
         document.querySelectorAll('button').forEach(function (btn) {
           if (btn.textContent.trim() !== 'Publish' || btn._noDropdown) return;
           var next = btn.nextElementSibling;
