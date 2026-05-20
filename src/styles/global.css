@@ -146,9 +146,10 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 .section-label .num { color: var(--fg); font-weight: 500; }
 .section-label .line { width: 36px; height: 1px; background: var(--fg-faint); }
 .section-label-right {
+  display: none;
   position: absolute; top: 88px; right: 32px;
   font-size: 11px; letter-spacing: 0.22em; color: var(--fg-dim);
-  display: flex; gap: 14px; align-items: center;
+  gap: 14px; align-items: center;
 }
 .section-label-right .num { color: var(--fg); font-weight: 500; }
 
@@ -285,7 +286,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 @media (max-width: 560px) { .logo-grid { grid-template-columns: repeat(3,1fr); } }
 
 /* ─── Work ─── */
-.work { padding-top: 120px; display: flex; flex-direction: column; }
+.work { padding: 110px 0 0; display: flex; flex-direction: column; }
 .work .head {
   display: flex; justify-content: space-between; align-items: flex-end;
   padding: 0 32px 56px;
@@ -376,7 +377,8 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 .releases {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   overflow: hidden;
-  padding: 120px 0 80px;
+  padding: 110px 0 0;
+  min-height: 0;
 }
 .releases .head {
   display: flex; justify-content: space-between; width: 100%;
@@ -529,7 +531,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 @media (max-width: 720px) { .discography-head { padding: 0 22px 36px; } }
 
 /* ─── Contact ─── */
-.contact { padding: 120px 32px 56px; display: flex; flex-direction: column; }
+.contact { padding: 110px 32px 0; display: flex; flex-direction: column; }
 .contact .head {
   display: flex; justify-content: space-between; align-items: flex-end;
   margin-bottom: 80px;
