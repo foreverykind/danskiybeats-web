@@ -56,3 +56,13 @@ const h = heroData;
   </div>
 </section>
 
+<script>
+  const v = document.querySelector('.hero-reel') as HTMLVideoElement | null;
+  if (v) {
+    v.play().catch(() => {
+      const resume = () => { v.play().catch(() => {}); document.removeEventListener('touchstart', resume); };
+      document.addEventListener('touchstart', resume, { passive: true });
+    });
+  }
+</script>
+
