@@ -103,3 +103,4 @@ collections:
               - { label: Platform, name: name, widget: string }
               - { label: "Display Label", name: label, widget: string }
               - { label: URL, name: url, widget: string }
+
