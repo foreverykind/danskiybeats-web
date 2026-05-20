@@ -990,6 +990,7 @@ document.addEventListener('keydown',function(e){
 function previewFile(input,dropId,labelId){
   var file=input.files[0];if(!file)return;
   var drop=document.getElementById(dropId),lbl=document.getElementById(labelId);
+  drop.style.backgroundImage='';
   drop.querySelectorAll('img.file-preview').forEach(function(i){i.remove();});
   var img=document.createElement('img');img.src=URL.createObjectURL(file);img.className='file-preview';
   drop.insertBefore(img,drop.firstChild);lbl.textContent=file.name;
@@ -1054,7 +1055,7 @@ async function saveContacts(){
 function renderClients(){
   var items=cache['clients.json'].content.items||[],grid=document.getElementById('clientsGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="users" class="icon"></i></div><h4>No clients yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
-  grid.innerHTML=items.map(function(c,i){return'<div class="client-card"><div class="client-logo">'+(c.logo?'<img src="'+c.logo+'" alt="'+c.name+'" />':(c.name.toUpperCase()))+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><div style="display:flex;gap:4px"><button class="icon-btn" onclick="openClientModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  grid.innerHTML=items.map(function(c,i){var logoSrc=clientBlobUrls[i]||c.logo;var logoHtml=logoSrc?'<img src="'+logoSrc+'" alt="'+c.name+'" onerror="this.outerHTML=\'<span>\'+this.getAttribute(\'alt\').toUpperCase()+\'</span>\'" />':(c.name.toUpperCase());return'<div class="client-card"><div class="client-logo">'+logoHtml+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><div style="display:flex;gap:4px"><button class="icon-btn" onclick="openClientModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
   lucide.createIcons();
 }
 async function removeClient(idx){
@@ -1067,7 +1068,7 @@ async function removeClient(idx){
     cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;renderClients();toast('Client removed');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
-var editClientIdx=-1;
+var editClientIdx=-1,clientBlobUrls={};
 function openClientModal(idx){
   editClientIdx=(idx===undefined)?-1:idx;
   var isEdit=editClientIdx>=0;
@@ -1090,13 +1091,16 @@ async function submitClient(){
     var items=(cache['clients.json'].content.items||[]).slice();
     var existing=editClientIdx>=0?items[editClientIdx]:{};
     var logoPath=existing.logo||'';
+    var blobUrl=lf?URL.createObjectURL(lf):null;
     if(lf){var ext=lf.name.split('.').pop();logoPath=await uploadFile('clients',brand.toLowerCase().replace(/[^a-z0-9]/g,'-')+'.'+ext,lf);}
     var entry={name:brand,logo:logoPath};
+    var targetIdx=editClientIdx>=0?editClientIdx:items.length;
     if(editClientIdx>=0){items[editClientIdx]=entry;}else{items=items.concat([entry]);}
     var content=Object.assign({},cache['clients.json'].content,{items:items});
     var msg=(editClientIdx>=0?'Update':'Add')+' client '+brand+' via admin';
     var res=await writeFile('src/data/clients.json',cache['clients.json'].sha,content,msg);
     cache['clients.json'].sha=res.content.sha;cache['clients.json'].content=content;
+    if(blobUrl)clientBlobUrls[targetIdx]=blobUrl;
     closeModal('clientModal');renderClients();toast(editClientIdx>=0?'Client updated':'Client added');
   }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
 }
