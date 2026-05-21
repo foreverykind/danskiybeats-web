@@ -1,12 +1,40 @@
 ---
 import heroData from '../data/hero.json';
 const h = heroData;
+
+// Build optimised Cloudinary URLs for video and poster
+// Original: .../video/upload/v.../filename.mp4
+// We inject transformation parameters after /upload/
+function cloudinaryVideo(url: string): string {
+  if (!url || !url.includes('cloudinary.com')) return url;
+  return url.replace('/upload/', '/upload/q_auto,f_auto/');
+}
+
+function cloudinaryPoster(url: string): string {
+  if (!url || !url.includes('cloudinary.com')) return '';
+  // Generate a JPEG thumbnail from the first frame
+  return url
+    .replace('/upload/', '/upload/q_auto,f_jpg,so_0/')
+    .replace(/\.(mp4|mov|webm)$/i, '.jpg');
+}
+
+const optimisedVideoUrl  = cloudinaryVideo(h.video_url);
+const posterUrl          = cloudinaryPoster(h.video_url);
 ---
 
 <section id="hero" class="hero">
   <div class="hero-video" aria-hidden="true">
     {h.video_url ? (
-      <video class="hero-reel" autoplay muted loop playsinline src={h.video_url} />
+      <video
+        class="hero-reel"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster={posterUrl || undefined}
+        src={optimisedVideoUrl}
+      />
     ) : (
       <>
         <div class="vignette-dot"></div>

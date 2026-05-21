@@ -69,28 +69,42 @@ const WORKS = worksData.items.map(w => ({
 
   const TOTAL = WORKS.length;
   const grid = document.getElementById('workGrid');
+  const gradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
+
+  // Lazy-load YouTube thumbnails only when card enters viewport
+  const thumbObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const card = entry.target;
+      const yt = card.dataset.yt;
+      const thumb = card.querySelector('.thumb');
+      if (!yt || !thumb || thumb.dataset.loaded) return;
+      thumb.dataset.loaded = '1';
+      const probe = new Image();
+      probe.onload = () => {
+        const quality = probe.naturalWidth > 120 ? 'maxresdefault' : 'hqdefault';
+        thumb.style.backgroundImage = `${gradient}, url(https://img.youtube.com/vi/${yt}/${quality}.jpg)`;
+        thumb.style.backgroundSize = 'cover';
+        thumb.style.backgroundPosition = 'center';
+      };
+      probe.onerror = () => {
+        thumb.style.backgroundImage = `${gradient}, url(https://img.youtube.com/vi/${yt}/hqdefault.jpg)`;
+        thumb.style.backgroundSize = 'cover';
+        thumb.style.backgroundPosition = 'center';
+      };
+      probe.src = `https://img.youtube.com/vi/${yt}/maxresdefault.jpg`;
+      thumbObserver.unobserve(card);
+    });
+  }, { rootMargin: '200px' });
+
   WORKS.forEach((w, i) => {
     const card = document.createElement('a');
     card.href = "#";
     card.className = "work-card";
     card.dataset.idx = String(i);
+    card.dataset.yt = w.yt;
     const thumb = document.createElement('div');
     thumb.className = "thumb";
-    const gradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
-    const setThumb = (quality) => {
-      thumb.style.backgroundImage = `${gradient}, url(https://img.youtube.com/vi/${w.yt}/${quality}.jpg)`;
-      thumb.style.backgroundSize = 'cover';
-      thumb.style.backgroundPosition = 'center';
-    };
-    // Try maxresdefault (1280×720) first, fall back to hqdefault (480×360)
-    const probe = new Image();
-    probe.onload = () => {
-      if (probe.naturalWidth > 120) setThumb('maxresdefault');
-      else setThumb('hqdefault');
-    };
-    probe.onerror = () => setThumb('hqdefault');
-    setThumb('hqdefault'); // immediate render, upgrades if maxres loads
-    probe.src = `https://img.youtube.com/vi/${w.yt}/maxresdefault.jpg`;
     card.appendChild(thumb);
     card.insertAdjacentHTML('beforeend', `
       <div class="index">${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}</div>
@@ -102,6 +116,7 @@ const WORKS = worksData.items.map(w => ({
     `);
     card.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
     grid.appendChild(card);
+    thumbObserver.observe(card);
   });
 
   // Mobile load-more (+5 per tap)

@@ -10,7 +10,18 @@ import '../styles/global.css';
   <title>DANSKIY BEATS — COMPOSER · PRODUCER</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Non-blocking font load: media trick swapped to "all" on load -->
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    media="print"
+    onload="this.media='all'"
+  />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+  </noscript>
+  <link rel="preconnect" href="https://res.cloudinary.com" />
+  <link rel="dns-prefetch" href="https://img.youtube.com" />
 </head>
 <body>
   <div class="dot-cursor" id="cursorDot"></div>
