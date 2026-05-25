@@ -7,9 +7,13 @@ import Clients from '../components/Clients.astro';
 import Work from '../components/Work.astro';
 import Releases from '../components/Releases.astro';
 import Contact from '../components/Contact.astro';
+import { cloudinaryPoster } from '../lib/cloudinary';
+import heroData from '../data/hero.json';
+
+const posterUrl = cloudinaryPoster(heroData.video_url);
 ---
 
-<Layout>
+<Layout posterUrl={posterUrl}>
   <Nav />
   <Rail />
   <main>
@@ -24,16 +28,16 @@ import Contact from '../components/Contact.astro';
 <script>
   /* ─── Custom Cursor ─── */
   (function () {
-    const dot = document.getElementById('cursorDot');
-    const ring = document.getElementById('cursorRing');
-    if (!dot || !ring) return;
+    const dotEl = document.getElementById('cursorDot');
+    const ringEl = document.getElementById('cursorRing');
+    if (!dotEl || !ringEl) return;
     let mx = 0, my = 0, rx = 0, ry = 0;
     window.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; });
     function tick() {
       rx += (mx - rx) * 0.16;
       ry += (my - ry) * 0.16;
-      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+      dotEl!.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+      ringEl!.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
       requestAnimationFrame(tick);
     }
     tick();

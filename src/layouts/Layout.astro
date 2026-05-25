@@ -1,6 +1,11 @@
 ---
 import '../styles/global.css';
 import SpeedInsights from '@vercel/speed-insights/astro';
+
+interface Props {
+  posterUrl?: string;
+}
+const { posterUrl } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -9,9 +14,9 @@ import SpeedInsights from '@vercel/speed-insights/astro';
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Danskiy Beats — Composer & Producer. Original music and custom sound design for film, advertising and artists." />
   <title>DANSKIY BEATS — COMPOSER · PRODUCER</title>
+  {posterUrl && <link rel="preload" as="image" href={posterUrl} fetchpriority="high" />}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Non-blocking font load: media trick swapped to "all" on load -->
   <link
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap"

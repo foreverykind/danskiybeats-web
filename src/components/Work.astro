@@ -1,14 +1,16 @@
 ---
 import worksData from '../data/works.json';
 import { extractYoutubeId } from '../lib/youtube';
-const WORKS = worksData.items.map(w => ({
+
+const works = worksData.items.map((w, i) => ({
+  i,
   brand: w.brand,
   title: w.title,
   yt: extractYoutubeId(w.youtubeUrl),
 }));
+const TOTAL = works.length;
 ---
 
-<!-- Work grid and modal are populated by client-side JS -->
 <section id="work" class="work">
   <div class="section-label">
     <span class="num">03</span>
@@ -19,7 +21,19 @@ const WORKS = worksData.items.map(w => ({
     <span>Works</span>
   </div>
 
-  <div class="work-grid" id="workGrid"></div>
+  <div class="work-grid" id="workGrid">
+    {works.map((w) => (
+      <a class="work-card" href="#" data-idx={w.i} data-yt={w.yt}>
+        <div class="thumb"></div>
+        <div class="index">{String(w.i + 1).padStart(2, '0')} / {String(TOTAL).padStart(2, '0')}</div>
+        <div class="overlay">
+          <span class="play"></span>
+          <div class="brand">{w.brand}</div>
+          <div class="title">{w.title}</div>
+        </div>
+      </a>
+    ))}
+  </div>
   <div class="work-loadmore-wrap">
     <button class="work-loadmore" id="workLoadMore" type="button">
       Load more — 12 cases
@@ -65,20 +79,16 @@ const WORKS = worksData.items.map(w => ({
   </div>
 </div>
 
-<script define:vars={{ WORKS }}>
-
-  const TOTAL = WORKS.length;
-  const grid = document.getElementById('workGrid');
+<script define:vars={{ works, TOTAL }} is:inline>
   const gradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
 
-  // Lazy-load YouTube thumbnails only when card enters viewport
   const thumbObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      const card = entry.target;
-      const yt = card.dataset.yt;
-      const thumb = card.querySelector('.thumb');
-      if (!yt || !thumb || thumb.dataset.loaded) return;
+      const thumb = entry.target;
+      const card = thumb.closest('[data-yt]');
+      const yt = card?.dataset.yt;
+      if (!yt || thumb.dataset.loaded) return;
       thumb.dataset.loaded = '1';
       const probe = new Image();
       probe.onload = () => {
@@ -93,36 +103,20 @@ const WORKS = worksData.items.map(w => ({
         thumb.style.backgroundPosition = 'center';
       };
       probe.src = `https://img.youtube.com/vi/${yt}/maxresdefault.jpg`;
-      thumbObserver.unobserve(card);
+      thumbObserver.unobserve(thumb);
     });
   }, { rootMargin: '200px' });
 
-  WORKS.forEach((w, i) => {
-    const card = document.createElement('a');
-    card.href = "#";
-    card.className = "work-card";
-    card.dataset.idx = String(i);
-    card.dataset.yt = w.yt;
-    const thumb = document.createElement('div');
-    thumb.className = "thumb";
-    card.appendChild(thumb);
-    card.insertAdjacentHTML('beforeend', `
-      <div class="index">${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}</div>
-      <div class="overlay">
-        <span class="play"></span>
-        <div class="brand">${w.brand}</div>
-        <div class="title">${w.title}</div>
-      </div>
-    `);
+  const allCards = Array.from(document.querySelectorAll('.work-card'));
+  allCards.forEach((card, i) => {
+    const thumb = card.querySelector('.thumb');
+    if (thumb) thumbObserver.observe(thumb);
     card.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
-    grid.appendChild(card);
-    thumbObserver.observe(card);
   });
 
-  // Mobile load-more (+5 per tap)
+  // Mobile load-more
   const STEP = 5;
   let visibleCount = STEP;
-  const allCards = Array.from(grid.querySelectorAll('.work-card'));
   const lm = document.getElementById('workLoadMore');
 
   function updateVisibility() {
@@ -137,9 +131,7 @@ const WORKS = worksData.items.map(w => ({
       lm.textContent = `Load more — ${Math.min(remaining, STEP)} cases`;
     }
   }
-
   updateVisibility();
-
   lm.addEventListener('click', () => {
     visibleCount = Math.min(visibleCount + STEP, TOTAL);
     updateVisibility();
@@ -154,11 +146,11 @@ const WORKS = worksData.items.map(w => ({
   let vmIdx = 0;
 
   function loadVideo(i) {
-    const w = WORKS[i];
+    const w = works[i];
     frame.src = `https://www.youtube.com/embed/${w.yt}?autoplay=1&rel=0&modestbranding=1&color=white`;
     vmBrand.textContent = w.brand;
     vmTitle.textContent = w.title;
-    vmCount.textContent = `${String(i + 1).padStart(2, '0')} / ${String(WORKS.length).padStart(2, '0')}`;
+    vmCount.textContent = `${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}`;
     vmIdx = i;
   }
 
@@ -172,22 +164,22 @@ const WORKS = worksData.items.map(w => ({
   function closeModal() {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    frame.src = "";
+    frame.src = '';
     document.body.classList.remove('vmodal-locked');
   }
 
   document.getElementById('vmClose').addEventListener('click', closeModal);
   document.getElementById('vmPrev').addEventListener('click', () =>
-    loadVideo((vmIdx - 1 + WORKS.length) % WORKS.length)
+    loadVideo((vmIdx - 1 + TOTAL) % TOTAL)
   );
   document.getElementById('vmNext').addEventListener('click', () =>
-    loadVideo((vmIdx + 1) % WORKS.length)
+    loadVideo((vmIdx + 1) % TOTAL)
   );
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener('keydown', (e) => {
     if (!modal.classList.contains('open')) return;
     if (e.key === 'Escape')     closeModal();
-    if (e.key === 'ArrowLeft')  loadVideo((vmIdx - 1 + WORKS.length) % WORKS.length);
-    if (e.key === 'ArrowRight') loadVideo((vmIdx + 1) % WORKS.length);
+    if (e.key === 'ArrowLeft')  loadVideo((vmIdx - 1 + TOTAL) % TOTAL);
+    if (e.key === 'ArrowRight') loadVideo((vmIdx + 1) % TOTAL);
   });
 </script>

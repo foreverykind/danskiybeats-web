@@ -14,7 +14,19 @@ const releases = releasesData.items;
     <span class="num">/ {String(releases.length).padStart(2, '0')}</span>
   </div>
 
-  <div class="coverflow" id="coverflow"></div>
+  <div class="coverflow" id="coverflow">
+    {releases.map((r, i) => (
+      <div class="cover" data-i={i}>
+        <div class="cover-inner">
+          <div
+            class="cover-art"
+            style={!r.cover ? 'background: linear-gradient(135deg, #1f1f1f 0%, #3a3a3a 60%, #0e0e0e 100%);' : ''}
+            data-cover={r.cover || undefined}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
   <div class="release-info" id="releaseInfo"></div>
 
   <div class="cf-nav">
@@ -36,7 +48,7 @@ const releases = releasesData.items;
   </div>
 </section>
 
-<script define:vars={{ releases }}>
+<script define:vars={{ releases }} is:inline>
   const cf = document.getElementById('coverflow');
   const info = document.getElementById('releaseInfo');
   let idx = 0;
@@ -56,23 +68,10 @@ const releases = releasesData.items;
     });
   }, { rootMargin: '300px' });
 
-  releases.forEach((r, i) => {
-    const el = document.createElement('div');
-    el.className = "cover";
-    el.dataset.i = String(i);
-    const artStyle = r.cover
-      ? ''
-      : 'background: linear-gradient(135deg, #1f1f1f 0%, #3a3a3a 60%, #0e0e0e 100%);';
-    el.innerHTML = `
-      <div class="cover-inner">
-        <div class="cover-art" style="${artStyle}" ${r.cover ? `data-cover="${r.cover}"` : ''}></div>
-      </div>
-    `;
+  Array.from(cf.querySelectorAll('.cover')).forEach((el, i) => {
     el.addEventListener('click', () => { idx = i; render(); });
-    cf.appendChild(el);
-    if (r.cover) {
-      coverObserver.observe(el.querySelector('.cover-art'));
-    }
+    const art = el.querySelector('.cover-art');
+    if (art && art.dataset.cover) coverObserver.observe(art);
   });
 
   function render() {
@@ -91,7 +90,7 @@ const releases = releasesData.items;
       el.style.transform = `translate(-50%,-50%) translate3d(${x}px, 0, ${z}px) rotateY(${rot}deg) scale(${scale})`;
       el.style.zIndex = String(100 - abs);
       el.style.opacity = String(op);
-      el.style.filter = offset === 0 ? "none" : `brightness(${0.55 + (0.45 / (abs + 1))})`;
+      el.style.filter = offset === 0 ? 'none' : `brightness(${0.55 + (0.45 / (abs + 1))})`;
     });
 
     const r = releases[idx];
@@ -127,7 +126,6 @@ const releases = releasesData.items;
     if (e.key === 'ArrowRight') { idx = (idx + 1) % releases.length; render(); }
   });
 
-  // Touch swipe
   let touchStartX = 0;
   cf.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;

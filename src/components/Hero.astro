@@ -1,40 +1,35 @@
 ---
+import { cloudinaryVideo, cloudinaryPoster } from '../lib/cloudinary';
 import heroData from '../data/hero.json';
 const h = heroData;
 
-// Build optimised Cloudinary URLs for video and poster
-// Original: .../video/upload/v.../filename.mp4
-// We inject transformation parameters after /upload/
-function cloudinaryVideo(url: string): string {
-  if (!url || !url.includes('cloudinary.com')) return url;
-  return url.replace('/upload/', '/upload/q_auto,f_auto/');
-}
-
-function cloudinaryPoster(url: string): string {
-  if (!url || !url.includes('cloudinary.com')) return '';
-  // Generate a JPEG thumbnail from the first frame
-  return url
-    .replace('/upload/', '/upload/q_auto,f_jpg,so_0/')
-    .replace(/\.(mp4|mov|webm)$/i, '.jpg');
-}
-
-const optimisedVideoUrl  = cloudinaryVideo(h.video_url);
-const posterUrl          = cloudinaryPoster(h.video_url);
+const optimisedVideoUrl = cloudinaryVideo(h.video_url);
+const posterUrl = cloudinaryPoster(h.video_url);
 ---
 
 <section id="hero" class="hero">
   <div class="hero-video" aria-hidden="true">
     {h.video_url ? (
-      <video
-        class="hero-reel"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="none"
-        poster={posterUrl || undefined}
-        src={optimisedVideoUrl}
-      />
+      <>
+        <img
+          id="heroPoster"
+          class="hero-reel"
+          src={posterUrl}
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+        />
+        <video
+          id="heroVideo"
+          class="hero-reel"
+          style="display:none"
+          muted
+          loop
+          playsinline
+          preload="none"
+          data-src={optimisedVideoUrl}
+        />
+      </>
     ) : (
       <>
         <div class="vignette-dot"></div>
@@ -85,12 +80,20 @@ const posterUrl          = cloudinaryPoster(h.video_url);
 </section>
 
 <script>
-  const v = document.querySelector('.hero-reel') as HTMLVideoElement | null;
-  if (v) {
-    v.play().catch(() => {
-      const resume = () => { v.play().catch(() => {}); document.removeEventListener('touchstart', resume); };
-      document.addEventListener('touchstart', resume, { passive: true });
-    });
+  const isMobile = window.matchMedia('(max-width: 720px)').matches;
+  const poster = document.getElementById('heroPoster') as HTMLImageElement | null;
+  const video  = document.getElementById('heroVideo')  as HTMLVideoElement | null;
+
+  if (video && !isMobile) {
+    const load = () => {
+      video.src = video.dataset.src!;
+      video.style.display = '';
+      video.load();
+      video.play()
+        .then(() => { if (poster) poster.style.display = 'none'; })
+        .catch(() => {});
+    };
+    if (document.readyState === 'complete') load();
+    else window.addEventListener('load', load);
   }
 </script>
-
