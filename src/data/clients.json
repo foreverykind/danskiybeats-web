@@ -55,6 +55,10 @@
     {
       "name": "Sky Sports",
       "logo": "/clients/sky-sports.webp"
+    },
+    {
+      "name": "Disney +",
+      "logo": "/clients/disney--.png"
     }
   ]
 }
