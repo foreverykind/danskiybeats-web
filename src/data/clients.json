@@ -47,6 +47,10 @@
     {
       "name": "JJS",
       "logo": "/clients/jjs-seeklogo.png"
+    },
+    {
+      "name": "Zeus Network",
+      "logo": "/clients/zeus-network.svg"
     }
   ]
 }
