@@ -798,8 +798,8 @@
         <div class="panel-body">
           <form class="form-grid cols-2" id="contactForm" onsubmit="event.preventDefault();saveContacts()">
             <div class="field"><label>Email</label><input class="input" id="c_email" type="email" /></div>
-            <div class="field"><label>Telegram URL</label><input class="input" id="c_telegram_url" type="url" placeholder="https://t.me/..." /></div>
             <div class="field"><label>Instagram URL</label><input class="input" id="c_instagram_url" type="url" /></div>
+            <div class="field"><label>Telegram URL</label><input class="input" id="c_telegram_url" type="url" placeholder="https://t.me/..." /></div>
             <div class="field"><label>Spotify URL</label><input class="input" id="c_spotify" type="url" /></div>
             <div class="field"><label>Apple Music URL</label><input class="input" id="c_apple" type="url" /></div>
             <div class="field"><label>Deezer URL</label><input class="input" id="c_deezer" type="url" /></div>
@@ -820,7 +820,7 @@
         <div class="field"><label>Logo (PNG/SVG, transparent background)</label>
           <label class="file-drop" id="clientLogoDrop">
             <i data-lucide="upload-cloud" class="icon"></i>
-            <div id="clientLogoLabel">Drop logo here, or <strong style="color:var(--primary)">browse</strong></div>
+            <div id="clientLogoLabel"><strong style="color:var(--primary)">Browse</strong></div>
             <div class="hint" style="margin-top:4px">PNG transparent background recommended</div>
             <input type="file" id="cf_logo" accept="image/*" hidden onchange="previewFile(this,'clientLogoDrop','clientLogoLabel')" />
           </label>
@@ -865,7 +865,7 @@
         <div class="field"><label>Cover image</label>
           <label class="file-drop" id="releaseCoverDrop">
             <i data-lucide="image" class="icon"></i>
-            <div id="releaseCoverLabel">Drop cover here, or <strong style="color:var(--primary)">browse</strong></div>
+            <div id="releaseCoverLabel"><strong style="color:var(--primary)">Browse</strong></div>
             <div class="hint" style="margin-top:4px">Square JPG/PNG, min 800x800</div>
             <input type="file" id="rf_cover" accept="image/*" hidden onchange="previewFile(this,'releaseCoverDrop','releaseCoverLabel')" />
           </label>
@@ -1080,8 +1080,8 @@ function openClientModal(idx){
   if(isEdit){
     var cur=cache['clients.json'].content.items[idx].logo;
     if(cur){drop.style.backgroundImage='url('+cur+')';drop.style.backgroundSize='contain';drop.style.backgroundRepeat='no-repeat';drop.style.backgroundPosition='center';lbl.textContent='Logo loaded — upload new to replace';}
-    else{drop.style.backgroundImage='';lbl.innerHTML='Drop logo here, or <strong style="color:var(--primary)">browse</strong>';}
-  }else{drop.style.backgroundImage='';lbl.innerHTML='Drop logo here, or <strong style="color:var(--primary)">browse</strong>';}
+    else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
+  }else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
   openModal('clientModal');
 }
 async function submitClient(){
@@ -1110,7 +1110,7 @@ function ytThumb(url){var id=ytId(url);return id?'https://img.youtube.com/vi/'+i
 function renderWorks(){
   var items=cache['works.json'].content.items||[],grid=document.getElementById('worksGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="clapperboard" class="icon"></i></div><h4>No works yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
-  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" draggable="true" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" draggable="false" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" draggable="false" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
   lucide.createIcons();initSortable(grid,'works');
 }
 function openWorkModal(idx){
@@ -1147,7 +1147,7 @@ async function removeWork(idx){
 function renderReleases(){
   var items=cache['releases.json'].content.items||[],list=document.getElementById('releasesList');
   if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="disc-3" class="icon"></i></div><h4>No releases yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
-  list.innerHTML=items.map(function(r,i){return'<div class="release-row" draggable="true" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" draggable="false" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  list.innerHTML=items.map(function(r,i){return'<div class="release-row" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" draggable="false" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
   lucide.createIcons();initSortable(list,'releases');
 }
 function openReleaseModal(idx){
@@ -1189,6 +1189,8 @@ function initSortable(container,key){
     animation:150,
     ghostClass:'drop-target',
     dragClass:'dragging',
+    forceFallback:true,
+    fallbackOnBody:true,
     onEnd:async function(evt){
       var from=evt.oldIndex,to=evt.newIndex;if(from===to)return;
       var jk=key==='works'?'works.json':'releases.json';
