@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "dddd",
+      "cover": "",
+      "format": "album",
+      "year": "2026",
+      "spotify": "https://open.spotify.com/album/6qNdniqBdZKEtSELnN4pcf",
+      "apple": "",
+      "deezer": ""
+    },
+    {
       "title": "Holy Vibe",
       "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
       "format": "album",
