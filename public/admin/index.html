@@ -792,21 +792,20 @@
       <div class="topbar"><div class="topbar-left">
         <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
         <div><h1 class="page-title">Contacts</h1><div class="page-sub">Footer links and booking info.</div></div>
-      </div></div>
-      <div class="panel">
-        <div class="panel-header"><div><h3>Public contact info</h3><div class="sub">Displayed in the site footer.</div></div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openLinkModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Link</span></button>
+      </div>
+      <div class="panel" style="margin-bottom:20px">
+        <div class="panel-header"><div><h3>General</h3><div class="sub">Booking label and inquiry email.</div></div></div>
         <div class="panel-body">
           <form class="form-grid cols-2" id="contactForm" onsubmit="event.preventDefault();saveContacts()">
             <div class="field"><label>Email</label><input class="input" id="c_email" type="email" /></div>
-            <div class="field"><label>Instagram URL</label><input class="input" id="c_instagram_url" type="url" /></div>
-            <div class="field"><label>Telegram URL</label><input class="input" id="c_telegram_url" type="url" placeholder="https://t.me/..." /></div>
-            <div class="field"><label>Spotify URL</label><input class="input" id="c_spotify" type="url" /></div>
-            <div class="field"><label>Apple Music URL</label><input class="input" id="c_apple" type="url" /></div>
-            <div class="field"><label>Deezer URL</label><input class="input" id="c_deezer" type="url" /></div>
+            <div class="field"><label>Bookings Label</label><input class="input" id="c_bookings" type="text" placeholder="Bookings 2026" /></div>
             <div class="form-actions" style="grid-column:1/-1"><button type="submit" class="btn btn-success"><span class="label"><i data-lucide="check" class="icon"></i> Save changes</span></button></div>
           </form>
         </div>
       </div>
+      <div class="panel"><div class="panel-header"><div><h3>Links</h3><div class="sub">Drag to reorder.</div></div></div><div class="release-list" id="linksList"></div></div>
     </section>
   </main>
 </div>
@@ -877,6 +876,24 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-ghost" onclick="closeModal('releaseModal')"><span class="label">Cancel</span></button>
         <button type="submit" class="btn btn-success" id="releaseSubmitBtn"><span class="label">Save release</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="linkModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="linkModalTitle">Add link</h3><button class="modal-close" onclick="closeModal('linkModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="linkForm" onsubmit="event.preventDefault();submitLink()">
+      <input type="hidden" id="lf_idx" />
+      <div class="modal-body"><div class="form-grid">
+        <div class="field"><label>Platform / Label</label><input class="input" id="lf_name" type="text" placeholder="e.g. Instagram" required /></div>
+        <div class="field"><label>Display Text</label><input class="input" id="lf_display" type="text" placeholder="e.g. @handle or Artist — /path" /></div>
+        <div class="field"><label>URL</label><input class="input" id="lf_url" type="url" placeholder="https://..." required /></div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('linkModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="linkSubmitBtn"><span class="label">Save link</span></button>
       </div>
     </form>
   </div>
@@ -1031,27 +1048,55 @@ async function saveHero(){
 function populateContacts(){
   var c=cache['contact.json'].content;
   document.getElementById('c_email').value=c.email||'';
-  document.getElementById('c_telegram_url').value=c.telegram_url||'';
-  document.getElementById('c_instagram_url').value=c.instagram_url||'';
-  var dsp=c.dsp||[];
-  document.getElementById('c_spotify').value=(dsp.find(function(d){return d.name==='Spotify';})||{}).url||'';
-  document.getElementById('c_apple').value=(dsp.find(function(d){return d.name==='Apple Music';})||{}).url||'';
-  document.getElementById('c_deezer').value=(dsp.find(function(d){return d.name==='Deezer';})||{}).url||'';
+  document.getElementById('c_bookings').value=c.bookings_label||'';
+  renderLinks();
 }
 async function saveContacts(){
   var btn=document.querySelector('#contactForm button[type=submit]');btn.classList.add('loading');
   try{
-    var old=cache['contact.json'].content;
-    var content=Object.assign({},old,{
+    var content=Object.assign({},cache['contact.json'].content,{
       email:document.getElementById('c_email').value.trim(),
-      telegram_url:document.getElementById('c_telegram_url').value.trim(),
-      instagram_url:document.getElementById('c_instagram_url').value.trim(),
-      dsp:[{name:'Spotify',label:(old.dsp&&old.dsp[0]&&old.dsp[0].label)||'Spotify',url:document.getElementById('c_spotify').value.trim()},
-           {name:'Apple Music',label:(old.dsp&&old.dsp[1]&&old.dsp[1].label)||'Apple Music',url:document.getElementById('c_apple').value.trim()},
-           {name:'Deezer',label:(old.dsp&&old.dsp[2]&&old.dsp[2].label)||'Deezer',url:document.getElementById('c_deezer').value.trim()}]});
+      bookings_label:document.getElementById('c_bookings').value.trim()
+    });
     var res=await writeFile('src/data/contact.json',cache['contact.json'].sha,content,'Update contacts via admin');
     cache['contact.json'].sha=res.content.sha;cache['contact.json'].content=content;toast('Contacts saved');
   }catch(err){toast('Save failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+function renderLinks(){
+  var links=cache['contact.json'].content.links||[],list=document.getElementById('linksList');
+  if(!links.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="link" class="icon"></i></div><h4>No links yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
+  list.innerHTML=links.map(function(l,i){return'<div class="release-row" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-info"><div class="release-title">'+l.name+'</div><div class="release-year">'+(l.display||l.url)+'</div></div><div class="release-actions"><button class="icon-btn" onclick="openLinkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeLink('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  lucide.createIcons();initSortable(list,'links');
+}
+function openLinkModal(idx){
+  document.getElementById('lf_idx').value=idx!==undefined?idx:'';
+  document.getElementById('linkModalTitle').textContent=idx!==undefined?'Edit link':'Add link';
+  if(idx!==undefined){var l=cache['contact.json'].content.links[idx];document.getElementById('lf_name').value=l.name||'';document.getElementById('lf_display').value=l.display||'';document.getElementById('lf_url').value=l.url||'';}
+  else document.getElementById('linkForm').reset();
+  openModal('linkModal');
+}
+async function submitLink(){
+  var name=document.getElementById('lf_name').value.trim(),url=document.getElementById('lf_url').value.trim();if(!name||!url)return;
+  var btn=document.getElementById('linkSubmitBtn');btn.classList.add('loading');
+  try{
+    var links=(cache['contact.json'].content.links||[]).slice(),idx=document.getElementById('lf_idx').value;
+    var entry={name:name,display:document.getElementById('lf_display').value.trim(),url:url};
+    if(idx!=='')links[parseInt(idx)]=entry;else links.push(entry);
+    var content=Object.assign({},cache['contact.json'].content,{links:links});
+    var res=await writeFile('src/data/contact.json',cache['contact.json'].sha,content,(idx!==''?'Update':'Add')+' link '+name+' via admin');
+    cache['contact.json'].sha=res.content.sha;cache['contact.json'].content=content;
+    closeModal('linkModal');renderLinks();toast(idx!==''?'Link updated':'Link added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+async function removeLink(idx){
+  if(!confirm('Delete this link?'))return;
+  var links=(cache['contact.json'].content.links||[]).slice();links.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['contact.json'].content,{links:links});
+    var res=await writeFile('src/data/contact.json',cache['contact.json'].sha,content,'Remove link via admin');
+    cache['contact.json'].sha=res.content.sha;cache['contact.json'].content=content;renderLinks();toast('Link removed');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
 function renderClients(){
   var items=cache['clients.json'].content.items||[],grid=document.getElementById('clientsGrid');
@@ -1193,14 +1238,15 @@ function initSortable(container,key){
     fallbackOnBody:true,
     onEnd:async function(evt){
       var from=evt.oldIndex,to=evt.newIndex;if(from===to)return;
-      var jk=key==='works'?'works.json':'releases.json';
-      var items=cache[jk].content.items.slice(),moved=items.splice(from,1)[0];items.splice(to,0,moved);
+      var jk=key==='works'?'works.json':key==='releases'?'releases.json':'contact.json';
+      var field=key==='links'?'links':'items';
+      var arr=cache[jk].content[field].slice(),moved=arr.splice(from,1)[0];arr.splice(to,0,moved);
       showLoad('Saving order...');
       try{
-        var content=Object.assign({},cache[jk].content,{items:items});
+        var content=Object.assign({},cache[jk].content);content[field]=arr;
         var res=await writeFile('src/data/'+jk,cache[jk].sha,content,'Reorder '+key+' via admin');
         cache[jk].sha=res.content.sha;cache[jk].content=content;
-        if(key==='works')renderWorks();else renderReleases();toast('Order saved');
+        if(key==='works')renderWorks();else if(key==='releases')renderReleases();else renderLinks();toast('Order saved');
       }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
     }
   });

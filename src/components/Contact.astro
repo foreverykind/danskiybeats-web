@@ -21,33 +21,15 @@ const c = contactData;
       </div>
     </div>
 
-    <div class="crow">
-      <div class="lab">Telegram</div>
-      <div class="data">
-        <a href={c.telegram_url} target="_blank" rel="noopener" class="single">
-          {c.telegram_handle}
-        </a>
-      </div>
-    </div>
-
-    <div class="crow">
-      <div class="lab">Instagram</div>
-      <div class="data">
-        <a href={c.instagram_url} target="_blank" rel="noopener" class="single">
-          {c.instagram_handle}
-        </a>
-      </div>
-    </div>
-
-    <div class="crow">
-      <div class="lab">Listen</div>
-      <div class="data">
-        {c.dsp.map((d) => (
-          <a href={d.url} target="_blank" rel="noopener" class="single">
-            {d.label}
+    {c.links.map((l) => (
+      <div class="crow">
+        <div class="lab">{l.name}</div>
+        <div class="data">
+          <a href={l.url} target="_blank" rel="noopener" class="single">
+            {l.display || l.url}
           </a>
-        ))}
+        </div>
       </div>
-    </div>
+    ))}
   </div>
 </section>
