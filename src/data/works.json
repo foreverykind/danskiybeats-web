@@ -1,11 +1,6 @@
 {
   "items": [
     {
-      "brand": "Nike",
-      "title": "Commercial",
-      "youtubeUrl": "https://www.youtube.com/watch?v=07-y537FrCA"
-    },
-    {
       "brand": "Vodafone",
       "title": "Commercial",
       "youtubeUrl": "https://www.youtube.com/watch?v=8Ybw8DgKL1o"
@@ -34,6 +29,11 @@
       "brand": "73 Rangers",
       "title": "Military Trailer",
       "youtubeUrl": "https://www.youtube.com/watch?v=fxsp8f7X20M"
+    },
+    {
+      "brand": "Nike",
+      "title": "Commercial",
+      "youtubeUrl": "https://www.youtube.com/watch?v=07-y537FrCA"
     },
     {
       "brand": "MHP",
