@@ -6,11 +6,6 @@
       "youtubeUrl": "https://www.youtube.com/watch?v=cWryuOjq1N0"
     },
     {
-      "brand": "Vodafone",
-      "title": "Commercial",
-      "youtubeUrl": "https://www.youtube.com/watch?v=8Ybw8DgKL1o"
-    },
-    {
       "brand": "Aerotim",
       "title": "Action Sports Meet Country",
       "youtubeUrl": "https://www.youtube.com/watch?v=YMTm1Y2H-Qs"
@@ -24,6 +19,11 @@
       "brand": "Toyota",
       "title": "Commercial",
       "youtubeUrl": "https://www.youtube.com/watch?v=6PTmMcJW7Vo"
+    },
+    {
+      "brand": "Vodafone",
+      "title": "Commercial",
+      "youtubeUrl": "https://www.youtube.com/watch?v=8Ybw8DgKL1o"
     },
     {
       "brand": "Jameson",
