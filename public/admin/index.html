@@ -805,6 +805,17 @@
           </form>
         </div>
       </div>
+      <div class="panel" style="margin-bottom:20px">
+        <div class="panel-header"><div><h3>Listen</h3><div class="sub">Streaming platforms grouped in one row.</div></div></div>
+        <div class="panel-body">
+          <form class="form-grid" id="streamingForm" onsubmit="event.preventDefault();saveStreaming()">
+            <div class="field"><label>Spotify URL</label><input class="input" id="s_spotify" type="url" placeholder="https://open.spotify.com/artist/..." /></div>
+            <div class="field"><label>Apple Music URL</label><input class="input" id="s_apple" type="url" placeholder="https://music.apple.com/..." /></div>
+            <div class="field"><label>Deezer URL</label><input class="input" id="s_deezer" type="url" placeholder="https://www.deezer.com/..." /></div>
+            <div class="form-actions"><button type="submit" class="btn btn-success"><span class="label"><i data-lucide="check" class="icon"></i> Save changes</span></button></div>
+          </form>
+        </div>
+      </div>
       <div class="panel"><div class="panel-header"><div><h3>Links</h3><div class="sub">Drag to reorder.</div></div></div><div class="release-list" id="linksList"></div></div>
     </section>
   </main>
@@ -1049,7 +1060,25 @@ function populateContacts(){
   var c=cache['contact.json'].content;
   document.getElementById('c_email').value=c.email||'';
   document.getElementById('c_bookings').value=c.bookings_label||'';
+  var st=c.streaming||[];
+  document.getElementById('s_spotify').value=(st.find(function(s){return s.name==='Spotify';})||{}).url||'';
+  document.getElementById('s_apple').value=(st.find(function(s){return s.name==='Apple Music';})||{}).url||'';
+  document.getElementById('s_deezer').value=(st.find(function(s){return s.name==='Deezer';})||{}).url||'';
   renderLinks();
+}
+async function saveStreaming(){
+  var btn=document.querySelector('#streamingForm button[type=submit]');btn.classList.add('loading');
+  try{
+    var old=cache['contact.json'].content;
+    var streaming=[
+      {name:'Spotify',display:'Spotify — /artist/danskiy',url:document.getElementById('s_spotify').value.trim()},
+      {name:'Apple Music',display:'Apple Music — /artist/danskiy',url:document.getElementById('s_apple').value.trim()},
+      {name:'Deezer',display:'Deezer — /artist/90002962',url:document.getElementById('s_deezer').value.trim()}
+    ].filter(function(s){return s.url;});
+    var content=Object.assign({},old,{streaming:streaming});
+    var res=await writeFile('src/data/contact.json',cache['contact.json'].sha,content,'Update streaming via admin');
+    cache['contact.json'].sha=res.content.sha;cache['contact.json'].content=content;toast('Streaming saved');
+  }catch(err){toast('Save failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
 }
 async function saveContacts(){
   var btn=document.querySelector('#contactForm button[type=submit]');btn.classList.add('loading');
