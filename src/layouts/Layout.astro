@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import SpeedInsights from '@vercel/speed-insights/astro';
 ---
 <!doctype html>
 <html lang="en">
@@ -27,5 +28,6 @@ import '../styles/global.css';
   <div class="dot-cursor" id="cursorDot"></div>
   <div class="dot-cursor-ring" id="cursorRing"></div>
   <slot />
+  <SpeedInsights />
 </body>
 </html>
