@@ -59,6 +59,10 @@
     {
       "name": "Disney +",
       "logo": "/clients/disney--.png"
+    },
+    {
+      "name": "Discovery +",
+      "logo": "/clients/discovery--.png"
     }
   ]
 }
