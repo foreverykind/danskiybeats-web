@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/sortablejs@1.15.0/Sortable.min.js"></script>
 <style>
 
   :root {
@@ -1110,7 +1111,7 @@ function renderWorks(){
   var items=cache['works.json'].content.items||[],grid=document.getElementById('worksGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="clapperboard" class="icon"></i></div><h4>No works yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
   grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" draggable="true" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" draggable="false" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
-  lucide.createIcons();attachDrag(grid,'works');
+  lucide.createIcons();initSortable(grid,'works');
 }
 function openWorkModal(idx){
   document.getElementById('wf_idx').value=idx!==undefined?idx:'';
@@ -1147,7 +1148,7 @@ function renderReleases(){
   var items=cache['releases.json'].content.items||[],list=document.getElementById('releasesList');
   if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="disc-3" class="icon"></i></div><h4>No releases yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
   list.innerHTML=items.map(function(r,i){return'<div class="release-row" draggable="true" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" draggable="false" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
-  lucide.createIcons();attachDrag(list,'releases');
+  lucide.createIcons();initSortable(list,'releases');
 }
 function openReleaseModal(idx){
   document.getElementById('rf_idx').value=idx!==undefined?idx:'';
@@ -1182,26 +1183,24 @@ async function removeRelease(idx){
     cache['releases.json'].sha=res.content.sha;cache['releases.json'].content=content;renderReleases();toast('Release deleted');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
-function attachDrag(container,key){
-  var dragIdx=null;
-  container.querySelectorAll('[draggable=true]').forEach(function(el){
-    el.addEventListener('dragstart',function(e){dragIdx=parseInt(el.dataset.idx);el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    el.addEventListener('dragend',function(){el.classList.remove('dragging');container.querySelectorAll('.drop-target').forEach(function(n){n.classList.remove('drop-target');});dragIdx=null;});
-    el.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='move';if(parseInt(el.dataset.idx)!==dragIdx)el.classList.add('drop-target');});
-    el.addEventListener('dragleave',function(e){if(!el.contains(e.relatedTarget))el.classList.remove('drop-target');});
-    el.addEventListener('drop',async function(e){
-      e.preventDefault();el.classList.remove('drop-target');
-      var ti=parseInt(el.dataset.idx);if(dragIdx===null||dragIdx===ti)return;
+function initSortable(container,key){
+  new Sortable(container,{
+    handle:'.drag-handle',
+    animation:150,
+    ghostClass:'drop-target',
+    dragClass:'dragging',
+    onEnd:async function(evt){
+      var from=evt.oldIndex,to=evt.newIndex;if(from===to)return;
       var jk=key==='works'?'works.json':'releases.json';
-      var items=cache[jk].content.items.slice(),moved=items.splice(dragIdx,1)[0];items.splice(ti,0,moved);
+      var items=cache[jk].content.items.slice(),moved=items.splice(from,1)[0];items.splice(to,0,moved);
       showLoad('Saving order...');
       try{
         var content=Object.assign({},cache[jk].content,{items:items});
         var res=await writeFile('src/data/'+jk,cache[jk].sha,content,'Reorder '+key+' via admin');
         cache[jk].sha=res.content.sha;cache[jk].content=content;
         if(key==='works')renderWorks();else renderReleases();toast('Order saved');
-      }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();dragIdx=null;}
-    });
+      }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+    }
   });
 }
 hideLoad();lucide.createIcons();
