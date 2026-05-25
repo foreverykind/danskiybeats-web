@@ -2,7 +2,7 @@ backend:
   name: github
   repo: foreverykind/danskiybeats-web
   branch: main
-  base_url: https://project-bzlk0.vercel.app
+  base_url: https://danskiybeats.com
   auth_endpoint: api/auth
 
 media_folder: public/clients
