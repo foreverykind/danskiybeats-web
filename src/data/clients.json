@@ -51,6 +51,10 @@
     {
       "name": "Peacock",
       "logo": "/clients/peacock.png"
+    },
+    {
+      "name": "Discovery +",
+      "logo": "/clients/discovery--.png"
     }
   ]
 }
