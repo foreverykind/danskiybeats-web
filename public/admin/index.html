@@ -1109,7 +1109,7 @@ function ytThumb(url){var id=ytId(url);return id?'https://img.youtube.com/vi/'+i
 function renderWorks(){
   var items=cache['works.json'].content.items||[],grid=document.getElementById('worksGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="clapperboard" class="icon"></i></div><h4>No works yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
-  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" draggable="true" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" draggable="true" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" draggable="false" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openWorkModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeWork('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
   lucide.createIcons();attachDrag(grid,'works');
 }
 function openWorkModal(idx){
@@ -1146,7 +1146,7 @@ async function removeWork(idx){
 function renderReleases(){
   var items=cache['releases.json'].content.items||[],list=document.getElementById('releasesList');
   if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="disc-3" class="icon"></i></div><h4>No releases yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
-  list.innerHTML=items.map(function(r,i){return'<div class="release-row" draggable="true" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  list.innerHTML=items.map(function(r,i){return'<div class="release-row" draggable="true" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(r.cover?'<img src="'+r.cover+'" alt="" draggable="false" />':(r.title||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+r.title+'</div><div class="release-year">'+(r.year||'')+(r.format?' · '+r.format:'')+'</div></div><div class="platforms"><span class="platform-pill spotify '+(r.spotify?'':'disabled')+'" title="Spotify">S</span><span class="platform-pill apple '+(r.apple?'':'disabled')+'" title="Apple">A</span><span class="platform-pill deezer '+(r.deezer?'':'disabled')+'" title="Deezer">D</span></div><div class="release-actions"><button class="icon-btn" onclick="openReleaseModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeRelease('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
   lucide.createIcons();attachDrag(list,'releases');
 }
 function openReleaseModal(idx){
@@ -1186,9 +1186,9 @@ function attachDrag(container,key){
   var dragIdx=null;
   container.querySelectorAll('[draggable=true]').forEach(function(el){
     el.addEventListener('dragstart',function(e){dragIdx=parseInt(el.dataset.idx);el.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
-    el.addEventListener('dragend',function(){el.classList.remove('dragging');container.querySelectorAll('.drop-target').forEach(function(n){n.classList.remove('drop-target');});});
-    el.addEventListener('dragover',function(e){e.preventDefault();if(parseInt(el.dataset.idx)!==dragIdx)el.classList.add('drop-target');});
-    el.addEventListener('dragleave',function(){el.classList.remove('drop-target');});
+    el.addEventListener('dragend',function(){el.classList.remove('dragging');container.querySelectorAll('.drop-target').forEach(function(n){n.classList.remove('drop-target');});dragIdx=null;});
+    el.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='move';if(parseInt(el.dataset.idx)!==dragIdx)el.classList.add('drop-target');});
+    el.addEventListener('dragleave',function(e){if(!el.contains(e.relatedTarget))el.classList.remove('drop-target');});
     el.addEventListener('drop',async function(e){
       e.preventDefault();el.classList.remove('drop-target');
       var ti=parseInt(el.dataset.idx);if(dragIdx===null||dragIdx===ti)return;
