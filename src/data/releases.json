@@ -1,15 +1,6 @@
 {
   "items": [
     {
-      "title": "Test",
-      "cover": "/releases/test.png",
-      "format": "album",
-      "year": "2026",
-      "spotify": "https://open.spotify.com/album/6qNdniqBdZKEtSELnN4pcf",
-      "apple": "https://music.apple.com/es/album/euphoria-ep/1712835681?l=en-GB",
-      "deezer": "https://www.deezer.com/en/album/502655261"
-    },
-    {
       "title": "Holy Vibe",
       "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
       "format": "album",
