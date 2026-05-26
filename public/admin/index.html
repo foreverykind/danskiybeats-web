@@ -914,7 +914,14 @@
 
 <script>
 var REPO='foreverykind/danskiybeats-web',BRANCH='main',GH='https://api.github.com';
-function tok(){return sessionStorage.getItem('gh_token');}
+var TOKEN_KEY='gh_token',TOKEN_EXP_KEY='gh_token_exp',TOKEN_TTL=24*60*60*1000;
+function tok(){
+  var t=localStorage.getItem(TOKEN_KEY),exp=parseInt(localStorage.getItem(TOKEN_EXP_KEY)||'0',10);
+  if(!t||!exp||Date.now()>exp){clearToken();return null;}
+  return t;
+}
+function setToken(t){localStorage.setItem(TOKEN_KEY,t);localStorage.setItem(TOKEN_EXP_KEY,String(Date.now()+TOKEN_TTL));}
+function clearToken(){localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(TOKEN_EXP_KEY);}
 async function gh(path,opts){
   opts=opts||{};
   var r=await fetch(GH+path,Object.assign({},opts,{headers:Object.assign({'Authorization':'Bearer '+tok(),'Content-Type':'application/json','User-Agent':'danskiy-admin','X-GitHub-Api-Version':'2022-11-28'},opts.headers||{})}));
@@ -954,7 +961,7 @@ document.getElementById('loginBtn').addEventListener('click',function(){
     if(e.data.startsWith('authorization:github:success:')){
       window.removeEventListener('message',handler);
       var p=JSON.parse(e.data.slice('authorization:github:success:'.length));
-      sessionStorage.setItem('gh_token',p.token);
+      setToken(p.token);
       if(!popup.closed)popup.close();
       startApp();
     }
@@ -965,7 +972,7 @@ document.getElementById('loginBtn').addEventListener('click',function(){
   },500);
 });
 document.getElementById('logoutBtn').addEventListener('click',function(){
-  sessionStorage.removeItem('gh_token');
+  clearToken();
   document.getElementById('app').classList.remove('active');
   document.getElementById('loginScreen').classList.remove('hidden');
   document.getElementById('loginBtn').disabled=false;
@@ -985,7 +992,9 @@ async function startApp(){
     document.getElementById('app').classList.add('active');
     hideLoad();lucide.createIcons();
   }catch(err){
-    hideLoad();alert('Login failed: '+err.message);
+    hideLoad();clearToken();
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('loginBtn').disabled=false;
     document.getElementById('loginBtnText').textContent='Login with GitHub';
   }
@@ -1258,6 +1267,8 @@ async function removeRelease(idx){
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
 function initSortable(container,key){
+  var existing=Sortable.get(container);
+  if(existing)existing.destroy();
   new Sortable(container,{
     handle:'.drag-handle',
     animation:150,
@@ -1280,7 +1291,8 @@ function initSortable(container,key){
     }
   });
 }
-hideLoad();lucide.createIcons();
+lucide.createIcons();
+if(tok())startApp();else hideLoad();
 </script>
 </body>
 </html>
