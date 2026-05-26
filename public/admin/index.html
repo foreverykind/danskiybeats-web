@@ -761,7 +761,7 @@
     <section class="screen" id="screen-clients">
       <div class="topbar"><div class="topbar-left">
         <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
-        <div><h1 class="page-title">Clients</h1><div class="page-sub">Brands featured on the clients strip.</div></div>
+        <div><h1 class="page-title">Clients</h1><div class="page-sub">Brands featured on the clients strip. Drag to reorder.</div></div>
       </div>
       <button class="btn btn-primary" onclick="openClientModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Client</span></button>
       </div>
@@ -1139,8 +1139,14 @@ async function removeLink(idx){
 function renderClients(){
   var items=cache['clients.json'].content.items||[],grid=document.getElementById('clientsGrid');
   if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="users" class="icon"></i></div><h4>No clients yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
-  grid.innerHTML=items.map(function(c,i){var logoSrc=clientBlobUrls[i]||c.logo;var logoHtml=logoSrc?'<img src="'+logoSrc+'" alt="'+c.name+'" onerror="this.outerHTML=\'<span>\'+this.getAttribute(\'alt\').toUpperCase()+\'</span>\'" />':(c.name.toUpperCase());return'<div class="client-card"><div class="client-logo">'+logoHtml+'</div><div class="client-info"><span class="client-name">'+c.name+'</span><div style="display:flex;gap:4px"><button class="icon-btn" onclick="openClientModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
-  lucide.createIcons();
+  grid.innerHTML=items.map(function(c,i){var logoSrc=clientBlobUrls[i]||c.logo;var logoHtml=logoSrc?'<img src="'+logoSrc+'" alt="'+c.name+'" onerror="this.outerHTML=\'<span>\'+this.getAttribute(\'alt\').toUpperCase()+\'</span>\'" />':(c.name.toUpperCase());return'<div class="client-card" data-idx="'+i+'"><div class="client-logo">'+logoHtml+'</div><div class="client-info"><div style="display:flex;align-items:center;gap:6px;min-width:0"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><span class="client-name">'+c.name+'</span></div><div style="display:flex;gap:4px"><button class="icon-btn" onclick="openClientModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeClient('+i+')" title="Remove"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  lucide.createIcons();initSortable(grid,'clients');
+}
+function reorderClientBlobs(from,to){
+  var n=(cache['clients.json'].content.items||[]).length,a=[],i;
+  for(i=0;i<n;i++)a[i]=clientBlobUrls[i];
+  var m=a.splice(from,1)[0];a.splice(to,0,m);
+  clientBlobUrls={};for(i=0;i<a.length;i++)if(a[i])clientBlobUrls[i]=a[i];
 }
 async function removeClient(idx){
   if(!confirm('Remove this client?'))return;
@@ -1278,15 +1284,16 @@ function initSortable(container,key){
     fallbackOnBody:true,
     onEnd:async function(evt){
       var from=evt.oldIndex,to=evt.newIndex;if(from===to)return;
-      var jk=key==='works'?'works.json':key==='releases'?'releases.json':'contact.json';
+      var jk=key==='works'?'works.json':key==='releases'?'releases.json':key==='clients'?'clients.json':'contact.json';
       var field=key==='links'?'links':'items';
       var arr=cache[jk].content[field].slice(),moved=arr.splice(from,1)[0];arr.splice(to,0,moved);
+      if(key==='clients')reorderClientBlobs(from,to);
       showLoad('Saving order...');
       try{
         var content=Object.assign({},cache[jk].content);content[field]=arr;
         var res=await writeFile('src/data/'+jk,cache[jk].sha,content,'Reorder '+key+' via admin');
         cache[jk].sha=res.content.sha;cache[jk].content=content;
-        if(key==='works')renderWorks();else if(key==='releases')renderReleases();else renderLinks();toast('Order saved');
+        if(key==='works')renderWorks();else if(key==='releases')renderReleases();else if(key==='clients')renderClients();else renderLinks();toast('Order saved');
       }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
     }
   });
