@@ -1,12 +1,12 @@
 {
   "items": [
     {
-      "name": "Mercedes",
-      "logo": "/clients/mercedes.png"
-    },
-    {
       "name": "Lexus",
       "logo": "/clients/lexus-seeklogo.png"
+    },
+    {
+      "name": "Mercedes",
+      "logo": "/clients/mercedes.png"
     },
     {
       "name": "Toyota",
