@@ -80,11 +80,10 @@ const posterUrl = cloudinaryPoster(h.video_url);
 </section>
 
 <script>
-  const isMobile = window.matchMedia('(max-width: 720px)').matches;
   const poster = document.getElementById('heroPoster') as HTMLImageElement | null;
   const video  = document.getElementById('heroVideo')  as HTMLVideoElement | null;
 
-  if (video && !isMobile) {
+  if (video) {
     const load = () => {
       video.src = video.dataset.src!;
       video.style.display = '';
