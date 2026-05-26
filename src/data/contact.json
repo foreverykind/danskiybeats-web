@@ -3,14 +3,14 @@
   "bookings_label": "Bookings 2026",
   "links": [
     {
-      "name": "Telegram",
-      "display": "@DanskiyBeats",
-      "url": "https://t.me/DanskiyBeats"
-    },
-    {
       "name": "Instagram",
       "display": "@danskiy",
       "url": "https://www.instagram.com/danskiy/"
+    },
+    {
+      "name": "Telegram",
+      "display": "@DanskiyBeats",
+      "url": "https://t.me/DanskiyBeats"
     }
   ],
   "streaming": [
