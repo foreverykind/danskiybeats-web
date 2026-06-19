@@ -25,6 +25,10 @@
       "logo": "/clients/netflix-seeklogo.png"
     },
     {
+      "name": "Universal Production Music",
+      "logo": "/clients/universal-production-music.svg"
+    },
+    {
       "name": "Vodafone",
       "logo": "/clients/Vodafone_logo_2017.png"
     },
@@ -59,10 +63,6 @@
     {
       "name": "Discovery +",
       "logo": "/clients/discovery--.png"
-    },
-    {
-      "name": "Universal Production Music",
-      "logo": "/clients/universal-production-music.svg"
     },
     {
       "name": "Felt Music",
