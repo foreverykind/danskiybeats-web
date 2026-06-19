@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Tapes II",
+      "cover": "/releases/tapes-ii.png",
+      "format": "album",
+      "year": "2025",
+      "spotify": "https://open.spotify.com/album/53b7suJQz2NPAqFlPIwhyc",
+      "apple": "https://music.apple.com/ua/album/tapes-ii-ep/1880861607",
+      "deezer": "https://www.deezer.com/ru/album/929111331"
+    },
+    {
       "title": "Tapes",
       "cover": "/releases/tapes.jpg",
       "format": "album",
