@@ -67,6 +67,10 @@
     {
       "name": "Felt Music",
       "logo": "/clients/felt-music.png"
+    },
+    {
+      "name": "Amazon Prime",
+      "logo": "/clients/amazon-prime.png"
     }
   ]
 }
