@@ -29,6 +29,10 @@
       "logo": "/clients/universal-production-music.svg"
     },
     {
+      "name": "Felt Music",
+      "logo": "/clients/felt-music.png"
+    },
+    {
       "name": "Vodafone",
       "logo": "/clients/Vodafone_logo_2017.png"
     },
@@ -63,10 +67,6 @@
     {
       "name": "Discovery +",
       "logo": "/clients/discovery--.png"
-    },
-    {
-      "name": "Felt Music",
-      "logo": "/clients/felt-music.png"
     },
     {
       "name": "Amazon Prime",
