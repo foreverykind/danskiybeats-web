@@ -5,6 +5,10 @@
       "logo": "/clients/mercedes.png"
     },
     {
+      "name": "Puma",
+      "logo": "/clients/puma-se-seeklogo.png"
+    },
+    {
       "name": "Lexus",
       "logo": "/clients/lexus-seeklogo.png"
     },
@@ -35,10 +39,6 @@
     {
       "name": "Felt Music",
       "logo": "/clients/felt-music.png"
-    },
-    {
-      "name": "Puma",
-      "logo": "/clients/puma-se-seeklogo.png"
     },
     {
       "name": "Hulu",
