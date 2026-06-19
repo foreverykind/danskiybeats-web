@@ -63,6 +63,10 @@
     {
       "name": "Universal Production Music",
       "logo": "/clients/universal-production-music.svg"
+    },
+    {
+      "name": "Felt Music",
+      "logo": "/clients/felt-music.png"
     }
   ]
 }
