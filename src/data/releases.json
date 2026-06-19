@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Yasmine",
+      "cover": "/releases/yasmine.png",
+      "format": "album",
+      "year": "2024",
+      "spotify": "https://open.spotify.com/album/35IhR5YiMN1152BiLnAjFR",
+      "apple": "https://music.apple.com/ua/album/yasmine-ep/1754381685",
+      "deezer": "https://www.deezer.com/ru/album/608257432"
+    },
+    {
       "title": "Tapes II",
       "cover": "/releases/tapes-ii.png",
       "format": "album",
