@@ -63,6 +63,10 @@
     {
       "name": "Discovery +",
       "logo": "/clients/discovery--.png"
+    },
+    {
+      "name": "Universal Production Music",
+      "logo": "/clients/universal-production-music.svg"
     }
   ]
 }
