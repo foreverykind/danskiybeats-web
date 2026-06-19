@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Tapes",
+      "cover": "/releases/tapes.png",
+      "format": "album",
+      "year": "2023",
+      "spotify": "https://open.spotify.com/album/29tFnXt6Of3sndPMLiz1DY?si=2LiHQa7nS1ep3-jYqpOstQ&nd=1&dlsi=132d0c81c90141d4",
+      "apple": "https://music.apple.com/ua/album/tapes-ep/1687585670",
+      "deezer": "https://www.deezer.com/en/album/440700737"
+    },
+    {
       "title": "Holy Vibe",
       "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
       "format": "album",
