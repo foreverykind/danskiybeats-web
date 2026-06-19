@@ -1,6 +1,15 @@
 {
   "items": [
     {
+      "title": "Santa Cruz",
+      "cover": "/releases/santa-cruz.png",
+      "format": "album",
+      "year": "2024",
+      "spotify": "https://open.spotify.com/album/76a6poUjnRscEtba44gFOM",
+      "apple": "https://music.apple.com/ua/album/santa-cruz-ep/1771794014",
+      "deezer": "https://www.deezer.com/uk/album/650887961"
+    },
+    {
       "title": "Yasmine",
       "cover": "/releases/yasmine.png",
       "format": "album",
