@@ -6,6 +6,11 @@
       "image": "/tvshows/man-city-treble-winners.jpg"
     },
     {
+      "show": "Breakdown",
+      "channel": "Disney+",
+      "image": "/tvshows/breakdown.jpg"
+    },
+    {
       "show": "Baddies West",
       "channel": "Zeus",
       "image": "/tvshows/baddies-west.jpg"
@@ -19,11 +24,6 @@
       "show": "Bitchin' Rides",
       "channel": "Discovery+",
       "image": "/tvshows/bitchin-rides.jpg"
-    },
-    {
-      "show": "Breakdown",
-      "channel": "Disney+",
-      "image": "/tvshows/breakdown.jpg"
     },
     {
       "show": "Center Court",
