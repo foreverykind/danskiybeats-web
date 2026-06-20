@@ -1,22 +1,94 @@
 {
   "items": [
-    { "show": "Baddies West", "channel": "Zeus", "image": "/tvshows/baddies-west.jpg" },
-    { "show": "Beauty In Black", "channel": "Netflix", "image": "/tvshows/beauty-in-black.jpg" },
-    { "show": "Bitchin' Rides", "channel": "Discovery+", "image": "/tvshows/bitchin-rides.jpg" },
-    { "show": "Breakdown", "channel": "Disney+", "image": "/tvshows/breakdown.jpg" },
-    { "show": "Center Court", "channel": "Tennis Channel", "image": "/tvshows/center-court.jpg" },
-    { "show": "The Kelly Clarkson Show", "channel": "Peacock", "image": "/tvshows/kelly-clarkson-show.jpg" },
-    { "show": "Loaded In Paradise", "channel": "Apple TV", "image": "/tvshows/loaded-in-paradise.jpg" },
-    { "show": "Love After Lockup", "channel": "Amazon Prime", "image": "/tvshows/love-after-lockup.jpg" },
-    { "show": "Together: Treble Winners", "channel": "Netflix", "image": "/tvshows/man-city-treble-winners.jpg" },
-    { "show": "P1 Powerboat Racing", "channel": "Fox Sports", "image": "/tvshows/p1-powerboat-racing.jpg" },
-    { "show": "Premier League Stories", "channel": "Sky Sports", "image": "/tvshows/premier-league-stories.jpg" },
-    { "show": "Road to UEFA EURO 2024", "channel": "International TV Broadcast", "image": "/tvshows/road-to-euro-2024.jpg" },
-    { "show": "Stalker 2", "channel": "Original Game Soundtrack", "image": "/tvshows/stalker-2.jpg" },
-    { "show": "Super Street Garage", "channel": "Amazon Prime", "image": "/tvshows/super-street-garage.jpg" },
-    { "show": "The Absent Voice", "channel": "Disney+", "image": "/tvshows/the-absent-voice.jpg" },
-    { "show": "United Gangs Of America", "channel": "Vice TV", "image": "/tvshows/united-gangs-of-america.jpg" },
-    { "show": "Unprisoned", "channel": "Hulu", "image": "/tvshows/unprisoned.jpg" },
-    { "show": "World's Strongest Man 2023", "channel": "CBS Sports", "image": "/tvshows/worlds-strongest-man-2023.jpg" }
+    {
+      "show": "Together: Treble Winners",
+      "channel": "Netflix",
+      "image": "/tvshows/man-city-treble-winners.jpg"
+    },
+    {
+      "show": "Baddies West",
+      "channel": "Zeus",
+      "image": "/tvshows/baddies-west.jpg"
+    },
+    {
+      "show": "Beauty In Black",
+      "channel": "Netflix",
+      "image": "/tvshows/beauty-in-black.jpg"
+    },
+    {
+      "show": "Bitchin' Rides",
+      "channel": "Discovery+",
+      "image": "/tvshows/bitchin-rides.jpg"
+    },
+    {
+      "show": "Breakdown",
+      "channel": "Disney+",
+      "image": "/tvshows/breakdown.jpg"
+    },
+    {
+      "show": "Center Court",
+      "channel": "Tennis Channel",
+      "image": "/tvshows/center-court.jpg"
+    },
+    {
+      "show": "The Kelly Clarkson Show",
+      "channel": "Peacock",
+      "image": "/tvshows/kelly-clarkson-show.jpg"
+    },
+    {
+      "show": "Loaded In Paradise",
+      "channel": "Apple TV",
+      "image": "/tvshows/loaded-in-paradise.jpg"
+    },
+    {
+      "show": "Love After Lockup",
+      "channel": "Amazon Prime",
+      "image": "/tvshows/love-after-lockup.jpg"
+    },
+    {
+      "show": "P1 Powerboat Racing",
+      "channel": "Fox Sports",
+      "image": "/tvshows/p1-powerboat-racing.jpg"
+    },
+    {
+      "show": "Premier League Stories",
+      "channel": "Sky Sports",
+      "image": "/tvshows/premier-league-stories.jpg"
+    },
+    {
+      "show": "Road to UEFA EURO 2024",
+      "channel": "International TV Broadcast",
+      "image": "/tvshows/road-to-euro-2024.jpg"
+    },
+    {
+      "show": "Stalker 2",
+      "channel": "Original Game Soundtrack",
+      "image": "/tvshows/stalker-2.jpg"
+    },
+    {
+      "show": "Super Street Garage",
+      "channel": "Amazon Prime",
+      "image": "/tvshows/super-street-garage.jpg"
+    },
+    {
+      "show": "The Absent Voice",
+      "channel": "Disney+",
+      "image": "/tvshows/the-absent-voice.jpg"
+    },
+    {
+      "show": "United Gangs Of America",
+      "channel": "Vice TV",
+      "image": "/tvshows/united-gangs-of-america.jpg"
+    },
+    {
+      "show": "Unprisoned",
+      "channel": "Hulu",
+      "image": "/tvshows/unprisoned.jpg"
+    },
+    {
+      "show": "World's Strongest Man 2023",
+      "channel": "CBS Sports",
+      "image": "/tvshows/worlds-strongest-man-2023.jpg"
+    }
   ]
 }
