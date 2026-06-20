@@ -46,60 +46,26 @@ const thumb = `https://img.youtube.com/vi/${ffYt}/maxresdefault.jpg`;
       </div>
     </section>
 
-    <!-- ───────── Variant B — Cinematic hero, stacked ───────── -->
-    <section class="vbox" data-variant="B" hidden>
+    <!-- ───────── Variant D — Poster centre, video left / vinyl right ───────── -->
+    <section class="vbox" data-variant="D" hidden>
       <div class="seclabel"><span class="n">04</span><span class="ln"></span><span>Cinema &amp; Trailer</span></div>
-      <div class="vB">
-        <a class="vB-hero vplay" href="#" data-yt={ffYt} style={`background-image:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.75)),url(${thumb})`}>
+      <header class="vD-head">
+        <span class="eyebrow">Feature Film</span>
+        <h2 class="display">{ff.title}</h2>
+        <span class="sub">{ff.subtitle}</span>
+      </header>
+      <div class="vD-row">
+        <a class="vD-video vplay" href="#" data-yt={ffYt} style={`background-image:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.55)),url(${thumb})`}>
           <span class="play"></span>
-          <div class="vB-hero-cap">
-            <span class="eyebrow">Feature Film · Watch</span>
-            <h2 class="display">{ff.title}</h2>
-            <span class="sub">{ff.subtitle}</span>
-          </div>
+          <span class="cap">Watch the Film</span>
         </a>
-        <div class="vB-row">
-          <figure class="vB-tile">
-            <img src={ff.poster} alt="" />
-            <figcaption>Movie Poster</figcaption>
-          </figure>
-          <a class="vB-tile vbuyable" href={ff.buyUrl} target="_blank" rel="noopener">
-            <img src={ff.vinyl} alt="" />
-            <div class="vinyl-overlay"><span class="buy-btn">Buy Vinyl</span></div>
-            <figcaption>Vinyl</figcaption>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ───────── Variant C — Product / spec sheet ───────── -->
-    <section class="vbox" data-variant="C" hidden>
-      <div class="seclabel"><span class="n">04</span><span class="ln"></span><span>Cinema &amp; Trailer</span></div>
-      <div class="vC">
-        <figure class="vC-poster">
+        <figure class="vD-poster">
           <img src={ff.poster} alt="" />
         </figure>
-        <div class="vC-info">
-          <span class="eyebrow">Feature Film — Soundtrack</span>
-          <h2 class="display">{ff.title}</h2>
-          <span class="sub">{ff.subtitle}</span>
-
-          <dl class="vC-spec">
-            <div><dt>Format</dt><dd>Original Soundtrack</dd></div>
-            <div><dt>Year</dt><dd>2024</dd></div>
-            <div><dt>Medium</dt><dd>Film · Vinyl · Digital</dd></div>
-            <div><dt>Composer</dt><dd>Danskiy</dd></div>
-          </dl>
-
-          <div class="vC-actions">
-            <a class="vC-btn vplay" href="#" data-yt={ffYt}><span class="tri"></span> Watch the Film</a>
-            <a class="vC-btn primary" href={ff.buyUrl} target="_blank" rel="noopener">Buy Vinyl →</a>
-          </div>
-
-          <a class="vC-vinyl vplay-none" href={ff.buyUrl} target="_blank" rel="noopener">
-            <img src={ff.vinyl} alt="" />
-          </a>
-        </div>
+        <a class="vD-vinyl vbuyable" href={ff.buyUrl} target="_blank" rel="noopener">
+          <img src={ff.vinyl} alt="" />
+          <div class="vinyl-overlay"><span class="buy-btn">Buy Vinyl</span></div>
+        </a>
       </div>
     </section>
 
@@ -182,6 +148,15 @@ const thumb = `https://img.youtube.com/vi/${ffYt}/maxresdefault.jpg`;
   .vC-vinyl img { width:100%; display:block; transition:filter .4s ease,transform .6s ease; }
   .vC-vinyl:hover img { filter:brightness(.5); transform:scale(1.03); }
 
+  /* ── Variant D — poster centre, video left / vinyl right ── */
+  .vD-head { text-align:center; margin-bottom:48px; }
+  .vD-row { display:grid; grid-template-columns:1fr 0.92fr 1fr; gap:24px; align-items:center; }
+  .vD-poster { margin:0; aspect-ratio:2/3; overflow:hidden; border:1px solid var(--rule); }
+  .vD-poster img { width:100%; height:100%; object-fit:cover; display:block; }
+  .vD-video { aspect-ratio:1/1; border:1px solid var(--rule); }
+  .vD-vinyl { position:relative; aspect-ratio:1/1; overflow:hidden; border:1px solid var(--rule); cursor:none; display:block; }
+  .vD-vinyl img { width:100%; height:100%; object-fit:cover; display:block; transition:filter .4s ease, transform .6s ease; }
+
   /* Lightbox */
   .plb { position:fixed; inset:0; background:rgba(0,0,0,.92); display:none; align-items:center; justify-content:center; z-index:1000; }
   .plb.open { display:flex; }
@@ -195,17 +170,22 @@ const thumb = `https://img.youtube.com/vi/${ffYt}/maxresdefault.jpg`;
   #curV { min-width:190px; text-align:center; }
 
   @media (max-width:760px){
-    .vA, .vC { grid-template-columns:1fr; }
-    .vC { gap:28px; }
-    .vB-hero { aspect-ratio:16/10; }
-    .vB-row { grid-template-columns:1fr; }
+    .vA { grid-template-columns:1fr; }
+    .vD-row { grid-template-columns:1fr; }
+    .vD-poster { aspect-ratio:3/4; }
     .vbox { padding:0 16px; }
+  }
+  @media (hover:none){
+    /* touch: show video play + vinyl buy without hover */
+    .vplay .play { opacity:1; }
+    .vbuyable img { filter:brightness(.42); }
+    .vbuyable .vinyl-overlay { opacity:1; }
   }
 </style>
 
 <script is:inline>
-  const NAMES = { A: 'A — Editorial split', B: 'B — Cinematic hero', C: 'C — Product / spec' };
-  const order = ['A', 'B', 'C'];
+  const NAMES = { A: 'A — Editorial split', D: 'D — Poster centre' };
+  const order = ['A', 'D'];
 
   function show(v) {
     if (!order.includes(v)) v = 'A';
