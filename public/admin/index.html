@@ -675,7 +675,9 @@
   .load-overlay.hidden{display:none}
   .load-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
   .load-overlay p{color:var(--text-dim);font-size:14px;margin:0}
-  .file-preview{width:100%;height:80px;object-fit:contain;margin-bottom:8px;border-radius:4px;display:block}
+  .file-preview{max-width:100%;max-height:300px;width:auto;height:auto;object-fit:contain;margin:0 auto 8px;border-radius:6px;display:block}
+  .file-drop.has-preview{padding:12px}
+  .file-drop.has-preview .icon{display:none}
   .client-logo img{max-width:70%;max-height:70%;object-fit:contain;filter:brightness(0)}
   .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 </style>
@@ -1121,13 +1123,19 @@ document.querySelectorAll('.modal-overlay').forEach(function(o){
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(function(o){closeModal(o.id);});
 });
-function previewFile(input,dropId,labelId){
-  var file=input.files[0];if(!file)return;
+function renderDropPreview(dropId,labelId,src,labelText){
   var drop=document.getElementById(dropId),lbl=document.getElementById(labelId);
+  if(!drop)return;
   drop.style.backgroundImage='';
   drop.querySelectorAll('img.file-preview').forEach(function(i){i.remove();});
-  var img=document.createElement('img');img.src=URL.createObjectURL(file);img.className='file-preview';
-  drop.insertBefore(img,drop.firstChild);lbl.textContent=file.name;
+  if(!src){drop.classList.remove('has-preview');if(lbl)lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';return;}
+  var img=document.createElement('img');img.className='file-preview';img.src=src;
+  drop.insertBefore(img,drop.firstChild);drop.classList.add('has-preview');
+  if(lbl)lbl.textContent=labelText||'Loaded — upload new to replace';
+}
+function previewFile(input,dropId,labelId){
+  var file=input.files[0];if(!file)return;
+  renderDropPreview(dropId,labelId,URL.createObjectURL(file),file.name);
 }
 function toast(msg,type){
   type=type||'success';
@@ -1243,12 +1251,7 @@ function openClientModal(idx){
   document.getElementById('clientModalTitle').textContent=isEdit?'Edit client':'Add client';
   document.getElementById('cf_brand').value=isEdit?(cache['clients.json'].content.items[idx].name||''):'';
   document.getElementById('cf_logo').value='';
-  var drop=document.getElementById('clientLogoDrop'),lbl=document.getElementById('clientLogoLabel');
-  if(isEdit){
-    var cur=cache['clients.json'].content.items[idx].logo;
-    if(cur){drop.style.backgroundImage='url('+cur+')';drop.style.backgroundSize='contain';drop.style.backgroundRepeat='no-repeat';drop.style.backgroundPosition='center';lbl.textContent='Logo loaded — upload new to replace';}
-    else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
-  }else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
+  setDropPreview('clientLogoDrop','clientLogoLabel', isEdit?(cache['clients.json'].content.items[idx].logo||''):'');
   openModal('clientModal');
 }
 async function submitClient(){
@@ -1349,13 +1352,7 @@ async function removeCinema(idx){
     cache['cinema.json'].sha=res.content.sha;cache['cinema.json'].content=content;renderCinema();toast('Work deleted');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
-function setDropPreview(dropId,labelId,url){
-  var drop=document.getElementById(dropId),lbl=document.getElementById(labelId);
-  if(!drop)return;
-  drop.querySelectorAll('img.file-preview').forEach(function(i){i.remove();});
-  if(url){drop.style.backgroundImage='url('+url+')';drop.style.backgroundSize='contain';drop.style.backgroundRepeat='no-repeat';drop.style.backgroundPosition='center';lbl.textContent='Loaded — upload new to replace';}
-  else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
-}
+function setDropPreview(dropId,labelId,url){ renderDropPreview(dropId,labelId,url); }
 function populateFullForce(){
   var ff=(cache['cinema.json'].content.fullforce)||{};
   document.getElementById('ff_title').value=ff.title||'';
@@ -1394,8 +1391,8 @@ function renderTvShows(){
 function openTvModal(idx){
   document.getElementById('tf_idx').value=idx!==undefined?idx:'';
   document.getElementById('tvModalTitle').textContent=idx!==undefined?'Edit show':'Add show';
-  if(idx!==undefined){var s=cache['tvshows.json'].content.items[idx];document.getElementById('tf_show').value=s.show||'';document.getElementById('tf_channel').value=s.channel||'';}
-  else document.getElementById('tvForm').reset();
+  if(idx!==undefined){var s=cache['tvshows.json'].content.items[idx];document.getElementById('tf_show').value=s.show||'';document.getElementById('tf_channel').value=s.channel||'';setDropPreview('tvPosterDrop','tvPosterLabel',s.image);}
+  else {document.getElementById('tvForm').reset();setDropPreview('tvPosterDrop','tvPosterLabel','');}
   openModal('tvModal');
 }
 async function submitTv(){
@@ -1434,8 +1431,8 @@ function renderReleases(){
 function openReleaseModal(idx){
   document.getElementById('rf_idx').value=idx!==undefined?idx:'';
   document.getElementById('releaseModalTitle').textContent=idx!==undefined?'Edit release':'Add release';
-  if(idx!==undefined){var r=cache['releases.json'].content.items[idx];document.getElementById('rf_title').value=r.title||'';document.getElementById('rf_year').value=r.year||'';document.getElementById('rf_spotify').value=r.spotify||'';document.getElementById('rf_apple').value=r.apple||'';document.getElementById('rf_deezer').value=r.deezer||'';}
-  else document.getElementById('releaseForm').reset();
+  if(idx!==undefined){var r=cache['releases.json'].content.items[idx];document.getElementById('rf_title').value=r.title||'';document.getElementById('rf_year').value=r.year||'';document.getElementById('rf_spotify').value=r.spotify||'';document.getElementById('rf_apple').value=r.apple||'';document.getElementById('rf_deezer').value=r.deezer||'';setDropPreview('releaseCoverDrop','releaseCoverLabel',r.cover);}
+  else {document.getElementById('releaseForm').reset();setDropPreview('releaseCoverDrop','releaseCoverLabel','');}
   openModal('releaseModal');
 }
 async function submitRelease(){
