@@ -373,16 +373,12 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 }
 .work-loadmore-wrap { display: flex; justify-content: center; }
 
-/* ─── Touch devices: reveal titles & give tap feedback ─── */
-@media (hover: none) {
-  /* Work: show brand/title without hover — a tap opens the video */
-  .work-card .overlay {
-    opacity: 1;
-    background: linear-gradient(to top,
-      rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.45) 38%, rgba(8,8,8,0) 72%);
-  }
-  .work-card:active .thumb { filter: brightness(0.5); }
+/* ─── Touch devices: tap to reveal, tap again to open ─── */
+/* A revealed card mirrors the desktop :hover state (title fades in over the dimmed thumb) */
+.work-card.revealed .thumb { transform: scale(1.04); filter: brightness(0.55); }
+.work-card.revealed .overlay { opacity: 1; }
 
+@media (hover: none) {
   /* Clients: react to touch (press inverts, like desktop hover) */
   .logo-cell.is-pressed { background: var(--fg); color: var(--bg); }
   .logo-cell.is-pressed .logo-img { filter: brightness(0); }
@@ -771,7 +767,6 @@ body.vmodal-locked { overflow: hidden; }
 .tv-channel { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--fg-dim); margin-top: 6px; }
 @media (max-width: 900px) { .tv-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 560px) { .tv-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (hover: none) {
-  .tv-overlay { opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0) 55%); }
-  .tv-card:active .tv-art { filter: brightness(0.4); }
-}
+/* touch: tap a poster to reveal its show/channel */
+.tv-card.revealed .tv-art { filter: brightness(0.32); transform: scale(1.04); }
+.tv-card.revealed .tv-overlay { opacity: 1; }

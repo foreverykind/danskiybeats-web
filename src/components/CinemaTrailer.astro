@@ -139,11 +139,19 @@ const ffYt = extractYoutubeId(ff.youtubeUrl);
   }
 
   // Grid cards
-  Array.from(document.querySelectorAll('#cinemaGrid .work-card')).forEach((card, i) => {
+  const cIsTouch = window.matchMedia('(hover: none)').matches;
+  const cCards = Array.from(document.querySelectorAll('#cinemaGrid .work-card'));
+  cCards.forEach((card, i) => {
     const thumb = card.querySelector('.thumb');
     if (thumb) { thumb.dataset.yt = card.dataset.yt; cObserver.observe(thumb); }
     card.addEventListener('click', (e) => {
       e.preventDefault();
+      // On touch: first tap reveals the title, second tap opens the video
+      if (cIsTouch && !card.classList.contains('revealed')) {
+        cCards.forEach((c) => c.classList.remove('revealed'));
+        card.classList.add('revealed');
+        return;
+      }
       const w = items[i];
       openCinema(w.yt, w.brand, w.title, `${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}`);
     });
