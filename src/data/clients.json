@@ -5,52 +5,56 @@
       "logo": "/clients/mercedes.png"
     },
     {
-      "name": "Lexus",
-      "logo": "/clients/lexus-seeklogo.png"
+      "name": "Puma",
+      "logo": "/clients/puma-se-seeklogo.png"
     },
     {
-      "name": "Toyota",
-      "logo": "/clients/toyota-seeklogo.png"
+      "name": "Lexus",
+      "logo": "/clients/lexus-seeklogo.png"
     },
     {
       "name": "Nike",
       "logo": "/clients/nike-logo-png_seeklogo-99482.png"
     },
     {
-      "name": "BMW",
-      "logo": "/clients/bmw-seeklogo.png"
+      "name": "Toyota",
+      "logo": "/clients/toyota-seeklogo.png"
     },
     {
-      "name": "Universal Music",
-      "logo": "/clients/universal-music-group-seeklogo.png"
+      "name": "BMW",
+      "logo": "/clients/bmw-seeklogo.png"
     },
     {
       "name": "Netflix",
       "logo": "/clients/netflix-seeklogo.png"
     },
     {
+      "name": "Universal Production Music",
+      "logo": "/clients/universal-production-music.svg"
+    },
+    {
       "name": "Vodafone",
       "logo": "/clients/Vodafone_logo_2017.png"
     },
     {
-      "name": "Puma",
-      "logo": "/clients/puma-se-seeklogo.png"
-    },
-    {
-      "name": "Levi's",
-      "logo": "/clients/Levis-logo-quer.svg.png"
+      "name": "Felt Music",
+      "logo": "/clients/felt-music.png"
     },
     {
       "name": "Hulu",
       "logo": "/clients/hulu-seeklogo.svg"
     },
     {
-      "name": "JJS",
-      "logo": "/clients/jjs-seeklogo.png"
+      "name": "Levi's",
+      "logo": "/clients/Levis-logo-quer.svg.png"
     },
     {
       "name": "Peacock",
       "logo": "/clients/peacock.png"
+    },
+    {
+      "name": "JJS",
+      "logo": "/clients/jjs-seeklogo.png"
     },
     {
       "name": "Sky Sports",
@@ -63,6 +67,10 @@
     {
       "name": "Discovery +",
       "logo": "/clients/discovery--.png"
+    },
+    {
+      "name": "Amazon Prime",
+      "logo": "/clients/amazon-prime.png"
     }
   ]
 }

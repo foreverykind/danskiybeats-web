@@ -1,6 +1,42 @@
 {
   "items": [
     {
+      "title": "Santa Cruz",
+      "cover": "/releases/santa-cruz.png",
+      "format": "album",
+      "year": "2024",
+      "spotify": "https://open.spotify.com/album/76a6poUjnRscEtba44gFOM",
+      "apple": "https://music.apple.com/ua/album/santa-cruz-ep/1771794014",
+      "deezer": "https://www.deezer.com/uk/album/650887961"
+    },
+    {
+      "title": "Yasmine",
+      "cover": "/releases/yasmine.png",
+      "format": "album",
+      "year": "2024",
+      "spotify": "https://open.spotify.com/album/35IhR5YiMN1152BiLnAjFR",
+      "apple": "https://music.apple.com/ua/album/yasmine-ep/1754381685",
+      "deezer": "https://www.deezer.com/ru/album/608257432"
+    },
+    {
+      "title": "Tapes II",
+      "cover": "/releases/tapes-ii.png",
+      "format": "album",
+      "year": "2025",
+      "spotify": "https://open.spotify.com/album/53b7suJQz2NPAqFlPIwhyc",
+      "apple": "https://music.apple.com/ua/album/tapes-ii-ep/1880861607",
+      "deezer": "https://www.deezer.com/ru/album/929111331"
+    },
+    {
+      "title": "Tapes",
+      "cover": "/releases/tapes.jpg",
+      "format": "album",
+      "year": "2023",
+      "spotify": "https://open.spotify.com/album/29tFnXt6Of3sndPMLiz1DY?si=2LiHQa7nS1ep3-jYqpOstQ&nd=1&dlsi=132d0c81c90141d4",
+      "apple": "https://music.apple.com/ua/album/tapes-ep/1687585670",
+      "deezer": "https://www.deezer.com/en/album/440700737"
+    },
+    {
       "title": "Holy Vibe",
       "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
       "format": "album",
