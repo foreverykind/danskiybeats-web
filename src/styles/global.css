@@ -732,12 +732,41 @@ body.vmodal-locked { overflow: hidden; }
   border-top: 7px solid transparent; border-bottom: 7px solid transparent;
   margin-left: 3px;
 }
+.ff-tile .ff-cap {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  padding: 16px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--fg); background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0));
+}
+/* Buyable vinyl tile — darken on hover, reveal CTA */
+.ff-buyable { cursor: none; }
+.ff-buyable img { transition: filter 0.4s ease, transform 0.6s cubic-bezier(.2,.6,.2,1); }
+.ff-buyable:hover img { filter: brightness(0.32); transform: scale(1.04); }
+.ff-vinyl-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.35s ease;
+}
+.ff-buyable:hover .ff-vinyl-overlay { opacity: 1; }
+.ff-buy {
+  border: 1px solid var(--fg); color: var(--fg);
+  padding: 13px 24px; border-radius: 999px;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500;
+  background: rgba(0,0,0,0.25); backdrop-filter: blur(2px);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.ff-buyable:hover .ff-buy { background: var(--fg); color: var(--bg); }
+
 @media (max-width: 720px) {
   .ff-case { padding: 64px 20px 0; }
   .ff-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
   .ff-poster { aspect-ratio: 3/4; }
   .ff-video  { aspect-ratio: 16/9; }
   .ff-vinyl  { aspect-ratio: 16/10; }
+}
+@media (hover: none) {
+  /* Touch: show the Buy CTA without hover */
+  .ff-buyable img { filter: brightness(0.42); }
+  .ff-vinyl-overlay { opacity: 1; }
 }
 
 /* ─── TV & Shows ─── */

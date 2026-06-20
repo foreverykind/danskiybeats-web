@@ -797,6 +797,7 @@
               <div class="field"><label>Subtitle</label><input class="input" id="ff_subtitle" type="text" placeholder="Original Motion Picture Soundtrack" /></div>
             </div>
             <div class="field"><label>Film YouTube URL</label><input class="input" id="ff_youtube" type="url" placeholder="https://www.youtube.com/watch?v=..." /></div>
+            <div class="field"><label>Buy Vinyl URL</label><input class="input" id="ff_buy" type="url" placeholder="https://vinyla.com/..." /><div class="hint">Shown as a “Buy Vinyl” button over the vinyl image.</div></div>
             <div class="form-grid cols-2" style="gap:18px">
               <div class="field"><label>Movie poster</label>
                 <label class="file-drop" id="ffPosterDrop">
@@ -1348,11 +1349,21 @@ async function removeCinema(idx){
     cache['cinema.json'].sha=res.content.sha;cache['cinema.json'].content=content;renderCinema();toast('Work deleted');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
+function setDropPreview(dropId,labelId,url){
+  var drop=document.getElementById(dropId),lbl=document.getElementById(labelId);
+  if(!drop)return;
+  drop.querySelectorAll('img.file-preview').forEach(function(i){i.remove();});
+  if(url){drop.style.backgroundImage='url('+url+')';drop.style.backgroundSize='contain';drop.style.backgroundRepeat='no-repeat';drop.style.backgroundPosition='center';lbl.textContent='Loaded — upload new to replace';}
+  else{drop.style.backgroundImage='';lbl.innerHTML='<strong style="color:var(--primary)">Browse</strong>';}
+}
 function populateFullForce(){
   var ff=(cache['cinema.json'].content.fullforce)||{};
   document.getElementById('ff_title').value=ff.title||'';
   document.getElementById('ff_subtitle').value=ff.subtitle||'';
   document.getElementById('ff_youtube').value=ff.youtubeUrl||'';
+  document.getElementById('ff_buy').value=ff.buyUrl||'';
+  setDropPreview('ffPosterDrop','ffPosterLabel',ff.poster);
+  setDropPreview('ffVinylDrop','ffVinylLabel',ff.vinyl);
 }
 async function saveFullForce(){
   var btn=document.querySelector('#fullforceForm button[type=submit]');btn.classList.add('loading');
@@ -1361,6 +1372,7 @@ async function saveFullForce(){
     ff.title=document.getElementById('ff_title').value.trim();
     ff.subtitle=document.getElementById('ff_subtitle').value.trim();
     ff.youtubeUrl=document.getElementById('ff_youtube').value.trim();
+    ff.buyUrl=document.getElementById('ff_buy').value.trim();
     var pf=document.getElementById('ff_poster').files[0];
     if(pf){var pe=pf.name.split('.').pop();ff.poster=await uploadFile('fullforce','poster.'+pe,pf);}
     var vf=document.getElementById('ff_vinyl').files[0];
