@@ -107,21 +107,11 @@ const TOTAL = works.length;
     });
   }, { rootMargin: '200px' });
 
-  const isTouch = window.matchMedia('(hover: none)').matches;
   const allCards = Array.from(document.querySelectorAll('#workGrid .work-card'));
   allCards.forEach((card, i) => {
     const thumb = card.querySelector('.thumb');
     if (thumb) thumbObserver.observe(thumb);
-    card.addEventListener('click', (e) => {
-      e.preventDefault();
-      // On touch: first tap reveals the title, second tap opens the video
-      if (isTouch && !card.classList.contains('revealed')) {
-        allCards.forEach((c) => c.classList.remove('revealed'));
-        card.classList.add('revealed');
-        return;
-      }
-      openModal(i);
-    });
+    card.addEventListener('click', (e) => { e.preventDefault(); openModal(i); });
   });
 
   // Mobile load-more

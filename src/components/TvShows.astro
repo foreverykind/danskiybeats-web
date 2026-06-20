@@ -26,18 +26,3 @@ const shows = tvData.items;
     ))}
   </div>
 </section>
-
-<script is:inline>
-  /* Touch: tap a poster to reveal its show/channel (tap again hides) */
-  (function () {
-    if (window.matchMedia('(hover: hover)').matches) return;
-    const cards = Array.from(document.querySelectorAll('#tvGrid .tv-card'));
-    cards.forEach((card) => {
-      card.addEventListener('click', () => {
-        const was = card.classList.contains('revealed');
-        cards.forEach((c) => c.classList.remove('revealed'));
-        if (!was) card.classList.add('revealed');
-      });
-    });
-  })();
-</script>

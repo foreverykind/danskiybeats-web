@@ -91,6 +91,17 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
     });
   })();
 
+  /* ─── Mobile: reveal card titles as they pass the viewport center ─── */
+  (function () {
+    if (window.matchMedia('(hover: hover)').matches) return;
+    const cards = document.querySelectorAll('.work-card, .tv-card');
+    if (!cards.length) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((en) => en.target.classList.toggle('revealed', en.isIntersecting));
+    }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+    cards.forEach((c) => obs.observe(c));
+  })();
+
   /* ─── Hamburger Menu ─── */
   (function () {
     const h = document.getElementById('hamburger');
