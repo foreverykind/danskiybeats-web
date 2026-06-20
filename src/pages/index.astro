@@ -91,15 +91,24 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
     });
   })();
 
-  /* ─── Mobile: reveal card titles as they pass the viewport center ─── */
+  /* ─── Mobile: reveal the card the finger is over while scrolling ─── */
   (function () {
     if (window.matchMedia('(hover: hover)').matches) return;
-    const cards = document.querySelectorAll('.work-card, .tv-card');
-    if (!cards.length) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((en) => en.target.classList.toggle('revealed', en.isIntersecting));
-    }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
-    cards.forEach((c) => obs.observe(c));
+    const sel = '.work-card, .tv-card';
+    let current: Element | null = null;
+    function clear() { if (current) { current.classList.remove('revealed'); current = null; } }
+    function revealAt(x: number, y: number) {
+      const el = document.elementFromPoint(x, y);
+      const card = el ? el.closest(sel) : null;
+      if (card === current) return;       // no change — skip
+      clear();
+      if (card) { card.classList.add('revealed'); current = card; }
+    }
+    const at = (e: TouchEvent) => { const t = e.touches[0]; if (t) revealAt(t.clientX, t.clientY); };
+    window.addEventListener('touchstart', at, { passive: true });
+    window.addEventListener('touchmove', at, { passive: true });
+    window.addEventListener('touchend', clear, { passive: true });
+    window.addEventListener('touchcancel', clear, { passive: true });
   })();
 
   /* ─── Hamburger Menu ─── */
