@@ -373,6 +373,21 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
 }
 .work-loadmore-wrap { display: flex; justify-content: center; }
 
+/* ─── Touch devices: reveal titles & give tap feedback ─── */
+@media (hover: none) {
+  /* Work: show brand/title without hover — a tap opens the video */
+  .work-card .overlay {
+    opacity: 1;
+    background: linear-gradient(to top,
+      rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.45) 38%, rgba(8,8,8,0) 72%);
+  }
+  .work-card:active .thumb { filter: brightness(0.5); }
+
+  /* Clients: react to touch (press inverts, like desktop hover) */
+  .logo-cell.is-pressed { background: var(--fg); color: var(--bg); }
+  .logo-cell.is-pressed .logo-img { filter: brightness(0); }
+}
+
 /* ─── Releases (Coverflow) ─── */
 .releases {
   display: flex; flex-direction: column; align-items: center; justify-content: center;

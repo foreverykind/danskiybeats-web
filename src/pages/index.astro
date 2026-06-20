@@ -75,6 +75,18 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
     });
   })();
 
+  /* ─── Logo touch feedback (mobile) ─── */
+  (function () {
+    if (window.matchMedia('(hover: hover)').matches) return;
+    document.querySelectorAll('.logo-cell').forEach((cell) => {
+      const on = () => cell.classList.add('is-pressed');
+      const off = () => cell.classList.remove('is-pressed');
+      cell.addEventListener('touchstart', on, { passive: true });
+      cell.addEventListener('touchend', off, { passive: true });
+      cell.addEventListener('touchcancel', off, { passive: true });
+    });
+  })();
+
   /* ─── Hamburger Menu ─── */
   (function () {
     const h = document.getElementById('hamburger');
