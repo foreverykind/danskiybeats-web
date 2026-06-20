@@ -721,17 +721,17 @@ body.vmodal-locked { overflow: hidden; }
 }
 .ff-video:hover .ff-video-thumb { filter: brightness(0.5); transform: scale(1.04); }
 .ff-video .play {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 2;
-  width: 58px; height: 58px; border-radius: 50%; border: 1px solid var(--fg);
+  position: absolute; top: 22px; right: 22px; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--fg);
   display: flex; align-items: center; justify-content: center;
   opacity: 0; transition: opacity 0.35s ease;
 }
 .ff-video:hover .play { opacity: 1; }
 .ff-video .play::after {
   content: ""; width: 0; height: 0;
-  border-left: 11px solid var(--fg);
-  border-top: 7px solid transparent; border-bottom: 7px solid transparent;
-  margin-left: 3px;
+  border-left: 7px solid var(--fg);
+  border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  margin-left: 2px;
 }
 .ff-tile .ff-cap {
   position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
