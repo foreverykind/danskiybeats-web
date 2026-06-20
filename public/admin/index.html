@@ -1000,7 +1000,15 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-var REPO='foreverykind/danskiybeats-web',BRANCH='main',GH='https://api.github.com';
+var REPO='foreverykind/danskiybeats-web',GH='https://api.github.com';
+// Production domain edits `main`; a Vercel git-branch preview edits that branch
+// (so staging admin works on staging content). Hash preview URLs fall back to main.
+var BRANCH=(function(){
+  var h=location.hostname;
+  if(h==='danskiybeats.com'||h==='www.danskiybeats.com'||h==='localhost')return 'main';
+  var m=h.match(/^project-bzlk0-git-(.+)-danskiy-s-projects\.vercel\.app$/);
+  return m?m[1]:'main';
+})();
 var TOKEN_KEY='gh_token',TOKEN_EXP_KEY='gh_token_exp',TOKEN_TTL=24*60*60*1000;
 function tok(){
   var t=localStorage.getItem(TOKEN_KEY),exp=parseInt(localStorage.getItem(TOKEN_EXP_KEY)||'0',10);
@@ -1044,7 +1052,7 @@ document.getElementById('loginBtn').addEventListener('click',function(){
   var popup=window.open('/api/auth','github-oauth','width=620,height=720,left=200,top=100');
   var handler=function(e){
     if(typeof e.data!=='string')return;
-    if(e.data==='authorizing:github'){popup.postMessage('ack',location.origin);return;}
+    if(e.data==='authorizing:github'){popup.postMessage('ack','*');return;}
     if(e.data.startsWith('authorization:github:success:')){
       window.removeEventListener('message',handler);
       var p=JSON.parse(e.data.slice('authorization:github:success:'.length));
