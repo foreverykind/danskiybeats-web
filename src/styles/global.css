@@ -760,6 +760,10 @@ body.vmodal-locked { overflow: hidden; }
 @media (max-width: 720px) {
   .ff-case { padding: 64px 20px 0; }
   .ff-grid { grid-template-columns: 1fr; gap: 16px; }
+  /* mobile order: poster → film → vinyl */
+  .ff-poster { order: 0; }
+  .ff-video  { order: 1; }
+  .ff-vinyl  { order: 2; }
 }
 @media (hover: none) {
   /* Touch: show the video play + vinyl Buy CTA without hover */
