@@ -1,0 +1,168 @@
+---
+import cinemaData from '../data/cinema.json';
+import { extractYoutubeId } from '../lib/youtube';
+
+const items = cinemaData.items.map((w, i) => ({
+  i,
+  brand: w.brand,
+  title: w.title,
+  yt: extractYoutubeId(w.youtubeUrl),
+}));
+const TOTAL = items.length;
+const ff = cinemaData.fullforce;
+const ffYt = extractYoutubeId(ff.youtubeUrl);
+---
+
+<section id="cinema" class="work cinema">
+  <div class="section-label">
+    <span class="num">04</span>
+    <span class="line"></span>
+    <span>Cinema &amp; Trailer</span>
+  </div>
+  <div class="section-label-right">
+    <span>Trailers</span>
+  </div>
+
+  <div class="work-grid" id="cinemaGrid">
+    {items.map((w) => (
+      <a class="work-card" href="#" data-idx={w.i} data-yt={w.yt}>
+        <div class="thumb"></div>
+        <div class="index">{String(w.i + 1).padStart(2, '0')} / {String(TOTAL).padStart(2, '0')}</div>
+        <div class="overlay">
+          <span class="play"></span>
+          <div class="brand">{w.brand}</div>
+          <div class="title">{w.title}</div>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <!-- Full Force film case -->
+  <div class="ff-case">
+    <div class="ff-head">
+      <span class="ff-eyebrow">Feature Film</span>
+      <h3 class="ff-title">{ff.title}</h3>
+      <span class="ff-sub">{ff.subtitle}</span>
+    </div>
+    <div class="ff-grid">
+      <figure class="ff-tile ff-poster">
+        <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
+        <figcaption>Poster</figcaption>
+      </figure>
+
+      <a class="ff-tile ff-video" href="#" data-yt={ffYt}>
+        <div class="ff-video-thumb"></div>
+        <span class="play"></span>
+        <figcaption>Watch the Film</figcaption>
+      </a>
+
+      <figure class="ff-tile ff-vinyl">
+        <img src={ff.vinyl} alt={`${ff.title} — vinyl record`} loading="lazy" decoding="async" />
+        <figcaption>Vinyl</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- Cinema video modal -->
+<div class="vmodal" id="cmodal" aria-hidden="true">
+  <div class="vmodal-bar">
+    <span class="meta">
+      <span class="num" id="cmCount">01 / 01</span>
+      <span class="sep">/</span>
+      <span>Cinema &amp; Trailer</span>
+    </span>
+    <button class="vmodal-close" id="cmClose" aria-label="Close"></button>
+  </div>
+  <div class="vmodal-frame">
+    <iframe
+      id="cmFrame"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+  <div class="vmodal-foot">
+    <div class="title-l">
+      <span class="brand" id="cmBrand">Brand</span>
+      <span class="sep">·</span>
+      <span id="cmTitle">Title</span>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ items, TOTAL, ff, ffYt }} is:inline>
+  const cGradient = 'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%)';
+
+  function setThumb(el, yt) {
+    const probe = new Image();
+    const apply = (q) => {
+      el.style.backgroundImage = `${cGradient}, url(https://img.youtube.com/vi/${yt}/${q}.jpg)`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+    };
+    probe.onload = () => apply(probe.naturalWidth > 120 ? 'maxresdefault' : 'hqdefault');
+    probe.onerror = () => apply('hqdefault');
+    probe.src = `https://img.youtube.com/vi/${yt}/maxresdefault.jpg`;
+  }
+
+  const cObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const yt = el.dataset.yt;
+      if (yt && !el.dataset.loaded) { el.dataset.loaded = '1'; setThumb(el, yt); }
+      cObserver.unobserve(el);
+    });
+  }, { rootMargin: '200px' });
+
+  // Modal
+  const cmodal = document.getElementById('cmodal');
+  const cmFrame = document.getElementById('cmFrame');
+  const cmBrand = document.getElementById('cmBrand');
+  const cmTitle = document.getElementById('cmTitle');
+  const cmCount = document.getElementById('cmCount');
+
+  function openCinema(yt, brand, title, count) {
+    cmFrame.src = `https://www.youtube.com/embed/${yt}?autoplay=1&rel=0&modestbranding=1&color=white`;
+    cmBrand.textContent = brand;
+    cmTitle.textContent = title;
+    cmCount.textContent = count;
+    cmodal.classList.add('open');
+    cmodal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vmodal-locked');
+  }
+  function closeCinema() {
+    cmodal.classList.remove('open');
+    cmodal.setAttribute('aria-hidden', 'true');
+    cmFrame.src = '';
+    document.body.classList.remove('vmodal-locked');
+  }
+
+  // Grid cards
+  Array.from(document.querySelectorAll('#cinemaGrid .work-card')).forEach((card, i) => {
+    const thumb = card.querySelector('.thumb');
+    if (thumb) { thumb.dataset.yt = card.dataset.yt; cObserver.observe(thumb); }
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      const w = items[i];
+      openCinema(w.yt, w.brand, w.title, `${String(i + 1).padStart(2, '0')} / ${String(TOTAL).padStart(2, '0')}`);
+    });
+  });
+
+  // Full Force play tile
+  const ffVideo = document.querySelector('.ff-video');
+  if (ffVideo) {
+    const ffThumb = ffVideo.querySelector('.ff-video-thumb');
+    if (ffThumb) { ffThumb.dataset.yt = ffYt; cObserver.observe(ffThumb); }
+    ffVideo.addEventListener('click', (e) => {
+      e.preventDefault();
+      openCinema(ffYt, ff.title, ff.subtitle, 'Feature Film');
+    });
+  }
+
+  document.getElementById('cmClose').addEventListener('click', closeCinema);
+  cmodal.addEventListener('click', (e) => { if (e.target === cmodal) closeCinema(); });
+  document.addEventListener('keydown', (e) => {
+    if (cmodal.classList.contains('open') && e.key === 'Escape') closeCinema();
+  });
+</script>

@@ -5,6 +5,8 @@ import Rail from '../components/Rail.astro';
 import Hero from '../components/Hero.astro';
 import Clients from '../components/Clients.astro';
 import Work from '../components/Work.astro';
+import CinemaTrailer from '../components/CinemaTrailer.astro';
+import TvShows from '../components/TvShows.astro';
 import Releases from '../components/Releases.astro';
 import Contact from '../components/Contact.astro';
 import { cloudinaryPoster } from '../lib/cloudinary';
@@ -20,6 +22,8 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
     <Hero />
     <Clients />
     <Work />
+    <CinemaTrailer />
+    <TvShows />
     <Releases />
     <Contact />
   </main>
@@ -41,7 +45,7 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
       requestAnimationFrame(tick);
     }
     tick();
-    document.querySelectorAll('a, button, .work-card, .logo-cell, .pill, .dsp, .cf-btn, .cover')
+    document.querySelectorAll('a, button, .work-card, .logo-cell, .pill, .dsp, .cf-btn, .cover, .tv-card, .ff-tile')
       .forEach((el) => {
         el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
         el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
@@ -58,7 +62,7 @@ const posterUrl = cloudinaryPoster(heroData.video_url);
 
   /* ─── Scroll Spy ─── */
   (function () {
-    const sections = ['hero', 'clients', 'work', 'releases', 'contact'];
+    const sections = ['hero', 'clients', 'work', 'cinema', 'tvshows', 'releases', 'contact'];
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((en) => {
         if (en.isIntersecting) {

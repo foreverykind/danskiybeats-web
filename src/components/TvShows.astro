@@ -1,0 +1,28 @@
+---
+import tvData from '../data/tvshows.json';
+const shows = tvData.items;
+---
+
+<section id="tvshows" class="tvshows">
+  <div class="section-label">
+    <span class="num">05</span>
+    <span class="line"></span>
+    <span>TV &amp; Shows</span>
+  </div>
+  <div class="section-label-right">
+    <span>Featured Music</span>
+    <span class="num">/ {String(shows.length).padStart(2, '0')}</span>
+  </div>
+
+  <div class="tv-grid" id="tvGrid">
+    {shows.map((s) => (
+      <div class="tv-card">
+        <img class="tv-art" src={s.image} alt={`${s.show} — ${s.channel}`} loading="lazy" decoding="async" />
+        <div class="tv-overlay">
+          <div class="tv-show">{s.show}</div>
+          <div class="tv-channel">{s.channel}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

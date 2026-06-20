@@ -710,6 +710,8 @@
       <div class="nav-item active" data-screen="hero"><i data-lucide="home" class="icon"></i><span>Hero Section</span></div>
       <div class="nav-item" data-screen="clients"><i data-lucide="users" class="icon"></i><span>Clients</span></div>
       <div class="nav-item" data-screen="works"><i data-lucide="clapperboard" class="icon"></i><span>Selected Works</span></div>
+      <div class="nav-item" data-screen="cinema"><i data-lucide="film" class="icon"></i><span>Cinema &amp; Trailer</span></div>
+      <div class="nav-item" data-screen="tvshows"><i data-lucide="tv" class="icon"></i><span>TV &amp; Shows</span></div>
       <div class="nav-item" data-screen="releases"><i data-lucide="disc-3" class="icon"></i><span>Releases</span></div>
       <div class="nav-item" data-screen="contacts"><i data-lucide="mail" class="icon"></i><span>Contacts</span></div>
     </nav>
@@ -776,6 +778,57 @@
       <button class="btn btn-primary" onclick="openWorkModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Work</span></button>
       </div>
       <div class="grid-3" id="worksGrid"></div>
+    </section>
+
+    <section class="screen" id="screen-cinema">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">Cinema &amp; Trailer</h1><div class="page-sub">Trailer & cinematic works. Drag to reorder.</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openCinemaModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Work</span></button>
+      </div>
+      <div class="grid-3" id="cinemaGrid"></div>
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-header"><div><h3>Full Force — Film Case</h3><div class="sub">The feature-film block shown at the bottom of this section.</div></div></div>
+        <div class="panel-body">
+          <form class="form-grid" id="fullforceForm" onsubmit="event.preventDefault();saveFullForce()">
+            <div class="form-grid cols-2" style="gap:18px">
+              <div class="field"><label>Title</label><input class="input" id="ff_title" type="text" placeholder="Full Force" /></div>
+              <div class="field"><label>Subtitle</label><input class="input" id="ff_subtitle" type="text" placeholder="Original Motion Picture Soundtrack" /></div>
+            </div>
+            <div class="field"><label>Film YouTube URL</label><input class="input" id="ff_youtube" type="url" placeholder="https://www.youtube.com/watch?v=..." /></div>
+            <div class="form-grid cols-2" style="gap:18px">
+              <div class="field"><label>Movie poster</label>
+                <label class="file-drop" id="ffPosterDrop">
+                  <i data-lucide="image" class="icon"></i>
+                  <div id="ffPosterLabel"><strong style="color:var(--primary)">Browse</strong></div>
+                  <div class="hint" style="margin-top:4px">Portrait JPG/PNG</div>
+                  <input type="file" id="ff_poster" accept="image/*" hidden onchange="previewFile(this,'ffPosterDrop','ffPosterLabel')" />
+                </label>
+              </div>
+              <div class="field"><label>Vinyl image</label>
+                <label class="file-drop" id="ffVinylDrop">
+                  <i data-lucide="disc-3" class="icon"></i>
+                  <div id="ffVinylLabel"><strong style="color:var(--primary)">Browse</strong></div>
+                  <div class="hint" style="margin-top:4px">JPG/PNG</div>
+                  <input type="file" id="ff_vinyl" accept="image/*" hidden onchange="previewFile(this,'ffVinylDrop','ffVinylLabel')" />
+                </label>
+              </div>
+            </div>
+            <div class="form-actions"><button type="submit" class="btn btn-success"><span class="label"><i data-lucide="check" class="icon"></i> Save Full Force</span></button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-tvshows">
+      <div class="topbar"><div class="topbar-left">
+        <button class="mobile-toggle" onclick="toggleSidebar()"><i data-lucide="menu" class="icon"></i></button>
+        <div><h1 class="page-title">TV &amp; Shows</h1><div class="page-sub">Shows where music was featured. Drag to reorder.</div></div>
+      </div>
+      <button class="btn btn-primary" onclick="openTvModal()"><i data-lucide="plus" class="icon"></i><span class="label">Add Show</span></button>
+      </div>
+      <div class="panel"><div class="release-list" id="tvList"></div></div>
     </section>
 
     <section class="screen" id="screen-releases">
@@ -881,6 +934,51 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="cinemaModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="cinemaModalTitle">Add work</h3><button class="modal-close" onclick="closeModal('cinemaModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="cinemaForm" onsubmit="event.preventDefault();submitCinema()">
+      <input type="hidden" id="kf_idx" />
+      <div class="modal-body"><div class="form-grid">
+        <div class="field"><label>Project title</label><input class="input" id="kf_title" type="text" placeholder="e.g. Military Trailer" required /></div>
+        <div class="field"><label>Client / Brand</label><input class="input" id="kf_brand" type="text" required /></div>
+        <div class="field"><label>YouTube URL</label><input class="input" id="kf_youtube" type="url" placeholder="https://www.youtube.com/watch?v=..." required /><div class="hint">Thumbnail fetched automatically.</div></div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('cinemaModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="cinemaSubmitBtn"><span class="label">Save work</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tvModal">
+  <div class="modal">
+    <div class="modal-header"><h3 id="tvModalTitle">Add show</h3><button class="modal-close" onclick="closeModal('tvModal')"><i data-lucide="x" class="icon"></i></button></div>
+    <form id="tvForm" onsubmit="event.preventDefault();submitTv()">
+      <input type="hidden" id="tf_idx" />
+      <div class="modal-body"><div class="form-grid">
+        <div class="form-grid cols-2" style="gap:18px">
+          <div class="field"><label>Show name</label><input class="input" id="tf_show" type="text" placeholder="e.g. Unprisoned" required /></div>
+          <div class="field"><label>Channel</label><input class="input" id="tf_channel" type="text" placeholder="e.g. Hulu" required /></div>
+        </div>
+        <div class="field"><label>Poster image</label>
+          <label class="file-drop" id="tvPosterDrop">
+            <i data-lucide="image" class="icon"></i>
+            <div id="tvPosterLabel"><strong style="color:var(--primary)">Browse</strong></div>
+            <div class="hint" style="margin-top:4px">Portrait JPG/PNG (poster)</div>
+            <input type="file" id="tf_image" accept="image/*" hidden onchange="previewFile(this,'tvPosterDrop','tvPosterLabel')" />
+          </label>
+        </div>
+      </div></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('tvModal')"><span class="label">Cancel</span></button>
+        <button type="submit" class="btn btn-success" id="tvSubmitBtn"><span class="label">Save show</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal-overlay" id="linkModal">
   <div class="modal">
     <div class="modal-header"><h3 id="linkModalTitle">Add link</h3><button class="modal-close" onclick="closeModal('linkModal')"><i data-lucide="x" class="icon"></i></button></div>
@@ -936,7 +1034,7 @@ async function uploadFile(folder,filename,file){
 }
 var cache={};
 async function loadAll(){
-  await Promise.all(['hero.json','clients.json','works.json','releases.json','contact.json'].map(async function(f){
+  await Promise.all(['hero.json','clients.json','works.json','cinema.json','tvshows.json','releases.json','contact.json'].map(async function(f){
     var x=await readFile('src/data/'+f);cache[f]={sha:x.sha,content:x.content};
   }));
 }
@@ -976,7 +1074,7 @@ async function startApp(){
     var av=document.getElementById('userAvatar');
     if(user.avatar_url)av.innerHTML='<img src="'+user.avatar_url+'" alt="">';
     await loadAll();
-    populateHero();populateContacts();renderClients();renderWorks();renderReleases();
+    populateHero();populateContacts();renderClients();renderWorks();renderCinema();populateFullForce();renderTvShows();renderReleases();
     document.getElementById('loginScreen').classList.add('hidden');
     document.getElementById('app').classList.add('active');
     hideLoad();lucide.createIcons();
@@ -1204,6 +1302,109 @@ async function removeWork(idx){
     cache['works.json'].sha=res.content.sha;cache['works.json'].content=content;renderWorks();toast('Work deleted');
   }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
 }
+/* ── Cinema & Trailer ── */
+function renderCinema(){
+  var items=cache['cinema.json'].content.items||[],grid=document.getElementById('cinemaGrid');
+  if(!items.length){grid.innerHTML='<div class="panel" style="grid-column:1/-1"><div class="empty"><div class="empty-icon"><i data-lucide="film" class="icon"></i></div><h4>No works yet</h4><p>Add your first one</p></div></div>';lucide.createIcons();return;}
+  grid.innerHTML=items.map(function(w,i){var th=ytThumb(w.youtubeUrl);return'<div class="work-card" data-idx="'+i+'"><div class="work-thumb">'+(th?'<img src="'+th+'" alt="" draggable="false" />':'')+'<div class="play"><i data-lucide="play" class="icon"></i></div></div><div class="work-body"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="work-meta"><div class="work-title">'+w.title+'</div><div class="work-client">'+w.brand+'</div></div><div class="work-actions"><button class="icon-btn" onclick="openCinemaModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeCinema('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div></div>';}).join('');
+  lucide.createIcons();initSortable(grid,'cinema');
+}
+function openCinemaModal(idx){
+  document.getElementById('kf_idx').value=idx!==undefined?idx:'';
+  document.getElementById('cinemaModalTitle').textContent=idx!==undefined?'Edit work':'Add work';
+  if(idx!==undefined){var w=cache['cinema.json'].content.items[idx];document.getElementById('kf_title').value=w.title||'';document.getElementById('kf_brand').value=w.brand||'';document.getElementById('kf_youtube').value=w.youtubeUrl||'';}
+  else document.getElementById('cinemaForm').reset();
+  openModal('cinemaModal');
+}
+async function submitCinema(){
+  var title=document.getElementById('kf_title').value.trim(),brand=document.getElementById('kf_brand').value.trim(),youtube=document.getElementById('kf_youtube').value.trim();
+  if(!title||!brand||!youtube)return;
+  var btn=document.getElementById('cinemaSubmitBtn');btn.classList.add('loading');
+  try{
+    var items=cache['cinema.json'].content.items.slice(),idx=document.getElementById('kf_idx').value;
+    var entry={brand:brand,title:title,youtubeUrl:youtube};
+    if(idx!=='')items[parseInt(idx)]=entry;else items.unshift(entry);
+    var content=Object.assign({},cache['cinema.json'].content,{items:items});
+    var res=await writeFile('src/data/cinema.json',cache['cinema.json'].sha,content,(idx!==''?'Update':'Add')+' cinema work '+title+' via admin');
+    cache['cinema.json'].sha=res.content.sha;cache['cinema.json'].content=content;
+    closeModal('cinemaModal');renderCinema();toast(idx!==''?'Work updated':'Work added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+async function removeCinema(idx){
+  if(!confirm('Delete this work?'))return;
+  var items=cache['cinema.json'].content.items.slice();items.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['cinema.json'].content,{items:items});
+    var res=await writeFile('src/data/cinema.json',cache['cinema.json'].sha,content,'Remove cinema work via admin');
+    cache['cinema.json'].sha=res.content.sha;cache['cinema.json'].content=content;renderCinema();toast('Work deleted');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+}
+function populateFullForce(){
+  var ff=(cache['cinema.json'].content.fullforce)||{};
+  document.getElementById('ff_title').value=ff.title||'';
+  document.getElementById('ff_subtitle').value=ff.subtitle||'';
+  document.getElementById('ff_youtube').value=ff.youtubeUrl||'';
+}
+async function saveFullForce(){
+  var btn=document.querySelector('#fullforceForm button[type=submit]');btn.classList.add('loading');
+  try{
+    var ff=Object.assign({},cache['cinema.json'].content.fullforce||{});
+    ff.title=document.getElementById('ff_title').value.trim();
+    ff.subtitle=document.getElementById('ff_subtitle').value.trim();
+    ff.youtubeUrl=document.getElementById('ff_youtube').value.trim();
+    var pf=document.getElementById('ff_poster').files[0];
+    if(pf){var pe=pf.name.split('.').pop();ff.poster=await uploadFile('fullforce','poster.'+pe,pf);}
+    var vf=document.getElementById('ff_vinyl').files[0];
+    if(vf){var ve=vf.name.split('.').pop();ff.vinyl=await uploadFile('fullforce','vinyl.'+ve,vf);}
+    var content=Object.assign({},cache['cinema.json'].content,{fullforce:ff});
+    var res=await writeFile('src/data/cinema.json',cache['cinema.json'].sha,content,'Update Full Force case via admin');
+    cache['cinema.json'].sha=res.content.sha;cache['cinema.json'].content=content;
+    document.getElementById('fullforceForm').reset();populateFullForce();toast('Full Force saved');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+
+/* ── TV & Shows ── */
+function renderTvShows(){
+  var items=cache['tvshows.json'].content.items||[],list=document.getElementById('tvList');
+  if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="tv" class="icon"></i></div><h4>No shows yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
+  list.innerHTML=items.map(function(s,i){return'<div class="release-row" data-idx="'+i+'"><div class="drag-handle"><i data-lucide="grip-vertical" class="icon"></i></div><div class="release-cover">'+(s.image?'<img src="'+s.image+'" alt="" draggable="false" />':(s.show||'?').slice(0,1).toUpperCase())+'</div><div class="release-info"><div class="release-title">'+s.show+'</div><div class="release-year">'+(s.channel||'')+'</div></div><div class="release-actions"><button class="icon-btn" onclick="openTvModal('+i+')" title="Edit"><i data-lucide="pencil" class="icon"></i></button><button class="icon-btn danger" onclick="removeTv('+i+')" title="Delete"><i data-lucide="trash-2" class="icon"></i></button></div></div>';}).join('');
+  lucide.createIcons();initSortable(list,'tvshows');
+}
+function openTvModal(idx){
+  document.getElementById('tf_idx').value=idx!==undefined?idx:'';
+  document.getElementById('tvModalTitle').textContent=idx!==undefined?'Edit show':'Add show';
+  if(idx!==undefined){var s=cache['tvshows.json'].content.items[idx];document.getElementById('tf_show').value=s.show||'';document.getElementById('tf_channel').value=s.channel||'';}
+  else document.getElementById('tvForm').reset();
+  openModal('tvModal');
+}
+async function submitTv(){
+  var show=document.getElementById('tf_show').value.trim(),channel=document.getElementById('tf_channel').value.trim();
+  if(!show||!channel)return;
+  var btn=document.getElementById('tvSubmitBtn');btn.classList.add('loading');
+  try{
+    var items=cache['tvshows.json'].content.items.slice(),idx=document.getElementById('tf_idx').value;
+    var image=idx!==''?(items[parseInt(idx)].image||''):'';
+    var imf=document.getElementById('tf_image').files[0];
+    if(imf){var ext=imf.name.split('.').pop();image=await uploadFile('tvshows',show.toLowerCase().replace(/[^a-z0-9]/g,'-').slice(0,40)+'.'+ext,imf);}
+    var entry={show:show,channel:channel,image:image};
+    if(idx!=='')items[parseInt(idx)]=entry;else items.push(entry);
+    var content=Object.assign({},cache['tvshows.json'].content,{items:items});
+    var res=await writeFile('src/data/tvshows.json',cache['tvshows.json'].sha,content,(idx!==''?'Update':'Add')+' show '+show+' via admin');
+    cache['tvshows.json'].sha=res.content.sha;cache['tvshows.json'].content=content;
+    closeModal('tvModal');renderTvShows();toast(idx!==''?'Show updated':'Show added');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{btn.classList.remove('loading');}
+}
+async function removeTv(idx){
+  if(!confirm('Delete this show?'))return;
+  var items=cache['tvshows.json'].content.items.slice();items.splice(idx,1);
+  showLoad('Saving...');
+  try{
+    var content=Object.assign({},cache['tvshows.json'].content,{items:items});
+    var res=await writeFile('src/data/tvshows.json',cache['tvshows.json'].sha,content,'Remove show via admin');
+    cache['tvshows.json'].sha=res.content.sha;cache['tvshows.json'].content=content;renderTvShows();toast('Show deleted');
+  }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
+}
 function renderReleases(){
   var items=cache['releases.json'].content.items||[],list=document.getElementById('releasesList');
   if(!items.length){list.innerHTML='<div class="empty"><div class="empty-icon"><i data-lucide="disc-3" class="icon"></i></div><h4>No releases yet</h4><p>Add your first one</p></div>';lucide.createIcons();return;}
@@ -1255,7 +1456,7 @@ function initSortable(container,key){
     fallbackOnBody:true,
     onEnd:async function(evt){
       var from=evt.oldIndex,to=evt.newIndex;if(from===to)return;
-      var jk=key==='works'?'works.json':key==='releases'?'releases.json':key==='clients'?'clients.json':'contact.json';
+      var jk=key==='works'?'works.json':key==='cinema'?'cinema.json':key==='tvshows'?'tvshows.json':key==='releases'?'releases.json':key==='clients'?'clients.json':'contact.json';
       var field=key==='links'?'links':'items';
       var arr=cache[jk].content[field].slice(),moved=arr.splice(from,1)[0];arr.splice(to,0,moved);
       if(key==='clients')reorderClientBlobs(from,to);
@@ -1264,7 +1465,7 @@ function initSortable(container,key){
         var content=Object.assign({},cache[jk].content);content[field]=arr;
         var res=await writeFile('src/data/'+jk,cache[jk].sha,content,'Reorder '+key+' via admin');
         cache[jk].sha=res.content.sha;cache[jk].content=content;
-        if(key==='works')renderWorks();else if(key==='releases')renderReleases();else if(key==='clients')renderClients();else renderLinks();toast('Order saved');
+        if(key==='works')renderWorks();else if(key==='cinema')renderCinema();else if(key==='tvshows')renderTvShows();else if(key==='releases')renderReleases();else if(key==='clients')renderClients();else renderLinks();toast('Order saved');
       }catch(err){toast('Failed: '+err.message,'error');}finally{hideLoad();}
     }
   });
