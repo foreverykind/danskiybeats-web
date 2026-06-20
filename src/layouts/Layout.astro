@@ -8,7 +8,7 @@ interface Props {
 const { posterUrl } = Astro.props;
 
 const siteUrl = 'https://danskiybeats.com';
-const title = 'DANSKIY BEATS — COMPOSER · PRODUCER';
+const title = 'Music Producer & Composer - Danskiy';
 const description = 'Danskiy Beats — Composer & Producer. Original music and custom sound design for film, advertising and artists.';
 const ogImage = `${siteUrl}/og-image.png`;
 ---
@@ -21,8 +21,9 @@ const ogImage = `${siteUrl}/og-image.png`;
   <title>{title}</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
   <!-- Open Graph -->

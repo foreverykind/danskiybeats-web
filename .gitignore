@@ -15,5 +15,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 
+# Source assets (not for repo — only optimized files copied into public/)
+danskiy gdrive assets/
+*.crdownload
+
 # Logs
 npm-debug.log*

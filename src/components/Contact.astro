@@ -31,18 +31,5 @@ const c = contactData;
         </div>
       </div>
     ))}
-
-    {c.streaming && c.streaming.length > 0 && (
-      <div class="crow">
-        <div class="lab">Listen</div>
-        <div class="data">
-          {c.streaming.map((s) => (
-            <a href={s.url} target="_blank" rel="noopener" class="single">
-              {s.display || s.name}
-            </a>
-          ))}
-        </div>
-      </div>
-    )}
   </div>
 </section>
