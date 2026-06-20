@@ -25,4 +25,30 @@ const shows = tvData.items;
       </div>
     ))}
   </div>
+  <div class="work-loadmore-wrap">
+    <button class="work-loadmore" id="tvLoadMore" type="button">Show more</button>
+  </div>
 </section>
+
+<script is:inline>
+  /* Mobile: show TV posters in batches of 4 */
+  (function () {
+    const STEP = 4;
+    let visibleCount = STEP;
+    const cards = Array.from(document.querySelectorAll('#tvGrid .tv-card'));
+    const TOTAL = cards.length;
+    const lm = document.getElementById('tvLoadMore');
+    if (!lm) return;
+    function update() {
+      cards.forEach((c, i) => c.classList.toggle('hidden-mobile', i >= visibleCount));
+      const remaining = TOTAL - visibleCount;
+      if (remaining <= 0) { lm.hidden = true; }
+      else { lm.hidden = false; lm.textContent = `Show more — ${Math.min(remaining, STEP)} shows`; }
+    }
+    update();
+    lm.addEventListener('click', () => {
+      visibleCount = Math.min(visibleCount + STEP, TOTAL);
+      update();
+    });
+  })();
+</script>

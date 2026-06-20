@@ -370,6 +370,7 @@ section { position: relative; min-height: 100vh; width: 100%; padding: 0; }
   }
   .work-loadmore.expanded::after { background: currentColor; }
   .work-card.hidden-mobile { display: none; }
+  .tv-card.hidden-mobile { display: none; }
 }
 .work-loadmore-wrap { display: flex; justify-content: center; }
 
