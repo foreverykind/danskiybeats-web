@@ -45,27 +45,24 @@ const ffYt = extractYoutubeId(ff.youtubeUrl);
       <span class="ff-sub">{ff.subtitle}</span>
     </div>
     <div class="ff-grid">
-      <figure class="ff-tile ff-poster">
-        <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
-        <figcaption>Poster</figcaption>
-      </figure>
-
       <a class="ff-tile ff-video" href="#" data-yt={ffYt}>
         <div class="ff-video-thumb"></div>
         <span class="play"></span>
-        <figcaption>Watch the Film</figcaption>
+        <span class="ff-cap">Watch the Film</span>
       </a>
+
+      <figure class="ff-tile ff-poster">
+        <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
+      </figure>
 
       {ff.buyUrl ? (
         <a class="ff-tile ff-vinyl ff-buyable" href={ff.buyUrl} target="_blank" rel="noopener">
           <img src={ff.vinyl} alt={`${ff.title} — vinyl record`} loading="lazy" decoding="async" />
           <div class="ff-vinyl-overlay"><span class="ff-buy">Buy Vinyl</span></div>
-          <span class="ff-cap">Vinyl</span>
         </a>
       ) : (
         <figure class="ff-tile ff-vinyl">
           <img src={ff.vinyl} alt={`${ff.title} — vinyl record`} loading="lazy" decoding="async" />
-          <figcaption>Vinyl</figcaption>
         </figure>
       )}
     </div>

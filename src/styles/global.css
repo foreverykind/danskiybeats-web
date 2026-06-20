@@ -698,22 +698,21 @@ body.vmodal-locked { overflow: hidden; }
 }
 .ff-sub { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-dim); }
 
+/* Variant D — poster centre, video (left) & vinyl (right) in their natural ratios */
 .ff-grid {
-  display: grid; grid-template-columns: 0.78fr 1.44fr 0.78fr;
-  grid-auto-rows: 460px; gap: 1px;
-  background: var(--rule); border: 1px solid var(--rule);
+  display: grid; grid-template-columns: 1fr 0.92fr 1fr;
+  gap: 24px; align-items: center;
 }
 .ff-tile {
   position: relative; overflow: hidden; background: #0e0e0e;
+  border: 1px solid var(--rule);
 }
+.ff-poster { aspect-ratio: 3 / 4; }
+.ff-video  { aspect-ratio: 16 / 9; }
+.ff-vinyl  { aspect-ratio: 16 / 10; }
 .ff-tile img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; display: block;
-}
-.ff-tile figcaption {
-  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
-  padding: 16px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
-  color: var(--fg); background: linear-gradient(to top, rgba(0,0,0,0.82), rgba(0,0,0,0));
 }
 .ff-video { cursor: none; }
 .ff-video-thumb {
@@ -725,7 +724,9 @@ body.vmodal-locked { overflow: hidden; }
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 2;
   width: 58px; height: 58px; border-radius: 50%; border: 1px solid var(--fg);
   display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.35s ease;
 }
+.ff-video:hover .play { opacity: 1; }
 .ff-video .play::after {
   content: ""; width: 0; height: 0;
   border-left: 11px solid var(--fg);
@@ -758,13 +759,11 @@ body.vmodal-locked { overflow: hidden; }
 
 @media (max-width: 720px) {
   .ff-case { padding: 64px 20px 0; }
-  .ff-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-  .ff-poster { aspect-ratio: 3/4; }
-  .ff-video  { aspect-ratio: 16/9; }
-  .ff-vinyl  { aspect-ratio: 16/10; }
+  .ff-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 @media (hover: none) {
-  /* Touch: show the Buy CTA without hover */
+  /* Touch: show the video play + vinyl Buy CTA without hover */
+  .ff-video .play { opacity: 1; }
   .ff-buyable img { filter: brightness(0.42); }
   .ff-vinyl-overlay { opacity: 1; }
 }
