@@ -1,9 +1,10 @@
 ---
-import { cloudinaryVideo, cloudinaryPoster } from '../lib/cloudinary';
+import { cloudinaryVideo, cloudinaryVideoMobile, cloudinaryPoster } from '../lib/cloudinary';
 import heroData from '../data/hero.json';
 const h = heroData;
 
 const optimisedVideoUrl = cloudinaryVideo(h.video_url);
+const mobileVideoUrl = cloudinaryVideoMobile(h.video_url);
 const posterUrl = cloudinaryPoster(h.video_url);
 ---
 
@@ -28,6 +29,7 @@ const posterUrl = cloudinaryPoster(h.video_url);
           playsinline
           preload="none"
           data-src={optimisedVideoUrl}
+          data-src-mobile={mobileVideoUrl}
         />
       </>
     ) : (
@@ -85,7 +87,8 @@ const posterUrl = cloudinaryPoster(h.video_url);
 
   if (video) {
     const load = () => {
-      video.src = video.dataset.src!;
+      const isMobile = window.matchMedia('(max-width: 760px)').matches;
+      video.src = (isMobile && video.dataset.srcMobile) ? video.dataset.srcMobile : video.dataset.src!;
       video.style.display = '';
       video.load();
       video.play()
