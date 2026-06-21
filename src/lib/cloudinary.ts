@@ -1,7 +1,7 @@
 export function cloudinaryVideo(url: string): string {
   if (!url || !url.includes('cloudinary.com')) return url;
-  // good quality + auto format + cap at 1080p width
-  return url.replace('/upload/', '/upload/q_auto:good,f_auto,w_1920/');
+  // best quality + auto format + cap at 1080p width
+  return url.replace('/upload/', '/upload/q_auto:best,f_auto,w_1920/');
 }
 
 export function cloudinaryPoster(url: string): string {
