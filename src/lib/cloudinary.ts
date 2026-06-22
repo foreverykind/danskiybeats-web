@@ -7,8 +7,8 @@ export function cloudinaryVideo(url: string): string {
 
 export function cloudinaryVideoMobile(url: string): string {
   if (!url || !url.includes('cloudinary.com')) return url;
-  // lighter variant for phones — 720p+ width at good quality, H.264 (autoplay-safe everywhere)
-  return url.replace('/upload/', '/upload/q_auto:good,vc_h264,w_1280/');
+  // phones — native 1080p width at good quality, H.264 (autoplay-safe everywhere)
+  return url.replace('/upload/', '/upload/q_auto:good,vc_h264,w_1920/');
 }
 
 export function cloudinaryPoster(url: string): string {
