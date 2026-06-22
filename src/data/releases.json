@@ -2,7 +2,7 @@
   "items": [
     {
       "title": "Santa Cruz",
-      "cover": "/releases/santa-cruz.png",
+      "cover": "/releases/santa-cruz.jpg",
       "format": "album",
       "year": "2024",
       "spotify": "https://open.spotify.com/album/76a6poUjnRscEtba44gFOM",
@@ -11,7 +11,7 @@
     },
     {
       "title": "Yasmine",
-      "cover": "/releases/yasmine.png",
+      "cover": "/releases/yasmine.jpg",
       "format": "album",
       "year": "2024",
       "spotify": "https://open.spotify.com/album/35IhR5YiMN1152BiLnAjFR",
@@ -20,7 +20,7 @@
     },
     {
       "title": "Tapes II",
-      "cover": "/releases/tapes-ii.png",
+      "cover": "/releases/tapes-ii.jpg",
       "format": "album",
       "year": "2025",
       "spotify": "https://open.spotify.com/album/53b7suJQz2NPAqFlPIwhyc",
@@ -38,7 +38,7 @@
     },
     {
       "title": "Holy Vibe",
-      "cover": "/releases/screenshot-2026-05-20-at-18.21.12.png",
+      "cover": "/releases/holy-vibe.jpg",
       "format": "album",
       "year": "2023",
       "spotify": "https://open.spotify.com/album/7iZPG84JQs5NaQV4T3mhM2",
@@ -47,7 +47,7 @@
     },
     {
       "title": "Full Force (Original Motion Picture Soundtrack)",
-      "cover": "/releases/screenshot-2026-05-20-at-18.32.03.png",
+      "cover": "/releases/full-force.jpg",
       "format": "album",
       "year": "2024",
       "spotify": "https://open.spotify.com/album/3LHnFkwdDnprVglpOEh3cR",
@@ -56,7 +56,7 @@
     },
     {
       "title": "Euphoria",
-      "cover": "/releases/euphoria.png",
+      "cover": "/releases/euphoria.jpg",
       "format": "album",
       "year": "2023",
       "spotify": "https://open.spotify.com/album/6qNdniqBdZKEtSELnN4pcf",
@@ -65,7 +65,7 @@
     },
     {
       "title": "The Motherland",
-      "cover": "/releases/screenshot-2026-05-20-at-18.34.07.png",
+      "cover": "/releases/the-motherland.jpg",
       "format": "ep",
       "year": "2023",
       "spotify": "https://open.spotify.com/album/7nLW3rkS4DZnrQRGeQPPyQ",
