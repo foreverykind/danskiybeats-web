@@ -53,25 +53,18 @@ const releases = releasesData.items;
   const info = document.getElementById('releaseInfo');
   let idx = 0;
 
-  const coverObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const art = entry.target;
-      const src = art.dataset.cover;
-      if (src && !art.dataset.loaded) {
-        art.dataset.loaded = '1';
-        art.style.backgroundImage = `url(${src})`;
-        art.style.backgroundSize = 'cover';
-        art.style.backgroundPosition = 'center';
-      }
-      coverObserver.unobserve(art);
-    });
-  }, { rootMargin: '300px' });
-
+  // Covers are small (optimized JPEGs) — load them all up front so the coverflow
+  // is ready immediately, independent of scroll position / other sections' images.
   Array.from(cf.querySelectorAll('.cover')).forEach((el, i) => {
     el.addEventListener('click', () => { idx = i; render(); });
     const art = el.querySelector('.cover-art');
-    if (art && art.dataset.cover) coverObserver.observe(art);
+    const src = art && art.dataset.cover;
+    if (src && !art.dataset.loaded) {
+      art.dataset.loaded = '1';
+      art.style.backgroundImage = `url(${src})`;
+      art.style.backgroundSize = 'cover';
+      art.style.backgroundPosition = 'center';
+    }
   });
 
   function render() {

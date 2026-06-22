@@ -17,7 +17,7 @@ const shows = tvData.items;
   <div class="tv-grid" id="tvGrid">
     {shows.map((s) => (
       <div class="tv-card">
-        <img class="tv-art" src={s.image} alt={`${s.show} — ${s.channel}`} loading="lazy" decoding="async" />
+        <img class="tv-art" src={s.image} alt={`${s.show} — ${s.channel}`} loading="lazy" decoding="async" fetchpriority="low" />
         <div class="tv-overlay">
           <div class="tv-show">{s.show}</div>
           <div class="tv-channel">{s.channel}</div>
