@@ -1,13 +1,14 @@
 export function cloudinaryVideo(url: string): string {
   if (!url || !url.includes('cloudinary.com')) return url;
-  // best quality + auto format + cap at 1080p width
-  return url.replace('/upload/', '/upload/q_auto:best,f_auto,w_1920/');
+  // best quality, force H.264 (avc1) — universally playable; cap at 1080p width.
+  // NB: f_auto serves HEVC to Apple UAs, which breaks inline autoplay on many phones.
+  return url.replace('/upload/', '/upload/q_auto:best,vc_h264,w_1920/');
 }
 
 export function cloudinaryVideoMobile(url: string): string {
   if (!url || !url.includes('cloudinary.com')) return url;
-  // lighter variant for phones — narrower + good quality (fast, autoplay-safe)
-  return url.replace('/upload/', '/upload/q_auto:good,f_auto,w_854/');
+  // lighter variant for phones — narrower + good quality, H.264 (autoplay-safe everywhere)
+  return url.replace('/upload/', '/upload/q_auto:good,vc_h264,w_854/');
 }
 
 export function cloudinaryPoster(url: string): string {
