@@ -46,15 +46,6 @@
       "deezer": "https://www.deezer.com/us/album/643690631"
     },
     {
-      "title": "The Motherland",
-      "cover": "/releases/the-motherland.jpg",
-      "format": "ep",
-      "year": "2023",
-      "spotify": "https://open.spotify.com/album/7nLW3rkS4DZnrQRGeQPPyQ",
-      "apple": "https://music.apple.com/es/album/the-motherland-ep/1657791338?l=en-GB",
-      "deezer": "https://www.deezer.com/us/album/384182127"
-    },
-    {
       "title": "Euphoria",
       "cover": "/releases/euphoria.jpg",
       "format": "album",
@@ -62,6 +53,15 @@
       "spotify": "https://open.spotify.com/album/6qNdniqBdZKEtSELnN4pcf",
       "apple": "https://music.apple.com/es/album/euphoria-ep/1712835681?l=en-GB",
       "deezer": "https://www.deezer.com/en/album/502655261"
+    },
+    {
+      "title": "The Motherland",
+      "cover": "/releases/the-motherland.jpg",
+      "format": "ep",
+      "year": "2023",
+      "spotify": "https://open.spotify.com/album/7nLW3rkS4DZnrQRGeQPPyQ",
+      "apple": "https://music.apple.com/es/album/the-motherland-ep/1657791338?l=en-GB",
+      "deezer": "https://www.deezer.com/us/album/384182127"
     },
     {
       "title": "Tapes",
