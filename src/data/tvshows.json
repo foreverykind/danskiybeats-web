@@ -6,6 +6,11 @@
       "image": "/tvshows/man-city-treble-winners.jpg"
     },
     {
+      "show": "Unprisoned",
+      "channel": "Hulu",
+      "image": "/tvshows/unprisoned.jpg"
+    },
+    {
       "show": "Premier League Stories",
       "channel": "Sky Sports",
       "image": "/tvshows/premier-league-stories.jpg"
@@ -29,11 +34,6 @@
       "show": "Bitchin' Rides",
       "channel": "Discovery+",
       "image": "/tvshows/bitchin-rides.jpg"
-    },
-    {
-      "show": "Unprisoned",
-      "channel": "Hulu",
-      "image": "/tvshows/unprisoned.jpg"
     },
     {
       "show": "Center Court",
