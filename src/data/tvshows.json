@@ -41,6 +41,11 @@
       "image": "/tvshows/p1-powerboat-racing.jpg"
     },
     {
+      "show": "Love After Lockup",
+      "channel": "Amazon Prime",
+      "image": "/tvshows/love-after-lockup.jpg"
+    },
+    {
       "show": "Stalker 2",
       "channel": "Original Game Soundtrack",
       "image": "/tvshows/stalker-2.jpg"
@@ -79,11 +84,6 @@
       "show": "Loaded In Paradise",
       "channel": "Apple TV",
       "image": "/tvshows/loaded-in-paradise.jpg"
-    },
-    {
-      "show": "Love After Lockup",
-      "channel": "Amazon Prime",
-      "image": "/tvshows/love-after-lockup.jpg"
     },
     {
       "show": "Super Street Garage",
