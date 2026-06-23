@@ -21,6 +21,11 @@
       "image": "/tvshows/beauty-in-black.jpg"
     },
     {
+      "show": "United Gangs Of America",
+      "channel": "Vice TV",
+      "image": "/tvshows/united-gangs-of-america.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -34,11 +39,6 @@
       "show": "Bitchin' Rides",
       "channel": "Discovery+",
       "image": "/tvshows/bitchin-rides.jpg"
-    },
-    {
-      "show": "United Gangs Of America",
-      "channel": "Vice TV",
-      "image": "/tvshows/united-gangs-of-america.jpg"
     },
     {
       "show": "Center Court",
