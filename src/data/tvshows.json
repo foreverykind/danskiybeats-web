@@ -46,6 +46,11 @@
       "image": "/tvshows/love-after-lockup.jpg"
     },
     {
+      "show": "Center Court",
+      "channel": "Tennis Channel",
+      "image": "/tvshows/center-court.jpg"
+    },
+    {
       "show": "Stalker 2",
       "channel": "Original Game Soundtrack",
       "image": "/tvshows/stalker-2.jpg"
@@ -69,11 +74,6 @@
       "show": "Baddies West",
       "channel": "Zeus",
       "image": "/tvshows/baddies-west.jpg"
-    },
-    {
-      "show": "Center Court",
-      "channel": "Tennis Channel",
-      "image": "/tvshows/center-court.jpg"
     },
     {
       "show": "The Kelly Clarkson Show",
