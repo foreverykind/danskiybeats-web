@@ -26,6 +26,11 @@
       "image": "/tvshows/united-gangs-of-america.jpg"
     },
     {
+      "show": "Bitchin' Rides",
+      "channel": "Discovery+",
+      "image": "/tvshows/bitchin-rides.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -34,11 +39,6 @@
       "show": "Baddies West",
       "channel": "Zeus",
       "image": "/tvshows/baddies-west.jpg"
-    },
-    {
-      "show": "Bitchin' Rides",
-      "channel": "Discovery+",
-      "image": "/tvshows/bitchin-rides.jpg"
     },
     {
       "show": "Center Court",
