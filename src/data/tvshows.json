@@ -6,6 +6,11 @@
       "image": "/tvshows/man-city-treble-winners.jpg"
     },
     {
+      "show": "Premier League Stories",
+      "channel": "Sky Sports",
+      "image": "/tvshows/premier-league-stories.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -49,11 +54,6 @@
       "show": "P1 Powerboat Racing",
       "channel": "Fox Sports",
       "image": "/tvshows/p1-powerboat-racing.jpg"
-    },
-    {
-      "show": "Premier League Stories",
-      "channel": "Sky Sports",
-      "image": "/tvshows/premier-league-stories.jpg"
     },
     {
       "show": "Road to UEFA EURO 2024",
