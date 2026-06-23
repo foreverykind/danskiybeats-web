@@ -31,6 +31,11 @@
       "image": "/tvshows/bitchin-rides.jpg"
     },
     {
+      "show": "P1 Powerboat Racing",
+      "channel": "Fox Sports",
+      "image": "/tvshows/p1-powerboat-racing.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -59,11 +64,6 @@
       "show": "Love After Lockup",
       "channel": "Amazon Prime",
       "image": "/tvshows/love-after-lockup.jpg"
-    },
-    {
-      "show": "P1 Powerboat Racing",
-      "channel": "Fox Sports",
-      "image": "/tvshows/p1-powerboat-racing.jpg"
     },
     {
       "show": "Road to UEFA EURO 2024",
