@@ -51,6 +51,11 @@
       "image": "/tvshows/worlds-strongest-man-2023.jpg"
     },
     {
+      "show": "Road to UEFA EURO 2024",
+      "channel": "International TV Broadcast",
+      "image": "/tvshows/road-to-euro-2024.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -79,11 +84,6 @@
       "show": "Love After Lockup",
       "channel": "Amazon Prime",
       "image": "/tvshows/love-after-lockup.jpg"
-    },
-    {
-      "show": "Road to UEFA EURO 2024",
-      "channel": "International TV Broadcast",
-      "image": "/tvshows/road-to-euro-2024.jpg"
     },
     {
       "show": "Super Street Garage",
