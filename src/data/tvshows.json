@@ -6,14 +6,14 @@
       "image": "/tvshows/man-city-treble-winners.jpg"
     },
     {
-      "show": "Beauty In Black",
-      "channel": "Netflix",
-      "image": "/tvshows/beauty-in-black.jpg"
-    },
-    {
       "show": "Premier League Stories",
       "channel": "Sky Sports",
       "image": "/tvshows/premier-league-stories.jpg"
+    },
+    {
+      "show": "Beauty In Black",
+      "channel": "Netflix",
+      "image": "/tvshows/beauty-in-black.jpg"
     },
     {
       "show": "Breakdown",
