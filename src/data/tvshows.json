@@ -36,6 +36,11 @@
       "image": "/tvshows/bitchin-rides.jpg"
     },
     {
+      "show": "United Gangs Of America",
+      "channel": "Vice TV",
+      "image": "/tvshows/united-gangs-of-america.jpg"
+    },
+    {
       "show": "Center Court",
       "channel": "Tennis Channel",
       "image": "/tvshows/center-court.jpg"
@@ -79,11 +84,6 @@
       "show": "The Absent Voice",
       "channel": "Disney+",
       "image": "/tvshows/the-absent-voice.jpg"
-    },
-    {
-      "show": "United Gangs Of America",
-      "channel": "Vice TV",
-      "image": "/tvshows/united-gangs-of-america.jpg"
     },
     {
       "show": "World's Strongest Man 2023",
