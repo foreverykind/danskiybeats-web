@@ -28,15 +28,6 @@
       "deezer": "https://www.deezer.com/ru/album/929111331"
     },
     {
-      "title": "Tapes",
-      "cover": "/releases/tapes.jpg",
-      "format": "album",
-      "year": "2023",
-      "spotify": "https://open.spotify.com/album/29tFnXt6Of3sndPMLiz1DY?si=2LiHQa7nS1ep3-jYqpOstQ&nd=1&dlsi=132d0c81c90141d4",
-      "apple": "https://music.apple.com/ua/album/tapes-ep/1687585670",
-      "deezer": "https://www.deezer.com/en/album/440700737"
-    },
-    {
       "title": "Holy Vibe",
       "cover": "/releases/holy-vibe.jpg",
       "format": "album",
@@ -71,6 +62,15 @@
       "spotify": "https://open.spotify.com/album/7nLW3rkS4DZnrQRGeQPPyQ",
       "apple": "https://music.apple.com/es/album/the-motherland-ep/1657791338?l=en-GB",
       "deezer": "https://www.deezer.com/us/album/384182127"
+    },
+    {
+      "title": "Tapes",
+      "cover": "/releases/tapes.jpg",
+      "format": "album",
+      "year": "2023",
+      "spotify": "https://open.spotify.com/album/29tFnXt6Of3sndPMLiz1DY?si=2LiHQa7nS1ep3-jYqpOstQ&nd=1&dlsi=132d0c81c90141d4",
+      "apple": "https://music.apple.com/ua/album/tapes-ep/1687585670",
+      "deezer": "https://www.deezer.com/en/album/440700737"
     }
   ]
 }
