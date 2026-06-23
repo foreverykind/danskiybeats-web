@@ -36,6 +36,11 @@
       "image": "/tvshows/p1-powerboat-racing.jpg"
     },
     {
+      "show": "Stalker 2",
+      "channel": "Original Game Soundtrack",
+      "image": "/tvshows/stalker-2.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -74,11 +79,6 @@
       "show": "Road to UEFA EURO 2024",
       "channel": "International TV Broadcast",
       "image": "/tvshows/road-to-euro-2024.jpg"
-    },
-    {
-      "show": "Stalker 2",
-      "channel": "Original Game Soundtrack",
-      "image": "/tvshows/stalker-2.jpg"
     },
     {
       "show": "Super Street Garage",
