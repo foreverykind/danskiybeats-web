@@ -41,6 +41,11 @@
       "image": "/tvshows/stalker-2.jpg"
     },
     {
+      "show": "World's Strongest Man 2023",
+      "channel": "CBS Sports",
+      "image": "/tvshows/worlds-strongest-man-2023.jpg"
+    },
+    {
       "show": "Breakdown",
       "channel": "Disney+",
       "image": "/tvshows/breakdown.jpg"
@@ -84,11 +89,6 @@
       "show": "Super Street Garage",
       "channel": "Amazon Prime",
       "image": "/tvshows/super-street-garage.jpg"
-    },
-    {
-      "show": "World's Strongest Man 2023",
-      "channel": "CBS Sports",
-      "image": "/tvshows/worlds-strongest-man-2023.jpg"
     }
   ]
 }
