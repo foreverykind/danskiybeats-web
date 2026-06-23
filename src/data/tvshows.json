@@ -41,6 +41,11 @@
       "image": "/tvshows/breakdown.jpg"
     },
     {
+      "show": "The Absent Voice",
+      "channel": "Disney+",
+      "image": "/tvshows/the-absent-voice.jpg"
+    },
+    {
       "show": "Baddies West",
       "channel": "Zeus",
       "image": "/tvshows/baddies-west.jpg"
@@ -79,11 +84,6 @@
       "show": "Super Street Garage",
       "channel": "Amazon Prime",
       "image": "/tvshows/super-street-garage.jpg"
-    },
-    {
-      "show": "The Absent Voice",
-      "channel": "Disney+",
-      "image": "/tvshows/the-absent-voice.jpg"
     },
     {
       "show": "World's Strongest Man 2023",
