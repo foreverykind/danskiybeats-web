@@ -31,6 +31,11 @@
       "image": "/tvshows/bitchin-rides.jpg"
     },
     {
+      "show": "Unprisoned",
+      "channel": "Hulu",
+      "image": "/tvshows/unprisoned.jpg"
+    },
+    {
       "show": "Center Court",
       "channel": "Tennis Channel",
       "image": "/tvshows/center-court.jpg"
@@ -79,11 +84,6 @@
       "show": "United Gangs Of America",
       "channel": "Vice TV",
       "image": "/tvshows/united-gangs-of-america.jpg"
-    },
-    {
-      "show": "Unprisoned",
-      "channel": "Hulu",
-      "image": "/tvshows/unprisoned.jpg"
     },
     {
       "show": "World's Strongest Man 2023",
