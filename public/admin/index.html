@@ -800,6 +800,7 @@
             </div>
             <div class="field"><label>Film YouTube URL</label><input class="input" id="ff_youtube" type="url" placeholder="https://www.youtube.com/watch?v=..." /></div>
             <div class="field"><label>Buy Vinyl URL</label><input class="input" id="ff_buy" type="url" placeholder="https://vinyla.com/..." /><div class="hint">Shown as a “Buy Vinyl” button over the vinyl image.</div></div>
+            <div class="field"><label>Listen Soundtrack URL</label><input class="input" id="ff_listen" type="url" placeholder="https://fanlink.tv/..." /><div class="hint">Shown as a “Listen Soundtrack” button over the movie poster.</div></div>
             <div class="form-grid cols-2" style="gap:18px">
               <div class="field"><label>Movie poster</label>
                 <label class="file-drop" id="ffPosterDrop">
@@ -1378,6 +1379,7 @@ function populateFullForce(){
   document.getElementById('ff_subtitle').value=ff.subtitle||'';
   document.getElementById('ff_youtube').value=ff.youtubeUrl||'';
   document.getElementById('ff_buy').value=ff.buyUrl||'';
+  document.getElementById('ff_listen').value=ff.listenUrl||'';
   setDropPreview('ffPosterDrop','ffPosterLabel',ff.poster);
   setDropPreview('ffVinylDrop','ffVinylLabel',ff.vinyl);
 }
@@ -1389,6 +1391,7 @@ async function saveFullForce(){
     ff.subtitle=document.getElementById('ff_subtitle').value.trim();
     ff.youtubeUrl=document.getElementById('ff_youtube').value.trim();
     ff.buyUrl=document.getElementById('ff_buy').value.trim();
+    ff.listenUrl=document.getElementById('ff_listen').value.trim();
     var pf=document.getElementById('ff_poster').files[0];
     if(pf){ff.poster=await uploadFile('fullforce','poster.jpg',await compressImage(pf,1400,0.85));}
     var vf=document.getElementById('ff_vinyl').files[0];

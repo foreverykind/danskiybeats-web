@@ -50,9 +50,16 @@ const ffYt = extractYoutubeId(ff.youtubeUrl);
         <div class="ff-cta-overlay"><span class="ff-cta">Watch Film</span></div>
       </a>
 
-      <figure class="ff-tile ff-poster">
-        <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
-      </figure>
+      {ff.listenUrl ? (
+        <a class="ff-tile ff-poster ff-buyable" href={ff.listenUrl} target="_blank" rel="noopener">
+          <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
+          <div class="ff-cta-overlay"><span class="ff-cta">Listen Soundtrack</span></div>
+        </a>
+      ) : (
+        <figure class="ff-tile ff-poster">
+          <img src={ff.poster} alt={`${ff.title} — movie poster`} loading="lazy" decoding="async" />
+        </figure>
+      )}
 
       {ff.buyUrl ? (
         <a class="ff-tile ff-vinyl ff-buyable" href={ff.buyUrl} target="_blank" rel="noopener">
