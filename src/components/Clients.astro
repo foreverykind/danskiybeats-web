@@ -1,5 +1,6 @@
 ---
 import clientsData from '../data/clients.json';
+import { vercelImage } from '../lib/cloudinary';
 
 type Client = { name: string; logo?: string };
 const clients: Client[] = clientsData.items;
@@ -16,7 +17,7 @@ const clients: Client[] = clientsData.items;
     {clients.map((c) => (
       <div class="logo-cell">
         {c.logo
-          ? <img class="logo-img" src={c.logo} alt={c.name} loading="lazy" decoding="async" />
+          ? <img class="logo-img" src={vercelImage(c.logo, 300)} alt={c.name} loading="lazy" decoding="async" width="300" height="300" />
           : <span class="mark">{c.name}</span>
         }
       </div>

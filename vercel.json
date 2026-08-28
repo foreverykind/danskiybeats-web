@@ -2,6 +2,12 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install --legacy-peer-deps",
+  "images": {
+    "sizes": [300, 600],
+    "domains": [],
+    "formats": ["image/webp"],
+    "minimumCacheTTL": 604800
+  },
   "headers": [
     {
       "source": "/_astro/(.*)",
